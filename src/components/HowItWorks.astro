@@ -1,0 +1,111 @@
+---
+import { Image } from 'astro:assets';
+import Ring from './Ring.astro';
+import targets from '../assets/shots/targets-dark.png';
+import proposed from '../assets/shots/proposed-plan-light.png';
+import log from '../assets/shots/meal-log-dark.png';
+import drift from '../assets/shots/today-drift-dark.png';
+
+const stages = [
+  { id: 'targets', clause: 'Set targets with a range.', body: 'Calories, protein, carbs and fat: each a number with its own ± band. One may float; it is balanced last, never judged.', shot: targets, alt: 'The Daily Targets screen: calories 2700 ±100, protein 210 ±10, carbs 230 ±25, fat 104 floats ±15, and a note that the macros add up to 2700 kcal.' },
+  { id: 'plan', clause: 'Claude drafts the day.', body: 'From what is in your pantry and what you tell it. You pick each food\'s real USDA match; an estimate is shown as one until you do.', shot: proposed, alt: 'A proposed plan from Claude: breakfast, lunch, dinner and a snack with grams, 6 of 14 foods matched.' },
+  { id: 'log', clause: 'Log what you really ate.', body: 'Amounts start from the plan. Nothing counts until you tap Log meal, and the plan stays exactly as it was.', shot: log, alt: 'A meal in Log mode, green: what you ate, with a Log meal button for 761 kcal.' },
+  { id: 'solve', clause: 'The rest re-sizes to land.', body: 'A deterministic solver resizes the meals ahead by the smallest plausible change. The forecast says where the day lands, before you eat it.', shot: drift, alt: 'The Today screen after a logged breakfast ran over: the solver offers to re-solve the three meals ahead.' },
+];
+---
+<section id="how" class="how" aria-labelledby="how-title">
+  <h2 id="how-title" class="sr-only">How it works</h2>
+  <div class="how__index">
+    <ol class="how__list">
+    {stages.map((s, i) => (
+      <li class="how__row" data-stage={i} data-reveal="left" style={`--i:${i}`} aria-current={i === 0 ? 'step' : undefined}>
+        <h3 class="how__clause"><button type="button" aria-expanded={i === 0 ? 'true' : 'false'} aria-controls={`how-shot-${i}`}>
+          <Ring class="how__bullet" size="0.7em" width={0.22} eaten={0.25 * (i + 1)} lands={0.93} zoneStart={0.84} tick={false} dot={i === 3} />
+          <span>{s.clause}</span>
+        </button></h3>
+        <p class="how__body"><span>{s.body}</span></p>
+      </li>
+    ))}
+    </ol>
+    <label class="how__slider">
+      <span class="sr-only">Stage</span>
+      <input type="range" min="0" max="3" step="1" value="0" aria-valuetext="Set targets with a range." />
+    </label>
+  </div>
+  <div class="how__frame" data-reveal="scale">
+    <div class="how__disc" aria-hidden="true"></div>
+    {stages.map((s, i) => (
+      <figure class="how__shot" id={`how-shot-${i}`} data-stage={i} class:list={{ 'is-on': i === 0 }}>
+        <Image src={s.shot} alt={s.alt} widths={[420, 640, 900]} sizes="(min-width: 64em) 30vw, 70vw" loading={i === 0 ? 'eager' : 'lazy'} />
+      </figure>
+    ))}
+  </div>
+</section>
+
+<script>
+  const root = document.querySelector('.how');
+  if (root) {
+    const rows = [...root.querySelectorAll<HTMLElement>('.how__row')];
+    const shots = [...root.querySelectorAll<HTMLElement>('.how__shot')];
+    const slider = root.querySelector<HTMLInputElement>('input[type=range]')!;
+    let current = 0;
+    const show = (i: number) => {
+      current = i;
+      rows.forEach((r, k) => { if (k === i) r.setAttribute('aria-current', 'step'); else r.removeAttribute('aria-current'); r.querySelector('button')!.setAttribute('aria-expanded', k === i ? 'true' : 'false'); });
+      shots.forEach((s, k) => s.classList.toggle('is-on', k === i));
+      slider.value = String(i);
+      slider.setAttribute('aria-valuetext', rows[i].querySelector('.how__clause span')!.textContent || '');
+    };
+    rows.forEach((r, i) => {
+      r.querySelector('button')!.addEventListener('click', () => show(i));
+      r.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') show(i); });
+      r.querySelector('button')!.addEventListener('focus', () => show(i));
+    });
+    slider.addEventListener('input', () => show(Number(slider.value)));
+    // Advance on its own once, slowly, until the visitor touches it.
+    let touched = false;
+    root.addEventListener('pointerdown', () => { touched = true; }, { once: true });
+    const io = new IntersectionObserver((entries) => {
+      if (!entries[0].isIntersecting) return;
+      io.disconnect();
+      const tick = () => { if (touched || current >= 3) return; show(current + 1); setTimeout(tick, 2600); };
+      setTimeout(tick, 2600);
+    }, { threshold: 0.6 });
+    io.observe(root);
+  }
+</script>
+
+<style>
+  .how { display: grid; grid-template-columns: 1fr 1fr; min-height: 88svh; margin-top: var(--section); }
+  .how__index { display: flex; flex-direction: column; justify-content: center; gap: 0.2rem; padding: clamp(2rem, 5vw, 5rem) var(--margin); background: var(--surface); }
+  .how__list { display: grid; gap: 0.2rem; }
+  .how__row { padding: 0.9rem 0; color: var(--muted); }
+  .how__clause { font-size: clamp(1.9rem, 3.2vw, 3.4rem); line-height: 1.05; letter-spacing: -0.02em; font-weight: 500; }
+  .how__clause button { display: flex; align-items: center; gap: 0.35em; text-align: left; color: var(--muted); transition: color var(--t-hover) ease; }
+  .how__clause button:focus-visible { outline-offset: 6px; }
+  .how__bullet { color: var(--ink); flex: none; opacity: 0.55; transition: opacity var(--t-hover) ease; }
+  .how__body { display: grid; grid-template-rows: 0fr; overflow: hidden; max-width: 46ch; margin-left: calc(0.7em * 1.9 + 0.35em); transition: grid-template-rows 320ms var(--ease-out), opacity 320ms ease, margin-top 320ms var(--ease-out); opacity: 0; }
+  .how__row[aria-current] .how__clause button { color: var(--ink); }
+  .how__row[aria-current] .how__bullet { opacity: 1; }
+  .how__row[aria-current] .how__body { grid-template-rows: 1fr; opacity: 1; margin-top: 0.5rem; }
+  .how__body > span { display: block; min-height: 0; overflow: hidden; }
+  @media (hover: hover) and (pointer: fine) {
+    .how__list:hover .how__row:not(:hover) .how__clause button { color: var(--muted); }
+  }
+  .how__slider { display: block; margin-top: 1.6rem; }
+  .how__slider input { -webkit-appearance: none; appearance: none; width: 100%; height: 8px; background: var(--surface-2); border-radius: 999px; outline-offset: 8px; }
+  .how__slider input::-webkit-slider-thumb { -webkit-appearance: none; width: 32px; height: 32px; border-radius: 50%; background: var(--accent); border: 0; cursor: pointer; }
+  .how__slider input::-moz-range-thumb { width: 32px; height: 32px; border-radius: 50%; background: var(--accent); border: 0; cursor: pointer; }
+  .how__frame { position: relative; overflow: hidden; background: var(--indigo-deep); display: grid; place-items: center; min-height: 60vh; }
+  .how__disc { position: absolute; width: 86%; aspect-ratio: 1; border-radius: 50%; background: var(--accent); opacity: 0.16; }
+  .how__shot { position: absolute; width: min(30vw, 46vh); aspect-ratio: 1206 / 2622; border-radius: 9% / 4.2%; overflow: hidden; opacity: 0; transition: opacity 200ms ease, transform 500ms var(--ease-out); transform: translateY(12px); }
+  .how__shot img { width: 100%; height: 100%; object-fit: cover; }
+  .how__shot.is-on { opacity: 1; transform: none; }
+  @media (max-width: 64em) {
+    .how { grid-template-columns: 1fr; }
+    .how__frame { order: -1; min-height: 58svh; }
+    .how__shot { width: min(60vw, 24svh); }
+    .how__clause { font-size: clamp(1.6rem, 6vw, 2.6rem); }
+    .how__body { margin-left: 0; }
+  }
+</style>

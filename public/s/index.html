@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Residual share</title>
+<meta name="description" content="A food or meal shared from Residual. Open it in Residual to add it to your day.">
+<meta property="og:title" content="Shared from Residual">
+<meta property="og:description" content="Open it in Residual to add it to your day, sized for you.">
+<meta name="robots" content="noindex">
+<!--
+  The share page. With Residual installed, iOS opens the app straight from this link (a universal
+  link: see /.well-known/apple-app-site-association) and this page never shows. Without it, or when a
+  link is opened somewhere iOS doesn't hand to apps, this page reads the share from the part of the
+  link after the # (which browsers never send to this server), shows what's in it, and offers to open
+  it in Residual through the app's own residual:// link. Nothing is stored or sent anywhere.
+-->
+<style>
+  :root {
+    --bg: #F4F5FA; --card: #FFFFFF; --ink: #1C1D26; --ink2: #6B6E80; --rule: #E6E8F0;
+    --accent: #4F5BD5; --green: #1F9D55; --amber: #B7791F;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0B0C11; --card: #181922; --ink: #F3F4FA; --ink2: #9A9DB0; --rule: #2A2C38;
+      --accent: #8B93FF; --green: #3DDC84; --amber: #F2B54B;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; background: var(--bg); color: var(--ink);
+    font: 17px/1.45 -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    display: flex; justify-content: center; padding: 48px 16px calc(32px + env(safe-area-inset-bottom));
+  }
+  main { width: 100%; max-width: 440px; }
+  .mark { display: flex; align-items: center; gap: 10px; color: var(--ink2); font-weight: 600; margin-bottom: 20px; }
+  .card { background: var(--card); border-radius: 22px; padding: 22px; }
+  .kind { color: var(--ink2); font-size: 14px; font-weight: 600; }
+  h1 { font-size: 28px; line-height: 1.15; letter-spacing: -0.02em; margin: 4px 0 6px; }
+  .note { color: var(--ink2); margin: 0 0 8px; }
+  ul { list-style: none; padding: 0; margin: 14px 0 0; }
+  li { display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-top: 1px solid var(--rule); }
+  .brand { color: var(--ink2); font-size: 14px; }
+  .grams { font-variant-numeric: tabular-nums; color: var(--ink2); white-space: nowrap; }
+  .open {
+    display: block; margin: 22px 0 12px; padding: 16px; border-radius: 16px; text-align: center;
+    background: var(--accent); color: #fff; font-weight: 700; text-decoration: none;
+  }
+  .open:active { transform: scale(0.98); }
+  .hint { color: var(--ink2); font-size: 15px; text-align: center; margin: 0; }
+  .error { color: var(--amber); }
+</style>
+</head>
+<body>
+<main>
+  <div class="mark">
+    <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
+      <circle cx="14" cy="14" r="10" fill="none" stroke="var(--rule)" stroke-width="4"/>
+      <path d="M14 4 A10 10 0 1 1 4.6 17.4" fill="none" stroke="var(--green)" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="9.5" cy="5.1" r="2.6" fill="var(--green)"/>
+    </svg>
+    Residual
+  </div>
+  <div class="card" id="card">
+    <div class="kind" id="kind">Shared with you</div>
+    <h1 id="name">Opening…</h1>
+    <p class="note" id="note" hidden></p>
+    <ul id="foods"></ul>
+  </div>
+  <a class="open" id="open" href="residual://share">Open in Residual</a>
+  <p class="hint">In Residual it's sized for your targets and added as a plan. Don't have the app yet? Ask whoever sent this for an invite.</p>
+</main>
+<script src="/s/share.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+node_modules
+dist
+.astro
+
+# Secrets: .env.example is the only env file that belongs in git
+.env
+.env.*
+!.env.example
+.dev.vars
+.wrangler
+
+# Claude Code: personal settings stay local; .claude/settings.json and .claude/rules are shared
+.claude/settings.local.json
+CLAUDE.local.md
+
+.DS_Store

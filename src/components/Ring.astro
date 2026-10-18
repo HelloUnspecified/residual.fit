@@ -1,0 +1,47 @@
+---
+/**
+ * Residual's macro ring, the one it draws for calories, protein, carbs and fat and the shape of its
+ * icon: solid green is what's eaten, clockwise from the target tick at 12 o'clock; dotted indigo is
+ * what's still planned; the soft green zone just before the tick is the range; the dot is where the
+ * day lands. Geometry mirrors scratchpad/icon/render_icon.swift. Fractions are of the full circle.
+ */
+interface Props {
+  size?: number | string;
+  eaten?: number;
+  lands?: number;
+  zoneStart?: number;
+  zoneEnd?: number;
+  width?: number;
+  tick?: boolean;
+  tickLength?: number;   // as a multiple of the stroke width
+  dot?: boolean;
+  dotSpacing?: number;   // gap between the planned dots, as a fraction of the circle (the app icon uses 0.0455)
+  class?: string;
+  label?: string;
+  id?: string;
+}
+const { size = '1em', eaten = 0.62, lands = 0.93, zoneStart = 0.84, zoneEnd = 1, width = 0.12, tick = true, tickLength = 1.5, dot = true, dotSpacing = 0.085, class: cls = '', label, id } = Astro.props;
+const c = 50, r = 29, w = width * 100;
+const C = 2 * Math.PI * r;
+const pt = (f: number) => { const a = f * 2 * Math.PI - Math.PI / 2; return [c + r * Math.cos(a), c + r * Math.sin(a)]; };
+const arc = (from: number, to: number) => {
+  const [x1, y1] = pt(from), [x2, y2] = pt(Math.min(to, from + 0.9999));
+  const large = to - from > 0.5 ? 1 : 0;
+  return `M ${x1.toFixed(3)} ${y1.toFixed(3)} A ${r} ${r} 0 ${large} 1 ${x2.toFixed(3)} ${y2.toFixed(3)}`;
+};
+const dotGap = dotSpacing * C;
+const css = typeof size === 'number' ? `${size}px` : size;
+---
+<svg class={`ring ${cls}`} id={id} viewBox="0 0 100 100" style={`width:${css};height:${css}`} role={label ? 'img' : undefined} aria-label={label} aria-hidden={label ? undefined : 'true'}>
+  <circle class="ring__track" cx={c} cy={c} r={r} fill="none" stroke="currentColor" stroke-opacity="0.12" stroke-width={w} />
+  {zoneEnd > zoneStart && <path class="ring__zone" d={arc(zoneStart, zoneEnd)} fill="none" stroke="var(--green)" stroke-opacity="0.28" stroke-width={w} />}
+  {lands > eaten && <path class="ring__plan" d={arc(eaten, lands)} fill="none" stroke="var(--accent)" stroke-width={w * 0.5} stroke-linecap="round" stroke-dasharray={`0.01 ${dotGap.toFixed(2)}`} />}
+  {eaten > 0 && <path class="ring__eaten" d={arc(0, eaten)} fill="none" stroke="var(--green)" stroke-width={w} stroke-linecap="round" />}
+  {tick && <rect class="ring__tick" x={c - 1.6} y={c - r - (w * tickLength) / 2} width="3.2" height={w * tickLength} fill="currentColor" />}
+  {dot && (
+    <g class="ring__dot" transform={`rotate(${(lands * 360).toFixed(2)} ${c} ${c})`}>
+      <circle cx={c} cy={c - r} r={w * 0.62} fill="var(--bg)" />
+      <circle cx={c} cy={c - r} r={w * 0.44} fill="var(--green)" />
+    </g>
+  )}
+</svg>

@@ -1,0 +1,16 @@
+---
+// The layout for Markdown pages (privacy): the site's chrome, a plain document column, the footer.
+// Frontmatter: title, description, heading (defaults to title), lead, updated.
+import Layout from './Layout.astro';
+import Footer from '../components/Footer.astro';
+const { frontmatter } = Astro.props;
+---
+<Layout title={frontmatter.title} description={frontmatter.description} plain>
+  <article class="doc wrap">
+    <h1 class="head">{frontmatter.heading ?? frontmatter.title}</h1>
+    {frontmatter.lead && <p class="lead">{frontmatter.lead}</p>}
+    <slot />
+    {frontmatter.updated && <p class="doc__updated small muted">Last updated {frontmatter.updated}.</p>}
+  </article>
+  <Footer />
+</Layout>

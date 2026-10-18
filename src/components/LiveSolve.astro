@@ -1,0 +1,193 @@
+---
+import Ring from './Ring.astro';
+import { rows, breakfast, lunch, ahead } from '../scripts/demo-day.js';
+import { solve, kcal } from '../scripts/solve.js';
+
+// The page is rendered at "lunch as planned", so it reads right without script.
+const m = (foods: any[], grams: number[]) => { let p = 0, c = 0, f = 0; foods.forEach((x, i) => { const g = grams[i] / 100; p += x.per100[0] * g; c += x.per100[1] * g; f += x.per100[2] * g; }); return { p, c, f, cal: kcal(p, c, f) }; };
+const L = m(lunch, lunch.map((x) => x.ref));
+const logged = { p: breakfast.p + L.p, c: breakfast.c + L.c, f: breakfast.f + L.f, cal: 0 };
+logged.cal = kcal(logged.p, logged.c, logged.f);
+const r = solve(rows, logged, ahead as any);
+const target = rows[0].target, tol = rows[0].tol;
+const fmt = (n: number) => Math.round(n).toLocaleString('en-US');
+const meals = ['Dinner', 'Snack'];
+---
+<section id="live" class="live" data-state={r.status.severity} aria-labelledby="live-title">
+  <div class="live__head wrap" data-reveal style="--i:0">
+    <h2 id="live-title" class="head"><span data-word>Lunch as planned.</span> <span data-word2>Nothing moves.</span></h2>
+    <p>Drag what you actually ate at lunch. The two meals ahead re-size with the same rules the app runs: calories first, then protein, then carbs; fat floats; nothing shrinks below half its plan or grows past double; portions on a 5 g grid.</p>
+  </div>
+
+  <div class="live__control" data-ui data-reveal="scale" style="--i:1">
+    <div class="stepper">
+      <div class="stepper__name">Chicken breast, cooked <span class="stepper__plan">plan 200 g</span></div>
+      <div class="stepper__row">
+        <button type="button" class="stepper__btn" data-step="-5" aria-label="5 grams less">−</button>
+        <output class="stepper__value nums" for="live-grams"><span data-grams>200</span> <span class="stepper__unit">g</span></output>
+        <button type="button" class="stepper__btn" data-step="5" aria-label="5 grams more">+</button>
+      </div>
+      <label class="stepper__slider">
+        <span class="sr-only">Chicken eaten at lunch, grams</span>
+        <input id="live-grams" type="range" min="100" max="400" step="5" value="200" />
+      </label>
+      <div class="stepper__foot nums">with white rice, cooked 250 g and olive oil 10 g</div>
+    </div>
+  </div>
+
+  <div class="live__result" data-reveal style="--i:2">
+    <div class="live__ring" data-ui>
+      <Ring id="live-ring" size="100%" width={0.11} eaten={logged.cal / target} lands={r.totals.cal / target} zoneStart={1 - tol / target} zoneEnd={1 + tol / target} label="Where the day lands" />
+      <div class="live__readout nums">
+        <div class="live__big" data-lands>{fmt(r.totals.cal)}</div>
+        <div class="live__of">/ {fmt(target)} kcal</div>
+      </div>
+    </div>
+    <div class="live__status">
+      <p class="live__title"><span class="live__dot" aria-hidden="true"></span> <strong data-status-title>On track</strong></p>
+      <p data-status-sub>Every target inside its range · 2 meals ahead</p>
+      <ul class="live__macros nums" aria-label="Where each macro lands">
+        {rows.slice(1).map((row) => (
+          <li data-macro={row.key}><span>{row.key === 'p' ? 'Protein' : row.key === 'c' ? 'Carbs' : 'Fat'}</span> <strong data-val>{fmt((r.totals as any)[row.key])}</strong> <span class="muted">/ {row.target}{row.floats ? ' floats' : ` ±${row.tol}`}</span></li>
+        ))}
+      </ul>
+    </div>
+    <div class="live__meals" data-ui>
+      {meals.map((meal) => (
+        <div class="meal">
+          <div class="meal__name">{meal}</div>
+          <ul class="meal__foods">
+            {ahead.map((f, i) => f.meal === meal && (
+              <li data-food={i}><span>{f.name}</span> <span class="nums"><em data-was hidden>was {f.ref} g</em> <strong data-g>{r.grams[i]}</strong> g</span></li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  import { solve, kcal, LABEL, UNIT } from '../scripts/solve.js';
+  import { rows, breakfast, lunch, ahead } from '../scripts/demo-day.js';
+
+  const root = document.getElementById('live')!;
+  const input = root.querySelector<HTMLInputElement>('#live-grams')!;
+  const target = rows[0].target, tol = rows[0].tol;
+  const fmt = (n: number) => Math.round(n).toLocaleString('en-US');
+
+  // the ring, redrawn with the same geometry as Ring.astro
+  const c = 50, r = 29;
+  const pt = (f: number) => { const a = f * 2 * Math.PI - Math.PI / 2; return [c + r * Math.cos(a), c + r * Math.sin(a)]; };
+  const arc = (from: number, to: number) => { const [x1, y1] = pt(from), [x2, y2] = pt(Math.min(to, from + 0.9999)); const large = to - from > 0.5 ? 1 : 0; return `M ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2}`; };
+  const ring = root.querySelector('#live-ring')!;
+  const paths = { eaten: ring.querySelector('.ring__eaten'), plan: ring.querySelector('.ring__plan'), dot: ring.querySelector('.ring__dot') };
+
+  const macrosOf = (foods: any[], grams: number[]) => { let p = 0, cc = 0, f = 0; foods.forEach((x, i) => { const g = grams[i] / 100; p += x.per100[0] * g; cc += x.per100[1] * g; f += x.per100[2] * g; }); return { p, c: cc, f }; };
+
+  const render = () => {
+    const grams = Number(input.value);
+    const L = macrosOf(lunch, [grams, 250, 10]);
+    const logged = { p: breakfast.p + L.p, c: breakfast.c + L.c, f: breakfast.f + L.f };
+    const loggedCal = kcal(logged.p, logged.c, logged.f);
+    const res = solve(rows, logged, ahead);
+
+    root.querySelector('[data-grams]')!.textContent = String(grams);
+    input.setAttribute('aria-valuetext', `${grams} grams`);
+    ahead.forEach((f, i) => {
+      const li = root.querySelector(`[data-food="${i}"]`)!;
+      li.querySelector('[data-g]')!.textContent = String(res.grams[i]);
+      const was = li.querySelector<HTMLElement>('[data-was]')!;
+      was.hidden = res.grams[i] === f.ref;
+      li.classList.toggle('is-changed', res.grams[i] !== f.ref);
+    });
+    root.querySelector('[data-lands]')!.textContent = fmt(res.totals.cal);
+    for (const row of rows.slice(1)) root.querySelector(`[data-macro="${row.key}"] [data-val]`)!.textContent = fmt((res.totals as any)[row.key]);
+
+    const eaten = loggedCal / target, lands = res.totals.cal / target;
+    paths.eaten?.setAttribute('d', arc(0, eaten));
+    paths.plan?.setAttribute('d', arc(eaten, Math.max(lands, eaten + 0.001)));
+    paths.dot?.setAttribute('transform', `rotate(${lands * 360} ${c} ${c})`);
+
+    const s = res.status;
+    root.dataset.state = s.severity;
+    root.querySelector('[data-status-title]')!.textContent = s.severity === 'onTrack' ? 'On track' : 'Drifting';
+    let sub = 'Every target inside its range · 2 meals ahead';
+    if (s.worst) sub = `${LABEL[s.worst.key as keyof typeof LABEL]} ${s.worst.gap >= 0 ? 'short' : 'over'} ${Math.round(Math.abs(s.worst.gap))}${UNIT[s.worst.key as keyof typeof UNIT]}`;
+    else if (s.note) sub = `Targets in range · ${LABEL[s.note.key as keyof typeof LABEL]} lands ${Math.round(s.note.lands)}${UNIT[s.note.key as keyof typeof UNIT]}`;
+    root.querySelector('[data-status-sub]')!.textContent = sub;
+
+    const word = root.querySelector('[data-word]')!, word2 = root.querySelector('[data-word2]')!;
+    if (grams > 200) { word.textContent = 'Lunch ran over.'; word2.textContent = s.severity === 'onTrack' ? 'Dinner shrinks.' : 'Dinner can’t absorb it.'; }
+    else if (grams < 200) { word.textContent = 'Lunch ran short.'; word2.textContent = s.severity === 'onTrack' ? 'Dinner grows.' : 'Dinner can’t cover it.'; }
+    else { word.textContent = 'Lunch as planned.'; word2.textContent = 'Nothing moves.'; }
+  };
+  input.addEventListener('input', render);
+  root.querySelectorAll<HTMLButtonElement>('[data-step]').forEach((b) => b.addEventListener('click', () => {
+    input.value = String(Math.min(400, Math.max(100, Number(input.value) + Number(b.dataset.step))));
+    render();
+  }));
+  render();
+</script>
+
+<style>
+  .live { --field: var(--green); --field-ink: var(--accent-ink); --field-muted: rgba(14, 15, 20, 0.62); --field-surface: rgba(14, 15, 20, 0.08);
+    background: var(--field); color: var(--field-ink); min-height: 92svh; padding-block: clamp(3rem, 7vw, 6rem); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); row-gap: 2.5rem; align-content: start; overflow: hidden; transition: background-color 500ms var(--ease-in-out); margin-top: var(--section); }
+  .live[data-state="drifting"] { --field: var(--amber); }
+  .live__head { grid-column: 1 / 8; }
+  .live__head p { margin-top: 1rem; max-width: 52ch; }
+  .live__head .muted, .live .muted { color: var(--field-muted); }
+  .live__control { grid-column: 8 / 13; align-self: start; justify-self: end; width: min(100%, 34rem); padding-inline: var(--margin); }
+  .live__result { grid-column: 1 / 13; display: grid; grid-template-columns: minmax(14rem, 22rem) 1fr 1.2fr; gap: 2rem var(--gutter); align-items: center; padding-inline: var(--margin); }
+  .live__ring { position: relative; }
+  .live__ring :global(.ring__track) { stroke: var(--field-ink); stroke-opacity: 0.14; }
+  .live__ring :global(.ring__tick) { fill: var(--field-ink); }
+  .live__ring :global(.ring__eaten), .live__ring :global(.ring__plan), .live__ring :global(.ring__zone), .live__ring :global(.ring__dot) { transition: d 400ms var(--ease-out); }
+  .live__ring :global(.ring__eaten) { stroke: var(--field-ink); }
+  .live__ring :global(.ring__zone) { stroke: var(--field-ink); stroke-opacity: 0.18; }
+  .live__ring :global(.ring__plan) { stroke: var(--field-ink); stroke-opacity: 0.55; }
+  .live__ring :global(.ring__dot circle:first-child) { fill: var(--field); }
+  .live__ring :global(.ring__dot circle:last-child) { fill: var(--field-ink); }
+  .live__readout { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+  .live__big { font-size: clamp(2.4rem, 4vw, 3.6rem); font-weight: 600; line-height: 1; letter-spacing: -0.03em; }
+  .live__of { color: var(--field-muted); }
+  .live__title { display: flex; align-items: center; gap: 0.6rem; font-size: var(--step-lead); font-weight: 600; }
+  .live__dot { width: 0.8em; height: 0.8em; border-radius: 50%; background: var(--field-ink); }
+  .live__macros { margin-top: 1.2rem; display: grid; gap: 0.3rem; }
+  .live__macros li { display: flex; gap: 0.5rem; align-items: baseline; }
+  .live__macros li span:first-child { width: 4.5em; }
+
+  /* the app's gram stepper and meal rows, at poster size */
+  [data-ui] .stepper { background: var(--field-surface); border-radius: 28px; padding: 1.4rem 1.6rem; }
+  [data-ui] .stepper__name { font-weight: 600; font-size: 1.15rem; display: flex; justify-content: space-between; gap: 1rem; }
+  [data-ui] .stepper__plan { color: var(--field-muted); font-weight: 500; white-space: nowrap; }
+  [data-ui] .stepper__row { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 1rem; margin-top: 0.8rem; }
+  [data-ui] .stepper__btn { width: 3.4rem; height: 3.4rem; border-radius: 50%; background: var(--field-ink); color: var(--field); font-size: 2rem; line-height: 1; display: grid; place-items: center; transition: transform var(--t-press) var(--ease-out); }
+  [data-ui] .stepper__btn:active { transform: scale(0.92); }
+  [data-ui] .stepper__value { text-align: center; font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 600; line-height: 1; letter-spacing: -0.03em; }
+  [data-ui] .stepper__unit { font-size: 0.4em; font-weight: 500; color: var(--field-muted); }
+  [data-ui] .stepper__slider { display: block; margin-top: 1rem; }
+  [data-ui] .stepper__slider input { -webkit-appearance: none; appearance: none; width: 100%; height: 10px; border-radius: 999px; background: rgba(14, 15, 20, 0.22); }
+  [data-ui] .stepper__slider input::-webkit-slider-thumb { -webkit-appearance: none; width: 40px; height: 40px; border-radius: 50%; background: var(--field-ink); border: 4px solid var(--field); cursor: grab; }
+  [data-ui] .stepper__slider input::-moz-range-thumb { width: 32px; height: 32px; border-radius: 50%; background: var(--field-ink); border: 4px solid var(--field); cursor: grab; }
+  [data-ui] .stepper__foot { margin-top: 0.8rem; color: var(--field-muted); font-size: var(--step-small); }
+  [data-ui].live__meals { display: grid; gap: 1rem; }
+  [data-ui] .meal { background: var(--field-surface); border-radius: 22px; padding: 1rem 1.2rem; }
+  [data-ui] .meal__name { font-weight: 600; margin-bottom: 0.3rem; }
+  [data-ui] .meal__foods li { display: flex; justify-content: space-between; gap: 1rem; padding: 0.35rem 0; }
+  [data-ui] .meal__foods em { font-style: normal; color: var(--field-muted); margin-right: 0.6rem; text-decoration: line-through; }
+  [data-ui] .meal__foods li.is-changed strong { font-weight: 700; }
+
+  @media (max-width: 64em) {
+    .live { min-height: 0; }
+    .live__head { grid-column: 1 / 13; }
+    .live__control { grid-column: 1 / 13; justify-self: stretch; width: auto; }
+    .live__result { grid-template-columns: 1fr 1fr; }
+    .live__ring { grid-column: 1 / 3; max-width: 20rem; margin-inline: auto; width: 100%; }
+    .live__meals { grid-column: 1 / 3; }
+  }
+  @media (max-width: 40em) {
+    .live__result { grid-template-columns: 1fr; }
+    .live__ring, .live__meals { grid-column: auto; }
+  }
+</style>

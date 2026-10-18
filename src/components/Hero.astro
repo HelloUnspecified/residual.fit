@@ -1,0 +1,69 @@
+---
+import { Image } from 'astro:assets';
+import Ring from './Ring.astro';
+import { site } from '../site';
+import today from '../assets/shots/today-dark.png';
+---
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__stage" aria-hidden="true">
+    <Ring class="hero__ring" size="100%" eaten={0.62} lands={0.93} zoneStart={0.84} width={0.12} tickLength={0.9} />
+    <div class="hero__screen">
+      <Image src={today} alt="" widths={[420, 640, 900]} sizes="(min-width: 64em) 34vh, 60vw" loading="eager" fetchpriority="high" />
+    </div>
+  </div>
+  <div class="hero__copy wrap">
+    <h1 id="hero-title" class="display lines">
+      <span class="line"><span data-line style="--i:0">A day of eating,</span></span>
+      <span class="line"><span data-line style="--i:1">solved.</span></span>
+    </h1>
+    <p class="lead" data-rise style="--i:2">Set the numbers your nutritionist gave you. Plan with Claude, log what you really ate, and Residual re-sizes the meals ahead so the day lands in range.</p>
+    <div class="hero__actions" data-rise style="--i:3">
+      <a class="button" href={site.appStoreUrl}><Ring size="1.1em" width={0.2} tick={false} dot={false} eaten={0.62} lands={0.93} zoneStart={0.84} /> Get Residual on the App Store</a>
+      <p class="small muted">iPhone · {site.minimumOS} · Nothing stored on a server.</p>
+    </div>
+  </div>
+  <figure class="hero__caption wrap" data-rise style="--i:4">
+    <figcaption class="small muted">Residual's Today screen: a day planned, nothing eaten yet. The dotted ring is the plan; the dot is where it lands; the green zone is your range.</figcaption>
+  </figure>
+</section>
+
+<style>
+  .hero { position: relative; min-height: 100svh; display: grid; grid-template-rows: 1fr auto; align-content: end; overflow: clip; padding-top: 6rem; }
+  .hero__stage { position: absolute; top: 50%; right: -16vh; width: 120vh; height: 120vh; transform: translateY(-50%); pointer-events: none; }
+  .hero__ring { color: var(--ink); }
+  .hero__screen { position: absolute; left: 50%; top: 50%; width: 34vh; aspect-ratio: 1206 / 2622; transform: translate(-50%, -32%); border-radius: 9% / 4.2%; overflow: hidden; }
+  .hero__screen img { width: 100%; height: 100%; object-fit: cover; }
+  .hero__copy { position: relative; z-index: 1; max-width: 58rem; padding-bottom: 2rem; }
+  .hero__copy h1 { max-width: 12ch; }
+  .lead { margin-top: 1.4rem; max-width: 36ch; }
+  .hero__actions { margin-top: 2rem; display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; }
+  .hero__caption { position: relative; z-index: 1; padding-bottom: 1.5rem; }
+  .hero__caption figcaption { max-width: 44ch; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .js .hero__ring :global(.ring__eaten) { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 1600ms var(--ease-out) 300ms forwards; }
+    .js .hero__ring :global(.ring__dot), .js .hero__ring :global(.ring__plan) { opacity: 0; animation: appear 700ms var(--ease-out) 1500ms forwards; }
+    .js .hero__screen img { transform: scale(1.06) translateY(1.5%); animation: settle 2200ms var(--ease-soft) 200ms forwards; }
+    @supports (animation-timeline: scroll()) {
+      .hero__stage { animation: turn linear both; animation-timeline: scroll(root); animation-range: 0 100vh; }
+    }
+  }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  @keyframes appear { to { opacity: 1; } }
+  @keyframes settle { to { transform: none; } }
+  @keyframes turn { to { transform: translateY(-44%) rotate(8deg); } }
+
+  @media (max-width: 64em) {
+    .hero { padding-top: 5rem; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; align-content: start; }
+    .hero__stage { position: relative; inset: auto; width: 120vw; height: 120vw; margin: 1rem 0 0 -22vw; order: 2; justify-self: start; transform: none; }
+    .hero__screen { width: 34vw; transform: translate(-50%, -38%); }
+    .hero__copy { padding-bottom: 0; }
+    .hero__caption { display: none; }
+    @supports (animation-timeline: scroll()) { .hero__stage { animation: none; } }
+  }
+  @media (max-width: 40em) {
+    .hero__stage { width: 150vw; height: 150vw; margin: 0.5rem 0 0 -25vw; }
+    .hero__screen { width: 44vw; transform: translate(-50%, -40%); }
+    .hero__copy h1 { max-width: none; font-size: 2.65rem; }
+  }
+</style>

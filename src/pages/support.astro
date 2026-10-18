@@ -1,0 +1,22 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../site';
+---
+<Layout title="Support" description="Help with Residual: targets, planning, logging, re-solving, subscriptions." plain>
+  <article class="doc wrap">
+    <h1 class="head">Support</h1>
+    <p class="lead">Write to <a class="link" href={`mailto:${site.supportEmail}?subject=Residual`}>{site.supportEmail}</a>. Say which iPhone and iOS version you have, and what you expected to happen.</p>
+    <h2>The day says "No room left"</h2>
+    <p>The meals ahead cannot absorb what has been eaten without shrinking a food below half its plan or growing one past double. Use Plan the rest of my day, or Suggest a fix, which finds the best few changes from what you already have.</p>
+    <h2>A planned food shows "to match"</h2>
+    <p>It is still Claude's estimate. Tap Match on the Today screen or the food itself and pick its real USDA entry; the plan then uses real numbers, and the match carries into the log.</p>
+    <h2>Plan my day does nothing or falls back</h2>
+    <p>Planning with Claude needs a network connection (and, once subscriptions launch, Residual Plus). When Claude cannot be reached, the app tells you which planner answered instead; the solver still sizes the portions.</p>
+    <h2>Subscriptions</h2>
+    <p>Residual Plus is managed by Apple. To change or cancel, open Settings → your name → Subscriptions. Once subscriptions launch, restore a purchase from More → Daily targets → Residual Plus.</p>
+    <h2>Sync between phones</h2>
+    <p>Both phones must be signed in to the same Apple ID with iCloud Drive on. More → Daily targets shows whether sync is on.</p>
+  </article>
+  <Footer />
+</Layout>

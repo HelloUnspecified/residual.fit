@@ -1,0 +1,13 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["5ECYNEC6SR.io.unspecified.residual"],
+        "components": [
+          { "/": "/s", "comment": "A Residual share; what's shared rides after the #" },
+          { "/": "/s/", "comment": "Same, with the trailing slash" }
+        ]
+      }
+    ]
+  }
+}

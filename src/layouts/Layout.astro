@@ -1,0 +1,67 @@
+---
+import '../styles/global.css';
+import { site } from '../site';
+import Ring from '../components/Ring.astro';
+interface Props { title?: string; description?: string; plain?: boolean }
+const { title, description = site.description, plain = false } = Astro.props;
+const fullTitle = title ? `${title} · ${site.name}` : `${site.name} — ${site.tagline}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="theme-color" content="#0A0B10" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL('/og.png', Astro.site)} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://api.fontshare.com" />
+    <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
+    <link href="https://api.fontshare.com/v2/css?f[]=roundo@400,500,600&display=swap" rel="stylesheet" />
+    <script is:inline>document.documentElement.classList.add('js');addEventListener('load',()=>setTimeout(()=>document.documentElement.classList.add('settled'),4000))</script>
+  </head>
+  <body>
+    <header class="top wrap">
+      <a href="/" class="top__mark" aria-label="Residual, home">
+        <Ring size="1.6rem" width={0.16} />
+        <span>Residual</span>
+      </a>
+      {!plain && (
+        <nav class="top__nav" aria-label="Sections">
+          <a class="link" href="#how">How it works</a>
+          <a class="link" href="#promises">Promises</a>
+          <a class="link" href="#questions">Questions</a>
+        </nav>
+      )}
+      <a class="button top__cta" href={site.appStoreUrl}>Get Residual</a>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <script>
+      // Reveal on scroll, once. Content is visible without this (html.js gates the hidden state).
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+      }, { rootMargin: '0px 0px -10% 0px', threshold: 0.08 });
+      document.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
+    </script>
+  </body>
+</html>
+
+<style>
+  .top { position: absolute; inset: 0 0 auto 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; gap: var(--gutter); min-height: 4.5rem; }
+  .top__mark { display: inline-flex; align-items: center; gap: 0.55rem; text-decoration: none; font-weight: 600; font-size: 1.15rem; }
+  .top__nav { display: none; gap: 1.6rem; }
+  .top__cta { min-height: 2.6rem; padding-inline: 1.1rem; font-size: 0.95rem; }
+  @media (min-width: 48em) { .top__nav { display: flex; } }
+</style>

@@ -1,0 +1,17 @@
+{
+  "name": "residual-site",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "og": "\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --headless=new --disable-gpu --hide-scrollbars --window-size=1200,630 --screenshot=public/og.png http://localhost:4321/og/"
+  },
+  "dependencies": {
+    "astro": "^7.4.0",
+    "@astrojs/sitemap": "^3.7.4"
+  }
+}

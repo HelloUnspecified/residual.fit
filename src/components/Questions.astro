@@ -1,0 +1,65 @@
+---
+const cards = [
+  { tab: 'Tracker', q: 'Does it replace Cronometer?', a: 'No. Residual is the planning layer in front of your tracker. You keep logging actuals there for your nutritionist; Residual plans the day, shows where it lands, and re-solves the meals ahead. Export any day as a CSV with eaten and planned grams, per food.' },
+  { tab: 'AI', q: 'What does the AI do, exactly?', a: 'Claude drafts the day: meals, foods and grams from your pantry, your favorites and what you tell it. That is all it owns. Landing the day inside your ranges is deterministic math, the same answer every time, with no AI in the loop.' },
+  { tab: 'Drift', q: 'What if I eat something that was not in the plan?', a: 'Add it to the meal, log it, and the meals ahead re-size by the smallest plausible change. When the ranges cannot be met, the forecast says so plainly, "No room left", rather than shrinking a food to a token portion.' },
+  { tab: 'Data', q: 'Where does my data live?', a: 'On your iPhone and in your private iCloud database. Planning with Claude asks first. A plan then sends your targets, the day so far, pantry foods, saved meals, recent meal names and your instructions to Anthropic through Apple\'s Foundation Models with App Attest; food search text goes to USDA FoodData Central. No account, no tracking, no analytics.' },
+  { tab: 'Phone', q: 'Which iPhone does it need?', a: 'iOS 27 or later. Planning with Claude and food search need a network connection; targets, logging, the solver and the forecast work offline.' },
+  { tab: 'Price', q: 'What does it cost?', a: 'Residual is free to try. AI day planning and real-food search are Residual Plus, an auto-renewing subscription with a free trial, priced on the App Store. Manage or cancel any time in your Apple ID settings.' },
+];
+---
+<section id="questions" class="faq" aria-labelledby="faq-title">
+  <h2 id="faq-title" class="faq__title">Questions a careful person asks</h2>
+  <div class="faq__drawer">
+    {cards.map((c, i) => (
+      <article class="card" data-reveal="scale" style={`--i:${i}; --n:${i}`} class:list={{ 'is-open': i === 0 }}>
+        <h3>
+          <button type="button" class="card__btn" aria-expanded={i === 0 ? 'true' : 'false'} aria-controls={`faq-a-${i}`} id={`faq-q-${i}`}>
+            <span class="card__tab">{c.tab}</span>
+            <span class="card__q">{c.q}</span>
+          </button>
+        </h3>
+        <div class="card__panel" id={`faq-a-${i}`} role="region" aria-labelledby={`faq-q-${i}`}><div><p>{c.a}</p></div></div>
+      </article>
+    ))}
+  </div>
+</section>
+
+<script>
+  const cards = [...document.querySelectorAll<HTMLElement>('.faq .card')];
+  cards.forEach((card) => {
+    const btn = card.querySelector<HTMLButtonElement>('.card__btn')!;
+    btn.addEventListener('click', () => {
+      const open = card.classList.contains('is-open');
+      cards.forEach((k) => { k.classList.remove('is-open'); k.querySelector('.card__btn')!.setAttribute('aria-expanded', 'false'); });
+      if (!open) { card.classList.add('is-open'); btn.setAttribute('aria-expanded', 'true'); }
+    });
+  });
+</script>
+
+<style>
+  .faq { margin-top: var(--section); padding-inline: var(--margin); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); }
+  .faq__title { grid-column: 3 / 11; font-size: clamp(2rem, 4vw, 3.75rem); line-height: 1.04; letter-spacing: -0.025em; margin-bottom: 2.5rem; }
+  .faq__drawer { grid-column: 3 / 11; display: grid; }
+  .card { --tab-w: 200px; --tab-h: 40px; --step: 11%; position: relative; margin-top: calc(-1 * 40px); padding-top: var(--tab-h); background: var(--surface); color: var(--ink);
+    clip-path: polygon(calc(var(--n) * var(--step)) var(--tab-h), calc(var(--n) * var(--step)) 0, calc(var(--n) * var(--step) + var(--tab-w)) 0, calc(var(--n) * var(--step) + var(--tab-w)) var(--tab-h), 100% var(--tab-h), 100% 100%, 0 100%, 0 var(--tab-h)); }
+  .card:first-child { margin-top: 0; }
+  .card:nth-child(3n+2) { background: var(--surface-2); }
+  .card:nth-child(3n) { background: var(--indigo-deep); }
+  .card__btn { display: block; width: 100%; text-align: left; color: inherit; }
+  .card__tab { position: absolute; top: 0; left: calc(var(--n) * var(--step)); width: var(--tab-w); height: var(--tab-h); display: flex; align-items: center; padding-left: 20px; font-weight: 600; }
+  .card__q { display: block; min-height: 96px; padding: 20px 20px 52px; font-size: 1.25rem; font-weight: 500; line-height: 1.3; }
+  .card__panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 320ms var(--ease-out); }
+  .card__panel > div { overflow: hidden; }
+  .card__panel p { padding: 0 20px 64px; max-width: 50ch; }
+  .card.is-open .card__panel { grid-template-rows: 1fr; }
+  .card.is-open .card__q { color: var(--ink); }
+  @media (hover: hover) and (pointer: fine) { .card__btn:hover .card__q { color: var(--accent-strong); } }
+  @media (max-width: 64em) {
+    .faq__title, .faq__drawer { grid-column: 1 / 13; }
+    .faq__title { font-size: 9vw; }
+    .card { --tab-w: 120px; --step: 48px; }
+    .card__q { min-height: 112px; padding-bottom: 60px; font-size: 1.125rem; }
+    .card__panel p { font-size: 1rem; }
+  }
+</style>

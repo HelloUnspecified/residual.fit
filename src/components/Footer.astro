@@ -1,0 +1,58 @@
+---
+import { site } from '../site';
+import Ring from './Ring.astro';
+const letters = [...'Residual'];
+const heights = [100, 100, 100, 100, 100, 100, 100, 100];
+const year = new Date().getFullYear();
+---
+<footer class="foot" aria-labelledby="foot-title">
+  <h2 id="foot-title" class="sr-only">Residual</h2>
+  <div class="foot__mark" aria-hidden="true" data-reveal>
+    <div class="foot__ring"><Ring size="100%" dotSpacing={0.0455} /></div>
+    <div class="foot__blocks">
+      {letters.map((l, i) => <span class="foot__block" style={`--h:${heights[i]}%`}>{l}</span>)}
+    </div>
+  </div>
+  <div class="foot__links">
+    <ul class="foot__col">
+      <li><a class="link" href="/#how">How it works</a></li>
+      <li><a class="link" href="/#live">Try the solver</a></li>
+      <li><a class="link" href="/#promises">Promises</a></li>
+      <li><a class="link" href="/#questions">Questions</a></li>
+    </ul>
+    <ul class="foot__col">
+      <li><a class="link" href={site.appStoreUrl}>App Store</a></li>
+      <li><a class="link" href="/support/">Support</a></li>
+      <li><a class="link" href="/privacy/">Privacy</a></li>
+    </ul>
+    <div class="foot__contact">
+      <p>Made by {site.developer}.</p>
+      <p><a class="link" href={`mailto:${site.supportEmail}`}>{site.supportEmail}</a></p>
+    </div>
+  </div>
+  <div class="foot__last">
+    <p class="small muted">© {year} {site.developer}. Residual is not medical advice; your targets come from you and your nutritionist.</p>
+    <a class="button button--ink foot__btn" href={site.appStoreUrl}>Get Residual</a>
+  </div>
+</footer>
+
+<style>
+  .foot { background: var(--surface); padding: clamp(3rem, 6vw, 5rem) var(--margin) 2rem; margin-top: 0; }
+  .foot__mark { display: grid; grid-template-columns: auto 1fr; gap: 4px; height: 34svh; min-height: 180px; align-items: end; }
+  .foot__ring { height: 100%; width: auto; aspect-ratio: 1; }
+  .foot__blocks { display: flex; gap: 4px; height: 100%; align-items: flex-end; }
+  .foot__block { flex: 1; height: var(--h); display: flex; align-items: center; justify-content: center; background: var(--ink); color: var(--surface); font-size: clamp(2.6rem, 9.5vw, 13rem); line-height: 1; font-weight: 600; overflow: hidden; }
+  .foot__block:nth-child(2n) { background: var(--accent); color: var(--accent-ink); }
+  .foot__block:nth-child(5) { background: var(--green); color: var(--accent-ink); }
+  .foot__links { margin-top: 56px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); row-gap: 1.5rem; }
+  .foot__col { display: grid; gap: 0.5rem; grid-column: span 3; }
+  .foot__contact { grid-column: 9 / 13; }
+  .foot__last { margin-top: 3rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .foot__btn { min-height: 2.6rem; padding-inline: 1.1rem; font-size: 0.95rem; }
+  @media (max-width: 64em) {
+    .foot__mark { height: 22svh; grid-template-columns: 1fr; }
+    .foot__ring { display: none; }
+    .foot__col { grid-column: span 6; }
+    .foot__contact { grid-column: 1 / 13; }
+  }
+</style>
