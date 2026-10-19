@@ -7,14 +7,14 @@ import Ring from './Ring.astro';
   </div>
 
   <div class="tile tile--3x2 tile--green" data-reveal style="--i:1">
-    <div class="ui ui--badge" data-ui>
+    <div class="ui ui--flow ui--badge" data-ui>
       <span class="seal" aria-hidden="true"></span> Matched · USDA<span class="only-wide"> · Fage</span>
     </div>
     <div class="tile__cap"><strong>Real numbers only</strong><span>You pick every USDA match. An estimate is shown as one.</span></div>
   </div>
 
   <div class="tile tile--3x2 tile--surface" data-reveal style="--i:2">
-    <div class="ui ui--modes" data-ui>
+    <div class="ui ui--flow ui--modes" data-ui>
       <span class="mode mode--plan">Planning</span>
       <span class="mode mode--log">Logging</span>
     </div>
@@ -46,7 +46,7 @@ import Ring from './Ring.astro';
   </div>
 
   <div class="tile tile--6x2 tile--amber" data-reveal style="--i:6">
-    <div class="ui ui--off nums" data-ui>
+    <div class="ui ui--flow ui--off nums" data-ui>
       <span class="off__title">Diverged from plan</span>
       <span class="off__vals">+2 P · +11 C · +2 F</span>
     </div>
@@ -54,14 +54,14 @@ import Ring from './Ring.astro';
   </div>
 
   <div class="tile tile--3x2 tile--surface" data-reveal style="--i:7">
-    <div class="ui ui--logbtn nums" data-ui>
+    <div class="ui ui--flow ui--logbtn nums" data-ui>
       <span class="chk" aria-hidden="true"></span> Log meal · 761 kcal
     </div>
     <div class="tile__cap"><strong>Nothing counts until you log it</strong><span>The plan is a target. What you ate is what you entered.</span></div>
   </div>
 
   <div class="tile tile--3x2 tile--surface2" data-reveal style="--i:8">
-    <div class="ui ui--sync" data-ui>
+    <div class="ui ui--flow ui--sync" data-ui>
       <span class="row"><span>iCloud sync</span><span class="on">On</span></span>
       <span class="row"><span>Account</span><span class="muted">None</span></span>
     </div>
@@ -70,7 +70,7 @@ import Ring from './Ring.astro';
 </section>
 
 <style>
-  .board { margin-top: var(--section); padding: 0 10px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); grid-auto-rows: 104px; gap: 8px; }
+  .board { margin-top: var(--section); padding: 0 10px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); grid-auto-rows: minmax(104px, auto); gap: 8px; }
   .tile { position: relative; overflow: hidden; border-radius: 0; background: var(--surface); padding: 20px; display: flex; flex-direction: column; justify-content: flex-end; }
   .tile--6x2 { grid-column: span 6; grid-row: span 2; }
   .tile--6x4 { grid-column: span 6; grid-row: span 4; }
@@ -87,12 +87,15 @@ import Ring from './Ring.astro';
   .tile__cap strong { font-size: 1.125rem; font-weight: 600; }
   .tile__cap span { font-size: 0.9375rem; line-height: 1.4; opacity: 0.85; }
 
-  /* Interface close-ups, each pushed off-centre so the tile crops it. */
+  /* Interface close-ups. The big ones (ring, stepper, floating figure) are pushed off-centre so their
+     tall tile crops them. The small ones sit in the tile's flow above the caption, so a caption that
+     wraps to another line makes the tile taller instead of sliding under the fragment. */
   .ui { position: absolute; pointer-events: none; }
-  [data-ui].ui--badge { top: 14%; left: 20px; font-size: 1.6rem; font-weight: 600; white-space: nowrap; display: flex; align-items: center; gap: 0.4em; color: var(--accent-ink); }
+  [data-ui].ui--flow { position: relative; margin-bottom: auto; max-width: 100%; align-self: flex-start; }
+  [data-ui].ui--badge { font-size: clamp(1.05rem, 1.55vw, 1.6rem); font-weight: 600; white-space: nowrap; display: flex; align-items: center; gap: 0.4em; color: var(--accent-ink); }
   [data-ui] .seal { width: 1em; height: 1em; border-radius: 50%; background: var(--accent-ink); position: relative; flex: none; }
   [data-ui] .seal::after { content: ''; position: absolute; left: 0.3em; top: 0.17em; width: 0.26em; height: 0.46em; border: solid var(--green); border-width: 0 0.12em 0.12em 0; transform: rotate(45deg); }
-  [data-ui].ui--modes { top: 20px; left: 20px; display: flex; gap: 0.45em; white-space: nowrap; font-size: 1.1rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
+  [data-ui].ui--modes { display: flex; flex-wrap: wrap; gap: 0.45em; white-space: nowrap; font-size: 1.1rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
   [data-ui] .mode { padding: 0.5em 1em; border-radius: 1.2em; }
   [data-ui] .mode--plan { color: var(--accent); border: 3px dashed var(--accent); }
   [data-ui] .mode--log { color: var(--green); border: 3px solid var(--green); background: rgba(61, 220, 132, 0.12); }
@@ -114,17 +117,17 @@ import Ring from './Ring.astro';
   [data-ui].ui--floats .of { font-size: 1.6rem; color: var(--muted); margin-top: 0.2em; }
   [data-ui].ui--floats .lbl { margin-top: 0.8rem; font-size: 1.5rem; font-weight: 600; }
   [data-ui].ui--floats .state { color: var(--green); font-size: 1.4rem; margin-top: 0.3em; white-space: nowrap; }
-  [data-ui].ui--off { top: 12%; left: 36%; display: grid; gap: 0.3em; font-size: 2.2rem; font-weight: 600; white-space: nowrap; color: var(--accent-ink); }
+  [data-ui].ui--off { display: grid; gap: 0.3em; font-size: 2.2rem; font-weight: 600; white-space: nowrap; color: var(--accent-ink); }
   [data-ui] .off__vals { font-weight: 500; opacity: 0.8; }
-  [data-ui].ui--logbtn { top: 12%; left: 20px; display: flex; align-items: center; gap: 0.5em; font-size: 2rem; font-weight: 600; background: var(--green); color: var(--accent-ink); padding: 0.6em 1em; border-radius: 2em; white-space: nowrap; }
+  [data-ui].ui--logbtn { display: flex; align-items: center; gap: 0.5em; font-size: clamp(1rem, 1.6vw, 1.5rem); font-weight: 600; background: var(--green); color: var(--accent-ink); padding: 0.6em 1em; border-radius: 2em; white-space: nowrap; }
   [data-ui] .chk { width: 1em; height: 1em; border-radius: 50%; background: var(--accent-ink); position: relative; flex: none; }
   [data-ui] .chk::after { content: ''; position: absolute; left: 0.33em; top: 0.18em; width: 0.24em; height: 0.44em; border: solid var(--green); border-width: 0 0.12em 0.12em 0; transform: rotate(45deg); }
-  [data-ui].ui--sync { top: 10%; left: 10%; right: 0; display: grid; gap: 0.3em; font-size: 1.25rem; }
+  [data-ui].ui--sync { align-self: stretch; display: grid; gap: 0.3em; font-size: 1.1rem; }
   [data-ui] .row { display: flex; justify-content: space-between; gap: 2em; padding: 0.45em 0.8em; background: var(--bg); border-radius: 0.6em; }
   [data-ui] .on { color: var(--green); font-weight: 600; }
 
   @media (max-width: 64em) {
-    .board { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 30vw; gap: 6px; padding: 0 6px; }
+    .board { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: minmax(30vw, auto); gap: 6px; padding: 0 6px; }
     .tile { padding: 16px; }
     .tile--6x2, .tile--head { grid-column: span 2; grid-row: span 2; }
     .tile--6x4 { grid-column: span 2; grid-row: span 3; }
@@ -132,15 +135,15 @@ import Ring from './Ring.astro';
     .tile--3x4, .tile--3x2 { grid-column: span 1; grid-row: span 2; }
     .tile--head h2 { font-size: 9vw; }
     .tile__cap strong { font-size: 1rem; } .tile__cap span { font-size: 0.875rem; }
-    [data-ui].ui--badge { font-size: 1.05rem; left: 16px; }
-    [data-ui].ui--modes { font-size: 0.75rem; left: 16px; top: 14px; display: grid; gap: 0.35em; }
+    [data-ui].ui--badge { font-size: 1.05rem; }
+    [data-ui].ui--modes { font-size: 0.75rem; gap: 0.35em; }
     [data-ui].ui--stepper { font-size: 1.4rem; left: 6%; }
     [data-ui].ui--floats strong { font-size: 2.6rem; }
     [data-ui].ui--floats .lbl, [data-ui].ui--floats .state, [data-ui].ui--floats .of { display: none; }
-    [data-ui].ui--sync .row:nth-child(2) { display: none; }
     [data-ui].ui--floats .lbl, [data-ui].ui--floats .of { font-size: 1rem; } [data-ui].ui--floats .state { font-size: 0.9rem; } [data-ui].ui--floats .lbl { margin-top: 0.4rem; }
-    [data-ui].ui--off { font-size: 1.4rem; left: 20%; top: 10%; }
-    [data-ui].ui--logbtn { font-size: 0.85rem; left: 16px; top: 8%; }
-    [data-ui].ui--sync { font-size: 0.95rem; left: 8%; right: 0; top: 6%; }
+    [data-ui].ui--off { font-size: 1.4rem; }
+    [data-ui].ui--logbtn { font-size: 0.85rem; }
+    [data-ui].ui--sync { font-size: 0.9rem; }
+    [data-ui].ui--sync .row { gap: 0.8em; }
   }
 </style>
