@@ -19,6 +19,13 @@
   "assets": {
     "binding": "ASSETS"
   },
+  // Plain settings for src/pages/api/subscribe.ts. They deploy with the code: a deploy from this file
+  // replaces any plain-text variables set in the dashboard, so keep them here, not there. Secrets
+  // (LOOPS_API_KEY) are set in the dashboard as encrypted secrets, which deploys leave alone.
+  //   LOOPS_MAILING_LIST_ID  the Residual newsletter list in Loops (Audience → Lists)
+  "vars": {
+    "LOOPS_MAILING_LIST_ID": "cmvft2uvb0hpg0jyua8boex04"
+  },
   // The newsletter sign-up's rate limit (src/pages/api/subscribe.ts): 5 attempts a minute per IP
   // address. period can only be 10 or 60 seconds. namespace_id is any number unique within the Cloudflare
   // account; jointroth.com's limiter uses another, so the two sites never share a count.

@@ -1,5 +1,5 @@
 // POST /api/subscribe — the newsletter sign-up behind the app's "Newsletter & product updates" and the
-// site footer's "Tell me" form.
+// site footer's "Subscribe" form.
 //
 // An Astro server route (the one page that isn't prerendered), run by the @astrojs/cloudflare adapter in
 // the site's Worker. It holds the Loops API key as a Worker secret (never in the app) and creates the
@@ -17,7 +17,7 @@
 // Environment (Cloudflare → Workers & Pages → the site's Worker → Settings → Variables and Secrets;
 // locally, .dev.vars):
 //   LOOPS_API_KEY          secret, required — Loops → Settings → API
-//   LOOPS_MAILING_LIST_ID  optional — the list to add the contact to (Loops → Audience → Lists)
+//   LOOPS_MAILING_LIST_ID  the newsletter list (a plain var in wrangler.jsonc, not the dashboard)
 //   SITE_ORIGIN            optional — the only browser Origin accepted (default https://residual.fit)
 //
 // Request:  { "email": "a@b.co", "source": "ios", "appVersion": "1.0 (12)" }   (JSON)

@@ -51,8 +51,10 @@ Then, once:
    return `200` with `content-type: application/json` and no redirect. Apple's CDN caches it, so a fix can
    take up to a day to reach phones.
 3. **Newsletter sign-up** (`src/pages/api/subscribe.ts`, an Astro server route at `POST /api/subscribe`): on the
-   Worker, under Settings → Variables and Secrets, add the secret `LOOPS_API_KEY` (Residual's own Loops account →
-   Settings → API) and, to put sign-ups on the one Residual list, `LOOPS_MAILING_LIST_ID` (Loops → Audience → Lists). `SITE_ORIGIN` is optional: the one browser Origin the function accepts
+   Worker, under Settings → Variables and Secrets, add `LOOPS_API_KEY` (Residual's own Loops account → Settings →
+   API) **as a secret**: a deploy replaces the Worker's plain-text variables with the `vars` in `wrangler.jsonc`, but
+   leaves secrets alone. The newsletter list, `LOOPS_MAILING_LIST_ID`, is one of those `vars`, so it ships with the
+   code. `SITE_ORIGIN` is optional: the one browser Origin the function accepts
    (default `https://residual.fit`; the app sends none). Then set `NEWSLETTER_URL` = `https://<domain>/api/subscribe`
    in the app repo's `Residual/Info.plist`; until it is set, the app's sign-up is hidden (DEBUG builds show it with a note).
    Check it: `curl -X POST https://<domain>/api/subscribe -H 'content-type: application/json' -d '{"email":"you@example.com","source":"curl"}'`.

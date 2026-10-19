@@ -56,7 +56,9 @@ When you search for a food or scan a barcode, the search text or barcode number 
 
 ## The newsletter, only if you sign up
 
-If you sign up in More → Newsletter & product updates, your email address and the app's version are sent to this website (hosted on Cloudflare) and on to Loops (loops.so), our mailing-list provider. We use them only to send Residual news and product updates. Your email address is never linked to anything you log. Every email has an unsubscribe link, and you can ask us to delete your address at any time.
+You can sign up for the Residual newsletter in the app (More → Newsletter & product updates) or at the bottom of this website. Your email address is sent to this website (hosted on Cloudflare) and on to Loops (loops.so), our mailing-list provider, along with where you signed up and, from the app, the app's version. We use them only to send the Residual newsletter and product updates. Your email address is never linked to anything you log. Every email has an unsubscribe link, and you can ask us to delete your address at any time.
+
+To stop abuse, the sign-up counts attempts from each IP address for a minute and turns away more than a few. That count isn't stored with your email address and isn't kept.
 
 ## Writing to support
 
@@ -79,7 +81,7 @@ This website is hosted on Cloudflare, which sees visitors' IP addresses like any
 - **Apple**: iCloud sync (your private iCloud database), the Foundation Models framework and App Attest that carry plan requests, and subscriptions through the App Store.
 - **Anthropic**: plan requests, only when you've allowed Planning with Claude.
 - **USDA FoodData Central**: food search text and barcode numbers.
-- **Loops**: your email address and app version, only if you sign up for the newsletter.
+- **Loops**: your email address, where you signed up, and the app's version if you signed up in the app; only if you sign up for the newsletter.
 - **Cloudflare**: hosts this website and the newsletter sign-up.
 
 We only use providers whose terms protect your data at least as well as this policy does. Each receives only what it needs for the purpose described above.

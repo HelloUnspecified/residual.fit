@@ -27,12 +27,12 @@ const year = new Date().getFullYear();
     </ul>
     <div class="foot__contact">
       <form class="foot__news" data-news novalidate>
-        <label for="news-email">Not on the App Store yet. Leave your email and you'll get one note when it ships.</label>
+        <label for="news-email">The Residual newsletter: product updates and what's new, by email.</label>
         <div class="foot__row">
           <input id="news-email" name="email" type="email" required autocomplete="email" inputmode="email" placeholder="you@example.com" />
-          <button class="button button--ink" type="submit">Tell me</button>
+          <button class="button button--ink" type="submit">Subscribe</button>
         </div>
-        <p class="small muted" data-news-msg aria-live="polite">One email at launch, nothing else. Unsubscribe in it.</p>
+        <p class="small muted" data-news-msg aria-live="polite">Occasional emails, never your food data. Unsubscribe from any of them.</p>
       </form>
       <p class="small">Made by {site.developer}. <a class="link" href={`mailto:${site.supportEmail}`}>{site.supportEmail}</a></p>
     </div>
@@ -44,7 +44,7 @@ const year = new Date().getFullYear();
 </footer>
 
 <script>
-  // The newsletter sign-up: the same endpoint the app uses (functions/api/subscribe.ts), from the site's own origin.
+  // The newsletter sign-up: the same endpoint the app uses (src/pages/api/subscribe.ts), from the site's own origin.
   const form = document.querySelector<HTMLFormElement>('[data-news]');
   if (form) {
     const input = form.querySelector<HTMLInputElement>('input')!;
@@ -59,7 +59,7 @@ const year = new Date().getFullYear();
       try {
         const res = await fetch('/api/subscribe', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ email, source: 'site' }) });
         const data = await res.json().catch(() => ({}));
-        if (res.ok) { say(data.existing ? 'You’re already on the list.' : 'You’re on the list. One note when it ships.', true); form.reset(); }
+        if (res.ok) { say(data.existing ? 'You’re already subscribed.' : 'You’re subscribed to the Residual newsletter.', true); form.reset(); }
         else say(data.error || 'Sign-up didn’t go through. Try again in a minute.', false);
       } catch { say('No connection. Try again in a minute.', false); }
       button.disabled = false;
