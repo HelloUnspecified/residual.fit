@@ -33,8 +33,9 @@ npm run preview   # the built site in the local Workers runtime, /api/subscribe 
 npm run og        # with the dev server running: renders public/og.png (needs Google Chrome)
 ```
 
-Set `ASTRO_TELEMETRY_DISABLED=1` in the shell to keep Astro from phoning home. To exercise `/api/subscribe`
-locally, put `LOOPS_API_KEY=…` in `.dev.vars` (gitignored) before `npm run build`; without it the route answers 503.
+Set `ASTRO_TELEMETRY_DISABLED=1` in the shell to keep Astro from phoning home. `npm run preview` runs
+`/api/subscribe` with the real settings from `wrangler.jsonc`, so a valid address posted to it locally is a real
+sign-up (Loops sends the confirmation email).
 
 ## Deploy
 
@@ -50,21 +51,22 @@ Then, once:
 2. **Check the association file:** `curl -i https://<domain>/.well-known/apple-app-site-association` should
    return `200` with `content-type: application/json` and no redirect. Apple's CDN caches it, so a fix can
    take up to a day to reach phones.
-3. **Newsletter sign-up** (`src/pages/api/subscribe.ts`, an Astro server route at `POST /api/subscribe`): on the
-   Worker, under Settings → Variables and Secrets, add `LOOPS_API_KEY` (Residual's own Loops account → Settings →
-   API) **as a secret**: a deploy replaces the Worker's plain-text variables with the `vars` in `wrangler.jsonc`, but
-   leaves secrets alone. The newsletter list, `LOOPS_MAILING_LIST_ID`, is one of those `vars`, so it ships with the
-   code. `SITE_ORIGIN` is optional: the one browser Origin the function accepts
+3. **Newsletter sign-up** (`src/pages/api/subscribe.ts`, an Astro server route at `POST /api/subscribe`): it
+   posts to the Residual Loops account's form endpoint, which has double opt-in on: Loops emails a confirmation
+   link and subscribes the contact only once it's clicked. Its settings are `vars` in `wrangler.jsonc`, so they
+   ship with the code (a deploy replaces any plain-text variables set in the dashboard): `LOOPS_FORM_ENDPOINT`
+   (Loops → Forms → Settings) and `LOOPS_MAILING_LIST_ID` (Audience → Lists; the list must be **Public**, or the
+   form can't subscribe anyone to it). No API key is needed. `SITE_ORIGIN` is optional: the one browser Origin the route accepts
    (default `https://residual.fit`; the app sends none). Then set `NEWSLETTER_URL` = `https://<domain>/api/subscribe`
    in the app repo's `Residual/Info.plist`; until it is set, the app's sign-up is hidden (DEBUG builds show it with a note).
    Check it: `curl -X POST https://<domain>/api/subscribe -H 'content-type: application/json' -d '{"email":"you@example.com","source":"curl"}'`.
-   - **Rate limit:** built in. The `SUBSCRIBE_LIMITER` binding in `wrangler.jsonc` allows 5 attempts a minute
-     per IP address; past that the route answers 429 with `retry-after: 60`. Cloudflare counts per data
-     centre, so a determined attacker spread across many locations gets a little more; for a hard global cap,
-     add a WAF rate-limiting rule on `/api/subscribe` in the dashboard as well.
-   - The endpoint creates the contact and never updates it: Loops' double opt-in doesn't apply to API
-     sign-ups, so an existing contact (including someone who unsubscribed) is left untouched and the
-     function answers `{"ok":true,"existing":true}`.
+   - **Rate limit: add a WAF rule.** In the Cloudflare dashboard for the domain: Security → WAF → Rate limiting
+     rules → URI Path equals `/api/subscribe`, 3 requests per 10 seconds per IP, Block for 10 seconds (the Free
+     plan allows one rule). The `SUBSCRIBE_LIMITER` binding in `wrangler.jsonc` (5 a minute per IP) is a
+     best-effort extra: Cloudflare documents it as permissive and eventually consistent, and it never refused
+     a request in production testing on 2026-10-19. Loops also rate-limits its form endpoint per IP.
+   - The form endpoint never unsubscribes anyone and can change only `userGroup` on an existing contact, which
+     the route never sends, so signing up again leaves the contact as it was.
 4. **Point the app at it** (in the Residual app repo): `Residual/Info.plist` → `SHARE_LINK_BASE` = `https://<domain>/s/`,
    and `Residual/Residual.entitlements` → `com.apple.developer.associated-domains` = `applinks:<domain>`
    (for a development build, `applinks:<domain>?mode=developer`). Turn on Associated Domains for the App ID

@@ -59,7 +59,7 @@ const year = new Date().getFullYear();
       try {
         const res = await fetch('/api/subscribe', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ email, source: 'site' }) });
         const data = await res.json().catch(() => ({}));
-        if (res.ok) { say(data.existing ? 'You’re already subscribed.' : 'You’re subscribed to the Residual newsletter.', true); form.reset(); }
+        if (res.ok) { say('Check your inbox: click the link in our email to confirm your subscription.', true); form.reset(); }
         else say(data.error || 'Sign-up didn’t go through. Try again in a minute.', false);
       } catch { say('No connection. Try again in a minute.', false); }
       button.disabled = false;

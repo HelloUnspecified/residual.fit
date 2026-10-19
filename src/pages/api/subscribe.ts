@@ -2,26 +2,31 @@
 // site footer's "Subscribe" form.
 //
 // An Astro server route (the one page that isn't prerendered), run by the @astrojs/cloudflare adapter in
-// the site's Worker. It holds the Loops API key as a Worker secret (never in the app) and creates the
-// contact in Loops. The app sends only the email it was given with explicit consent, where it came from,
-// and its own version number.
+// the site's Worker. It passes the sign-up to the Residual Loops account's form endpoint
+// (https://loops.so/docs/forms/custom-form), the one Loops endpoint gated behind double opt-in: Loops
+// emails the address a confirmation link, and the contact joins the newsletter list only once they click
+// it. So a sign-up can't subscribe someone else's address, and nobody is subscribed without saying yes.
 //
-// Create and never update: a contact that already exists (Loops answers 409) is left exactly as it is,
-// so someone who unsubscribed is never re-subscribed by signing up again, and the app can't change any
-// field on an existing contact. Loops' double opt-in doesn't apply to API sign-ups, which is why.
+// Existing contacts: the form endpoint can add a contact to a list but never unsubscribes anyone, and the
+// only field it can change on an existing contact is userGroup, which this route never sends. Signing up
+// again therefore changes nothing on the contact; Loops decides whether to send another confirmation.
+//
+// What reaches Loops: the email address, `source` ("Residual ios", "Residual site", …) and the list. The
+// app also sends its version; that isn't forwarded.
 //
 // Abuse protection: the SUBSCRIBE_LIMITER binding (wrangler.jsonc) allows 5 attempts a minute per IP
-// address, counted before anything else so rejected attempts count too; past that the route answers 429.
-// Cloudflare keeps the count per data centre, which is enough to stop a script hammering the endpoint.
+// address, counted before anything else; past that the route answers 429. Cloudflare documents the
+// binding as permissive (counts cached per machine), so a WAF rate-limiting rule on this path is the
+// dependable limit. Loops also rate-limits its form endpoint, and its 429 is passed through.
 //
-// Environment (Cloudflare → Workers & Pages → the site's Worker → Settings → Variables and Secrets;
-// locally, .dev.vars):
-//   LOOPS_API_KEY          secret, required — Loops → Settings → API
-//   LOOPS_MAILING_LIST_ID  the newsletter list (a plain var in wrangler.jsonc, not the dashboard)
+// Settings (plain vars in wrangler.jsonc, so they deploy with the code):
+//   LOOPS_FORM_ENDPOINT    the Residual account's form endpoint (Loops → Forms → Settings)
+//   LOOPS_MAILING_LIST_ID  the newsletter list; it must be Public in Loops for the form to use it
 //   SITE_ORIGIN            optional — the only browser Origin accepted (default https://residual.fit)
 //
 // Request:  { "email": "a@b.co", "source": "ios", "appVersion": "1.0 (12)" }   (JSON)
-// Response: 200 { "ok": true } | 200 { "ok": true, "existing": true } | 400 | 403 | 405 | 415 | 429 | 502 | 503 { "error": "…" }
+// Response: 200 { "ok": true } | 400 | 403 | 405 | 415 | 429 | 502 | 503 { "error": "…" }
+// (`existing: true`, which the app understands, is no longer sent: the form endpoint doesn't say.)
 import type { APIRoute } from 'astro';
 import { env as workerEnv } from 'cloudflare:workers';
 
@@ -31,7 +36,7 @@ interface RateLimit {
   limit(options: { key: string }): Promise<{ success: boolean }>;
 }
 interface Env {
-  LOOPS_API_KEY?: string;
+  LOOPS_FORM_ENDPOINT?: string;
   LOOPS_MAILING_LIST_ID?: string;
   SITE_ORIGIN?: string;
   SUBSCRIBE_LIMITER?: RateLimit;
@@ -50,6 +55,9 @@ const json = (status: number, body: unknown, extra: Record<string, string> = {})
     },
   });
 
+const TOO_MANY = 'Too many sign-ups from here. Try again in a minute.';
+const FAILED = 'Couldn’t sign you up right now. Try again later.';
+
 /** True when this caller is still under the limit. Without the binding (it is always bound when deployed)
  *  or when the limiter itself fails, the sign-up goes ahead: a limiter outage shouldn't lose a sign-up. */
 async function underLimit(request: Request): Promise<boolean> {
@@ -66,10 +74,8 @@ async function underLimit(request: Request): Promise<boolean> {
 const looksLikeEmail = (s: string) => s.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
 
 export const POST: APIRoute = async ({ request }) => {
-  if (!(await underLimit(request))) {
-    return json(429, { error: 'Too many sign-ups from here. Try again in a minute.' }, { 'retry-after': '60' });
-  }
-  if (!env.LOOPS_API_KEY) return json(503, { error: 'Sign-up is not configured.' });
+  if (!(await underLimit(request))) return json(429, { error: TOO_MANY }, { 'retry-after': '60' });
+  if (!env.LOOPS_FORM_ENDPOINT) return json(503, { error: 'Sign-up is not configured.' });
 
   // The app sends no Origin. A browser does, and only the site's own pages may use this.
   const origin = request.headers.get('origin');
@@ -86,37 +92,33 @@ export const POST: APIRoute = async ({ request }) => {
     return json(400, { error: 'Send JSON.' });
   }
   if (typeof body !== 'object' || body === null || Array.isArray(body)) return json(400, { error: 'Send JSON.' });
-  const fields = body as { email?: unknown; source?: unknown; appVersion?: unknown };
+  const fields = body as { email?: unknown; source?: unknown };
 
   const email = typeof fields.email === 'string' ? fields.email.trim().toLowerCase() : '';
   if (!looksLikeEmail(email)) return json(400, { error: 'That email address doesn’t look right.' });
-  const source = typeof fields.source === 'string' ? fields.source.slice(0, 40) : 'unknown';
+  const source = typeof fields.source === 'string' ? fields.source.replace(/[^\w .-]/g, '').slice(0, 40) : 'unknown';
 
-  const contact: Record<string, unknown> = {
-    email,
-    source: `Residual ${source}`,
-    userGroup: 'Residual',
-  };
-  if (typeof fields.appVersion === 'string' && fields.appVersion) {
-    contact.residualAppVersion = fields.appVersion.slice(0, 40);
-  }
-  if (env.LOOPS_MAILING_LIST_ID) contact.mailingLists = { [env.LOOPS_MAILING_LIST_ID]: true };
+  const form = new URLSearchParams({ email, source: `Residual ${source}` });
+  if (env.LOOPS_MAILING_LIST_ID) form.set('mailingLists', env.LOOPS_MAILING_LIST_ID);
 
   let res: Response;
   try {
-    res = await fetch('https://app.loops.so/api/v1/contacts/create', {
+    res = await fetch(env.LOOPS_FORM_ENDPOINT, {
       method: 'POST',
-      headers: { authorization: `Bearer ${env.LOOPS_API_KEY}`, 'content-type': 'application/json' },
-      body: JSON.stringify(contact),
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      body: form.toString(),
     });
   } catch {
-    return json(502, { error: 'Couldn’t sign you up right now. Try again later.' });
+    return json(502, { error: FAILED });
   }
-  // 409: the contact already exists. Leave it alone and tell the app it's done.
-  if (res.status === 409) return json(200, { ok: true, existing: true });
-  if (!res.ok) return json(502, { error: 'Couldn’t sign you up right now. Try again later.' });
-  return json(200, { ok: true });
+  const result = (await res.json().catch(() => ({}))) as { success?: boolean; message?: string };
+
+  if (res.ok && result.success !== false) return json(200, { ok: true });
+  if (res.status === 429) return json(429, { error: TOO_MANY }, { 'retry-after': '60' });
+  // Loops' 400 is about what was sent (a bad address, a list it won't accept); its message says which.
+  if (res.status === 400 && result.message) return json(400, { error: result.message });
+  return json(502, { error: FAILED });
 };
 
-// Anything but POST gets a plain 405, as the Pages Function did.
+// Anything but POST gets a plain 405.
 export const ALL: APIRoute = () => json(405, { error: 'Use POST.' });
