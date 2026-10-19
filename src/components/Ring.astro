@@ -4,6 +4,10 @@
  * icon: solid green is what's eaten, clockwise from the target tick at 12 o'clock; dotted indigo is
  * what's still planned; the soft green zone just before the tick is the range; the dot is where the
  * day lands. Geometry mirrors scratchpad/icon/render_icon.swift. Fractions are of the full circle.
+ *
+ * Give it the class `ring--animate` and it draws itself in on load the way the app's rings do (eaten
+ * arc, then the planned dots, then the landing dot travels to where it lands); `ring--reveal` does the
+ * same once an ancestor gets `is-in` (see global.css).
  */
 interface Props {
   size?: number | string;
@@ -31,15 +35,22 @@ const arc = (from: number, to: number) => {
 };
 const dotGap = dotSpacing * C;
 const css = typeof size === 'number' ? `${size}px` : size;
+const uid = id ?? `ring-${Math.random().toString(36).slice(2, 8)}`;
 ---
 <svg class={`ring ${cls}`} id={id} viewBox="0 0 100 100" style={`width:${css};height:${css}`} role={label ? 'img' : undefined} aria-label={label} aria-hidden={label ? undefined : 'true'}>
+  <defs>
+    <!-- The planned dots are drawn through this mask so they can appear along the arc, not all at once. -->
+    <mask id={`${uid}-plan`} maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100">
+      <path class="ring__planmask" d={arc(Math.min(eaten, lands), Math.max(lands, eaten + 0.001))} fill="none" stroke="#fff" stroke-width={w * 1.2} pathLength="1" />
+    </mask>
+  </defs>
   <circle class="ring__track" cx={c} cy={c} r={r} fill="none" stroke="currentColor" stroke-opacity="0.12" stroke-width={w} />
   {zoneEnd > zoneStart && <path class="ring__zone" d={arc(zoneStart, zoneEnd)} fill="none" stroke="var(--green)" stroke-opacity="0.28" stroke-width={w} />}
-  {lands > eaten && <path class="ring__plan" d={arc(eaten, lands)} fill="none" stroke="var(--accent)" stroke-width={w * 0.5} stroke-linecap="round" stroke-dasharray={`0.01 ${dotGap.toFixed(2)}`} />}
-  {eaten > 0 && <path class="ring__eaten" d={arc(0, eaten)} fill="none" stroke="var(--green)" stroke-width={w} stroke-linecap="round" />}
+  <path class="ring__plan" d={lands > eaten ? arc(eaten, lands) : ''} fill="none" stroke="var(--accent)" stroke-width={w * 0.5} stroke-linecap="round" stroke-dasharray={`0.01 ${dotGap.toFixed(2)}`} mask={`url(#${uid}-plan)`} />
+  <path class="ring__eaten" d={eaten > 0 ? arc(0, eaten) : ''} fill="none" stroke="var(--green)" stroke-width={w} stroke-linecap="round" pathLength="1" />
   {tick && <rect class="ring__tick" x={c - 1.6} y={c - r - (w * tickLength) / 2} width="3.2" height={w * tickLength} fill="currentColor" />}
   {dot && (
-    <g class="ring__dot" transform={`rotate(${(lands * 360).toFixed(2)} ${c} ${c})`}>
+    <g class="ring__dot" style={`--from:${(eaten * 360).toFixed(2)}deg;--to:${(lands * 360).toFixed(2)}deg`}>
       <circle cx={c} cy={c - r} r={w * 0.62} fill="var(--bg)" />
       <circle cx={c} cy={c - r} r={w * 0.44} fill="var(--green)" />
     </g>

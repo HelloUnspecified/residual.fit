@@ -37,7 +37,7 @@ const meals = ['Dinner', 'Snack'];
 
   <div class="live__result" data-reveal style="--i:2">
     <div class="live__ring" data-ui>
-      <Ring id="live-ring" size="100%" width={0.11} eaten={logged.cal / target} lands={r.totals.cal / target} zoneStart={1 - tol / target} zoneEnd={1 + tol / target} label="Where the day lands" />
+      <Ring id="live-ring" class="ring--reveal" size="100%" width={0.11} eaten={logged.cal / target} lands={r.totals.cal / target} zoneStart={1 - tol / target} zoneEnd={1 + tol / target} label="Where the day lands" />
       <div class="live__readout nums">
         <div class="live__big" data-lands>{fmt(r.totals.cal)}</div>
         <div class="live__of">/ {fmt(target)} kcal</div>
@@ -107,7 +107,8 @@ const meals = ['Dinner', 'Snack'];
     const eaten = loggedCal / target, lands = res.totals.cal / target;
     paths.eaten?.setAttribute('d', arc(0, eaten));
     paths.plan?.setAttribute('d', arc(eaten, Math.max(lands, eaten + 0.001)));
-    paths.dot?.setAttribute('transform', `rotate(${lands * 360} ${c} ${c})`);
+    ring.querySelector('.ring__planmask')?.setAttribute('d', arc(eaten, Math.max(lands, eaten + 0.001)));
+    (paths.dot as SVGGElement | null)?.style.setProperty('--to', `${lands * 360}deg`);
 
     const s = res.status;
     root.dataset.state = s.severity;
@@ -142,7 +143,8 @@ const meals = ['Dinner', 'Snack'];
   .live__ring { position: relative; }
   .live__ring :global(.ring__track) { stroke: var(--field-ink); stroke-opacity: 0.14; }
   .live__ring :global(.ring__tick) { fill: var(--field-ink); }
-  .live__ring :global(.ring__eaten), .live__ring :global(.ring__plan), .live__ring :global(.ring__zone), .live__ring :global(.ring__dot) { transition: d 400ms var(--ease-out); }
+  .live__ring :global(.ring__eaten), .live__ring :global(.ring__plan), .live__ring :global(.ring__zone), .live__ring :global(.ring__planmask) { transition: d 400ms var(--ease-out); }
+  .live__ring :global(.ring__dot) { transition: transform 400ms var(--ease-snap); }
   .live__ring :global(.ring__eaten) { stroke: var(--field-ink); }
   .live__ring :global(.ring__zone) { stroke: var(--field-ink); stroke-opacity: 0.18; }
   .live__ring :global(.ring__plan) { stroke: var(--field-ink); stroke-opacity: 0.55; }

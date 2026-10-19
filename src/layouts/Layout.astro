@@ -39,6 +39,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       {!plain && (
         <nav class="top__nav" aria-label="Sections">
           <a class="link" href="#how">How it works</a>
+          <a class="link" href="#live">Try it</a>
           <a class="link" href="#promises">Promises</a>
           <a class="link" href="#questions">Questions</a>
         </nav>
@@ -49,11 +50,27 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       <slot />
     </main>
     <script>
-      // Reveal on scroll, once. Content is visible without this (html.js gates the hidden state).
+      // Reveal on scroll, once. Content is visible without this (html.js gates the hidden state), and a
+      // plain scroll check backs the observer up, so nothing stays hidden in a throttled or background tab.
+      const pending = new Set<Element>(document.querySelectorAll('[data-reveal]'));
+      const reveal = (el: Element) => { el.classList.add('is-in'); pending.delete(el); io.unobserve(el); };
       const io = new IntersectionObserver((entries) => {
-        for (const e of entries) if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+        for (const e of entries) if (e.isIntersecting) reveal(e.target);
       }, { rootMargin: '0px 0px -10% 0px', threshold: 0.08 });
-      document.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
+      pending.forEach((el) => io.observe(el));
+      let queued = false;
+      const check = () => {
+        queued = false;
+        for (const el of pending) {
+          const r = el.getBoundingClientRect();
+          if (r.top < innerHeight * 0.92 && r.bottom > 0) reveal(el);
+        }
+      };
+      const onScroll = () => { if (!queued) { queued = true; requestAnimationFrame(check); } };
+      addEventListener('scroll', onScroll, { passive: true });
+      addEventListener('resize', onScroll);
+      addEventListener('load', check);
+      setTimeout(check, 400);
     </script>
   </body>
 </html>

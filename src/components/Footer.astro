@@ -26,8 +26,15 @@ const year = new Date().getFullYear();
       <li><a class="link" href="/privacy/">Privacy</a></li>
     </ul>
     <div class="foot__contact">
-      <p>Made by {site.developer}.</p>
-      <p><a class="link" href={`mailto:${site.supportEmail}`}>{site.supportEmail}</a></p>
+      <form class="foot__news" data-news novalidate>
+        <label for="news-email">Not on the App Store yet. Leave your email and you'll get one note when it ships.</label>
+        <div class="foot__row">
+          <input id="news-email" name="email" type="email" required autocomplete="email" inputmode="email" placeholder="you@example.com" />
+          <button class="button button--ink" type="submit">Tell me</button>
+        </div>
+        <p class="small muted" data-news-msg aria-live="polite">One email at launch, nothing else. Unsubscribe in it.</p>
+      </form>
+      <p class="small">Made by {site.developer}. <a class="link" href={`mailto:${site.supportEmail}`}>{site.supportEmail}</a></p>
     </div>
   </div>
   <div class="foot__last">
@@ -36,8 +43,41 @@ const year = new Date().getFullYear();
   </div>
 </footer>
 
+<script>
+  // The newsletter sign-up: the same endpoint the app uses (functions/api/subscribe.ts), from the site's own origin.
+  const form = document.querySelector<HTMLFormElement>('[data-news]');
+  if (form) {
+    const input = form.querySelector<HTMLInputElement>('input')!;
+    const button = form.querySelector<HTMLButtonElement>('button')!;
+    const msg = form.querySelector<HTMLElement>('[data-news-msg]')!;
+    const say = (text: string, ok?: boolean) => { msg.textContent = text; msg.classList.toggle('is-ok', ok === true); msg.classList.toggle('is-err', ok === false); };
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = input.value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { say('That doesn’t look like an email address.', false); input.focus(); return; }
+      button.disabled = true; say('Sending…');
+      try {
+        const res = await fetch('/api/subscribe', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ email, source: 'site' }) });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok) { say(data.existing ? 'You’re already on the list.' : 'You’re on the list. One note when it ships.', true); form.reset(); }
+        else say(data.error || 'Sign-up didn’t go through. Try again in a minute.', false);
+      } catch { say('No connection. Try again in a minute.', false); }
+      button.disabled = false;
+    });
+  }
+</script>
+
 <style>
   .foot { background: var(--surface); padding: clamp(3rem, 6vw, 5rem) var(--margin) 2rem; margin-top: 0; }
+  .foot__news { display: grid; gap: 0.6rem; max-width: 30rem; }
+  .foot__news label { font-weight: 500; }
+  .foot__row { display: flex; gap: 0.5rem; }
+  .foot__row input { flex: 1; min-width: 0; min-height: 2.75rem; padding: 0 1rem; background: var(--bg); border: 0; border-radius: var(--radius); color: var(--ink); font-size: max(1rem, var(--step-small)); }
+  .foot__row input::placeholder { color: var(--muted); }
+  .foot__row .button { min-height: 2.75rem; padding-inline: 1.1rem; font-size: 0.95rem; }
+  .foot__news .is-ok { color: var(--green); }
+  .foot__news .is-err { color: var(--amber); }
+  .foot__contact > p { margin-top: 1.4rem; }
   .foot__mark { display: grid; grid-template-columns: auto 1fr; gap: 4px; height: 34svh; min-height: 180px; align-items: end; }
   .foot__ring { height: 100%; width: auto; aspect-ratio: 1; }
   .foot__blocks { display: flex; gap: 4px; height: 100%; align-items: flex-end; }

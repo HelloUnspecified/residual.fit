@@ -9,7 +9,7 @@ const cards = [
 ];
 ---
 <section id="questions" class="faq" aria-labelledby="faq-title">
-  <h2 id="faq-title" class="faq__title">Questions a careful person asks</h2>
+  <h2 id="faq-title" class="faq__title">Questions</h2>
   <div class="faq__drawer">
     {cards.map((c, i) => (
       <article class="card" data-reveal="scale" style={`--i:${i}; --n:${i}`} class:list={{ 'is-open': i === 0 }}>

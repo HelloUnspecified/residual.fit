@@ -35,6 +35,7 @@
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
   --ease-soft: cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-snap: cubic-bezier(0.22, 1.25, 0.36, 1);   /* the app's .snappy: a touch of overshoot */
   --t-press: 140ms;
   --t-hover: 180ms;
   --t-ui: 240ms;
@@ -99,6 +100,27 @@ p + p { margin-top: 0.9em; }
 .js.settled [data-rise], .js.settled .lines [data-line] { opacity: 1; transform: none; animation: none; }
 @keyframes ad-rise { to { opacity: 1; transform: none; } }
 @keyframes ad-line { to { transform: none; } }
+
+/* The ring draws itself in the way the app's rings do: the eaten arc first, then the planned dots along
+   the arc, then the landing dot travels to where the day lands and the range fades in. `ring--animate`
+   plays on load; `ring--reveal` plays once an ancestor has `is-in`. The final state is also the no-motion state. */
+.ring__dot { transform-box: view-box; transform-origin: 50% 50%; transform: rotate(var(--to, 0deg)); }
+@media (prefers-reduced-motion: no-preference) {
+  .js .ring--animate .ring__eaten, .js .ring--reveal .ring__eaten { stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .js .ring--animate .ring__planmask, .js .ring--reveal .ring__planmask { stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .js .ring--animate .ring__dot, .js .ring--reveal .ring__dot { transform: rotate(var(--from, 0deg)); }
+  .js .ring--animate .ring__zone, .js .ring--reveal .ring__zone { opacity: 0; }
+  .js .ring--animate .ring__eaten, .js .is-in .ring--reveal .ring__eaten { animation: ring-draw 900ms var(--ease-out) 250ms forwards; }
+  .js .ring--animate .ring__planmask, .js .is-in .ring--reveal .ring__planmask { animation: ring-draw 800ms var(--ease-out) 1000ms forwards; }
+  .js .ring--animate .ring__dot, .js .is-in .ring--reveal .ring__dot { animation: ring-travel 900ms var(--ease-snap) 1050ms forwards; }
+  .js .ring--animate .ring__zone, .js .is-in .ring--reveal .ring__zone { animation: ring-fade 500ms ease 1500ms forwards; }
+  .js.settled .ring--animate .ring__eaten, .js.settled .ring--animate .ring__planmask { stroke-dashoffset: 0; animation: none; }
+  .js.settled .ring--animate .ring__dot { transform: rotate(var(--to, 0deg)); animation: none; }
+  .js.settled .ring--animate .ring__zone { opacity: 1; animation: none; }
+}
+@keyframes ring-draw { to { stroke-dashoffset: 0; } }
+@keyframes ring-travel { to { transform: rotate(var(--to, 0deg)); } }
+@keyframes ring-fade { to { opacity: 1; } }
 
 /* Plain documents: privacy, support. */
 .doc { padding-top: 8rem; padding-bottom: 6rem; max-width: 46rem; }

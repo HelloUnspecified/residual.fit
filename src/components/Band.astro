@@ -1,5 +1,5 @@
 ---
-/** The calorie bar from Residual's Today hero, at full width: eaten, planned, the range, where it lands. */
+/** The calorie bar from Residual's Today hero, at full width: eaten, planned, the range, where it lands. It fills in as it scrolls into view, the way the app's bar does. */
 interface Props { eaten?: number; lands?: number; tol?: number; target?: number; eatenLabel?: string; aheadLabel?: string }
 const { eaten = 0.54, lands = 0.988, tol = 0.037, target = 2700, eatenLabel = 'Breakfast and lunch, eaten', aheadLabel = 'Dinner and a snack, still planned' } = Astro.props;
 const pct = (f: number) => `${(f * 92 + 2).toFixed(2)}%`; // keep 2% either side for the caps and the zone past the tick
@@ -7,13 +7,15 @@ const pct = (f: number) => `${(f * 92 + 2).toFixed(2)}%`; // keep 2% either side
 <div class="band wrap" role="img" data-reveal aria-label={`The day so far: ${Math.round(eaten * target)} kcal eaten, the plan lands at ${Math.round(lands * target)} of ${target}, inside a range of plus or minus ${Math.round(tol * target)}.`}>
   <p class="band__left"><strong>{eatenLabel}</strong> <span class="muted">then</span> <strong>{aheadLabel}</strong></p>
   <svg class="band__bar" width="100%" height="36" aria-hidden="true">
-    <rect x={pct(1 - tol)} y="8" width={`${(2 * tol * 92).toFixed(2)}%`} height="20" fill="var(--green)" fill-opacity="0.28" />
+    <rect class="band__zone" x={pct(1 - tol)} y="8" width={`${(2 * tol * 92).toFixed(2)}%`} height="20" fill="var(--green)" fill-opacity="0.28" />
     <line x1="2%" x2="94%" y1="18" y2="18" stroke="var(--surface-2)" stroke-width="10" stroke-linecap="round" />
-    <line x1={pct(eaten)} x2={pct(lands)} y1="18" y2="18" stroke="var(--accent)" stroke-width="6" stroke-linecap="round" stroke-dasharray="0.1 14" />
-    <line x1="2%" x2={pct(eaten)} y1="18" y2="18" stroke="var(--green)" stroke-width="10" stroke-linecap="round" />
+    <line class="band__plan" x1={pct(eaten)} x2={pct(lands)} y1="18" y2="18" stroke="var(--accent)" stroke-width="6" stroke-linecap="round" stroke-dasharray="0.1 14" />
+    <line class="band__eaten" x1="2%" x2={pct(eaten)} y1="18" y2="18" stroke="var(--green)" stroke-width="10" stroke-linecap="round" pathLength="1" />
     <rect x="94%" y="4" width="3" height="28" fill="var(--ink)" transform="translate(-1.5 0)" />
-    <circle cx={pct(lands)} cy="18" r="9" fill="var(--bg)" />
-    <circle cx={pct(lands)} cy="18" r="6.5" fill="var(--green)" />
+    <g class="band__dot">
+      <circle cx={pct(lands)} cy="18" r="9" fill="var(--bg)" />
+      <circle cx={pct(lands)} cy="18" r="6.5" fill="var(--green)" />
+    </g>
   </svg>
   <p class="band__right nums"><strong>lands {Math.round(lands * target).toLocaleString('en-US')}</strong> <span class="muted">of {target.toLocaleString('en-US')} kcal, range ±{Math.round(tol * target)}</span></p>
 </div>
@@ -25,5 +27,11 @@ const pct = (f: number) => `${(f * 92 + 2).toFixed(2)}%`; // keep 2% either side
   @media (min-width: 48em) {
     .band { grid-template-columns: 1fr auto; grid-template-areas: 'l r' 'bar bar'; align-items: end; }
     .band__left { grid-area: l; } .band__right { grid-area: r; } .band__bar { grid-area: bar; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .js .band__eaten { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 900ms var(--ease-out) 150ms; }
+    .js .band__plan, .js .band__dot, .js .band__zone { opacity: 0; transition: opacity 500ms ease 900ms; }
+    .js .band.is-in .band__eaten { stroke-dashoffset: 0; }
+    .js .band.is-in .band__plan, .js .band.is-in .band__dot, .js .band.is-in .band__zone { opacity: 1; }
   }
 </style>
