@@ -10,7 +10,9 @@
 // so someone who unsubscribed is never re-subscribed by signing up again, and the app can't change any
 // field on an existing contact. Loops' double opt-in doesn't apply to API sign-ups, which is why.
 //
-// Abuse protection is a Cloudflare WAF rate-limiting rule on this path, not code here (see README).
+// Abuse protection: the SUBSCRIBE_LIMITER binding (wrangler.jsonc) allows 5 attempts a minute per IP
+// address, counted before anything else so rejected attempts count too; past that the route answers 429.
+// Cloudflare keeps the count per data centre, which is enough to stop a script hammering the endpoint.
 //
 // Environment (Cloudflare → Workers & Pages → the site's Worker → Settings → Variables and Secrets;
 // locally, .dev.vars):
@@ -19,20 +21,24 @@
 //   SITE_ORIGIN            optional — the only browser Origin accepted (default https://residual.fit)
 //
 // Request:  { "email": "a@b.co", "source": "ios", "appVersion": "1.0 (12)" }   (JSON)
-// Response: 200 { "ok": true } | 200 { "ok": true, "existing": true } | 400 | 403 | 405 | 415 | 502 | 503 { "error": "…" }
+// Response: 200 { "ok": true } | 200 { "ok": true, "existing": true } | 400 | 403 | 405 | 415 | 429 | 502 | 503 { "error": "…" }
 import type { APIRoute } from 'astro';
 import { env as workerEnv } from 'cloudflare:workers';
 
 export const prerender = false;
 
+interface RateLimit {
+  limit(options: { key: string }): Promise<{ success: boolean }>;
+}
 interface Env {
   LOOPS_API_KEY?: string;
   LOOPS_MAILING_LIST_ID?: string;
   SITE_ORIGIN?: string;
+  SUBSCRIBE_LIMITER?: RateLimit;
 }
 const env = workerEnv as unknown as Env;
 
-const json = (status: number, body: unknown) =>
+const json = (status: number, body: unknown, extra: Record<string, string> = {}) =>
   new Response(JSON.stringify(body), {
     status,
     headers: {
@@ -40,13 +46,29 @@ const json = (status: number, body: unknown) =>
       'cache-control': 'no-store',
       // `_headers` applies to static assets only, so the route sets this itself.
       'x-content-type-options': 'nosniff',
+      ...extra,
     },
   });
+
+/** True when this caller is still under the limit. Without the binding (it is always bound when deployed)
+ *  or when the limiter itself fails, the sign-up goes ahead: a limiter outage shouldn't lose a sign-up. */
+async function underLimit(request: Request): Promise<boolean> {
+  if (!env.SUBSCRIBE_LIMITER) return true;
+  const ip = request.headers.get('cf-connecting-ip') ?? 'unknown';
+  try {
+    return (await env.SUBSCRIBE_LIMITER.limit({ key: ip })).success;
+  } catch {
+    return true;
+  }
+}
 
 // Deliberately simple: one @, something on each side, a dot in the domain, no spaces.
 const looksLikeEmail = (s: string) => s.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
 
 export const POST: APIRoute = async ({ request }) => {
+  if (!(await underLimit(request))) {
+    return json(429, { error: 'Too many sign-ups from here. Try again in a minute.' }, { 'retry-after': '60' });
+  }
   if (!env.LOOPS_API_KEY) return json(503, { error: 'Sign-up is not configured.' });
 
   // The app sends no Origin. A browser does, and only the site's own pages may use this.

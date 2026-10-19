@@ -56,9 +56,10 @@ Then, once:
    (default `https://residual.fit`; the app sends none). Then set `NEWSLETTER_URL` = `https://<domain>/api/subscribe`
    in the app repo's `Residual/Info.plist`; until it is set, the app's sign-up is hidden (DEBUG builds show it with a note).
    Check it: `curl -X POST https://<domain>/api/subscribe -H 'content-type: application/json' -d '{"email":"you@example.com","source":"curl"}'`.
-   - **Required: a rate limit.** The function has none of its own. In the Cloudflare dashboard for the
-     domain: Security → WAF → Rate limiting rules → create one with URI Path equals `/api/subscribe`,
-     3 requests per 10 seconds per IP, action Block for 10 seconds. One rule is available on the Free plan.
+   - **Rate limit:** built in. The `SUBSCRIBE_LIMITER` binding in `wrangler.jsonc` allows 5 attempts a minute
+     per IP address; past that the route answers 429 with `retry-after: 60`. Cloudflare counts per data
+     centre, so a determined attacker spread across many locations gets a little more; for a hard global cap,
+     add a WAF rate-limiting rule on `/api/subscribe` in the dashboard as well.
    - The endpoint creates the contact and never updates it: Loops' double opt-in doesn't apply to API
      sign-ups, so an existing contact (including someone who unsubscribed) is left untouched and the
      function answers `{"ok":true,"existing":true}`.

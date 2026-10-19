@@ -19,6 +19,12 @@
   "assets": {
     "binding": "ASSETS"
   },
+  // The newsletter sign-up's rate limit (src/pages/api/subscribe.ts): 5 attempts a minute per IP
+  // address. period can only be 10 or 60 seconds. namespace_id is any number unique within the Cloudflare
+  // account; jointroth.com's limiter uses another, so the two sites never share a count.
+  "ratelimits": [
+    { "name": "SUBSCRIBE_LIMITER", "namespace_id": "1001", "simple": { "limit": 5, "period": 60 } }
+  ],
   "observability": {
     "enabled": true
   }

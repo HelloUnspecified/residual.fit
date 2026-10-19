@@ -12,7 +12,7 @@ paths:
 - One Loops account (Residual's own) and at most one list. No guides, events or multi-list routing.
 - No dependencies and no Node APIs beyond what Workers provide (`fetch`, `Request`, `Response`).
 - `public/_headers` applies to static assets only, so every response goes through `json()`, which sets its own headers.
-- Rate limiting is a Cloudflare WAF rule (see README), not code.
+- Rate limiting is the `SUBSCRIBE_LIMITER` binding in `wrangler.jsonc` (5 a minute per IP), checked first in the route. Keep the check before any other work.
 - Secrets come from `env` in `cloudflare:workers` (`LOOPS_API_KEY`, `LOOPS_MAILING_LIST_ID`, `SITE_ORIGIN`). Never log the key or echo request bodies back.
 - `wrangler.jsonc`: never add `main` or `assets.directory` (the adapter generates them). `name` must match the Worker in the dashboard. `compatibility_date` can't be later than the bundled workerd.
 - Test locally: put a throwaway `LOOPS_API_KEY` in `.dev.vars` (gitignored), `npm run build`, then `npm run preview`. Delete it after.
