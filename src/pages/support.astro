@@ -3,20 +3,42 @@ import Layout from '../layouts/Layout.astro';
 import Footer from '../components/Footer.astro';
 import { site } from '../site';
 ---
-<Layout title="Support" description="Help with Residual: targets, planning, logging, re-solving, subscriptions." plain>
+<Layout title="Support" description="Help with Residual: contact, the subscription, using it offline, planning with Claude, your data, and fixes for common problems." plain>
   <article class="doc wrap">
     <h1 class="head">Support</h1>
-    <p class="lead">Write to <a class="link" href={`mailto:${site.supportEmail}?subject=Residual`}>{site.supportEmail}</a>. Say which iPhone and iOS version you have, and what you expected to happen.</p>
+    <p class="lead">Write to <a class="link" href={`mailto:${site.supportEmail}?subject=Residual`}>{site.supportEmail}</a>. In the app, More → Support &amp; feedback opens the email with your app version, iOS version and iPhone model filled in.</p>
+    <p>Writing from somewhere else? Say which iPhone and iOS version you have, and what you expected to happen.</p>
+
+    <h2>Residual Plus</h2>
+    <p>Everything in Residual is part of Residual Plus, an auto-renewing subscription. There is no free tier. It starts with a free trial, and the price is on the App Store.</p>
+    <p>Apple handles the payment; we only see whether your subscription is active. To change or cancel, open Settings → your name → Subscriptions. Cancel at least 24 hours before the trial ends and you won't be charged.</p>
+    <p>On a new iPhone, sign in with the same Apple Account and install Residual. If it asks you to subscribe, tap Restore Purchases.</p>
+    <p>When your subscription or trial ends, the app locks until you subscribe again. Your data stays: from the lock screen you can still export it (More → Export to a spreadsheet) and Restore Purchases.</p>
+
+    <h2>Using it offline</h2>
+    <p>Residual works without a connection. Targets, logging, the solver and the forecast run on your iPhone. Planning uses Apple's on-device model on iPhones with Apple Intelligence turned on; otherwise plans are built from your pantry, saved meals and built-in foods. Food search shows the foods you've already saved, used or put in your pantry.</p>
+    <p>Planning with Claude and USDA food search need a connection, and the app shows when you're offline. iCloud sync catches up when you're back online.</p>
+
+    <h2>Planning with Claude</h2>
+    <p>Before your first Claude plan, the app asks once: "Plan with Claude?" Nothing goes to Anthropic unless you allow it. Turn it on or off any time in More → Planning with Claude. If it's off, plans are made on your iPhone. The <a href="/privacy/">privacy policy</a> lists what a plan sends.</p>
+    <p>A plan says which planner made it. "Planned on-device" means Claude didn't plan that day: it's turned off, you're offline, or Claude couldn't be reached, and the plan says which. The solver still sizes every portion.</p>
+
+    <h2>Your data</h2>
+    <p>Your days, foods and targets are stored on your iPhone and, with iCloud on, in your private iCloud database, which keeps your devices in sync. More → Daily targets shows whether sync is on.</p>
+    <p>More → Export to a spreadsheet saves the days you pick as a CSV file, one row per food, to open in Numbers, Excel or Google Sheets.</p>
+    <p>Delete single items in the app. Deleting the app removes its data from the phone. To remove the iCloud copy, open Settings → your name → iCloud → Manage Storage → Residual. To delete anything we hold, such as a support email or your newsletter address, write to us.</p>
+
+    <h2>Something isn't working</h2>
+    <ul>
+      <li><strong>Plans say "Planned on-device" while you're online.</strong> Check that More → Planning with Claude is on and that you have a connection. If Claude couldn't be reached, the plan says why; try again in a minute.</li>
+      <li><strong>Food search says the database is busy.</strong> USDA limits how often it answers. Try again in a minute; your saved foods and pantry still work.</li>
+      <li><strong>Sync doesn't show on another device.</strong> Both devices must be signed in to the same Apple Account, with iCloud on for Residual (Settings → your name → iCloud). More → Daily targets shows whether sync is on.</li>
+    </ul>
+
     <h2>The day says "No room left"</h2>
     <p>The meals ahead cannot absorb what has been eaten without shrinking a food below half its plan or growing one past double. Use Plan the rest of my day, or Suggest a fix, which finds the best few changes from what you already have.</p>
     <h2>A planned food shows "to match"</h2>
-    <p>It is still Claude's estimate. Tap Match on the Today screen or the food itself and pick its real USDA entry; the plan then uses real numbers, and the match carries into the log.</p>
-    <h2>Plan my day does nothing or falls back</h2>
-    <p>Planning with Claude needs a network connection (and, once subscriptions launch, Residual Plus). When Claude cannot be reached, the app tells you which planner answered instead; the solver still sizes the portions.</p>
-    <h2>Subscriptions</h2>
-    <p>Residual Plus is managed by Apple. To change or cancel, open Settings → your name → Subscriptions. Once subscriptions launch, restore a purchase from More → Daily targets → Residual Plus.</p>
-    <h2>Sync between phones</h2>
-    <p>Both phones must be signed in to the same Apple ID with iCloud Drive on. More → Daily targets shows whether sync is on.</p>
+    <p>It is still an AI estimate. Tap Match on the Today screen or the food itself and pick its real USDA entry; the plan then uses real numbers, and the match carries into the log.</p>
   </article>
   <Footer />
 </Layout>

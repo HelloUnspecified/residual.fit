@@ -41,6 +41,8 @@ When you plan with Claude, the app sends:
 - **Recent meals.** The names of your meals and foods from the last 7 days.
 - **Your instructions.** Anything you type for the plan, and, when you refine a plan, the current plan.
 
+**What you type is limited.** Your instructions for a plan are limited in length and are treated only as food preferences. Before anything is sent, the app strips line breaks and markup from them and from food and meal names.
+
 **How it's sent.** Through Apple's Foundation Models framework with App Attest. App Attest proves the request comes from a genuine copy of Residual and gives Anthropic a key for your installation of the app. The request also carries the app version and iOS version, and Anthropic sees your IP address, as any server does. No name, email or account identifier goes with it.
 
 **What it's used for.** Only to write your plan.
@@ -65,7 +67,7 @@ When you share a food or meal with someone, the shared copy travels inside the f
 
 ## Subscriptions
 
-Subscriptions are bought and managed through Apple. We only see whether your subscription is active; we never see your payment details.
+Residual Plus, the subscription that includes everything in the app, is bought, managed and cancelled through Apple. Apple handles the payment. We only see whether your subscription is active; we never see your payment details. When a subscription or free trial ends, the app locks until you subscribe again, but the lock screen still lets you export your data (More → Export to a spreadsheet) and restore purchases.
 
 ## This website
 
