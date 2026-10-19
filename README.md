@@ -16,8 +16,9 @@ page and the universal-link association file in `public/`.
   public/llms.txt       a plain summary of Residual for answer engines and AI assistants; keep it true to the app
   public/.well-known/apple-app-site-association   tells iOS that /s links open Residual
   public/s/index.html   the share page, for when the app isn't installed (its script is public/s/share.js)
-  public/_headers       serves the association file as JSON, and the security headers (Cloudflare Pages / Netlify)
-  functions/api/subscribe.ts  POST /api/subscribe: the app's newsletter sign-up, forwarded to Loops
+  public/_headers       serves the association file as JSON, and the security headers (static assets only)
+  src/pages/api/subscribe.ts  POST /api/subscribe: the newsletter sign-up (app and site footer), forwarded to Loops
+  wrangler.jsonc        the Cloudflare Worker's name and settings; the adapter fills in the rest at build time
 ```
 
 ## Run it
@@ -27,17 +28,20 @@ Needs Node 22.22 or newer (`.node-version` pins one; `fnm use` picks it up).
 ```
 npm install
 npm run dev       # http://localhost:4321
-npm run build     # static output in dist/
+npm run build     # pages in dist/client, the Worker in dist/server
+npm run preview   # the built site in the local Workers runtime, /api/subscribe included
 npm run og        # with the dev server running: renders public/og.png (needs Google Chrome)
 ```
 
-Set `ASTRO_TELEMETRY_DISABLED=1` in the shell to keep Astro from phoning home.
+Set `ASTRO_TELEMETRY_DISABLED=1` in the shell to keep Astro from phoning home. To exercise `/api/subscribe`
+locally, put `LOOPS_API_KEY=…` in `.dev.vars` (gitignored) before `npm run build`; without it the route answers 503.
 
 ## Deploy
 
-Cloudflare Pages: create a project from this repo (root directory: the repo root), build command `npm run build`,
-output directory `dist`, and `NODE_VERSION` = `22.23.3`. Add the custom domain. Netlify and GitHub Pages work
-the same way (the `.nojekyll` in `public/` keeps `.well-known` published on GitHub Pages).
+A Cloudflare Worker with static assets, built by the `@astrojs/cloudflare` adapter (the same setup as
+jointroth.com). Every page is prerendered; only `src/pages/api/subscribe.ts` runs on request. Workers Builds,
+connected to this repo, runs `npm run build` and deploys the generated `dist/server/wrangler.json`. The Worker's
+name in `wrangler.jsonc` must match its name in the dashboard, or the build stops before deploying.
 
 Then, once:
 
@@ -46,9 +50,9 @@ Then, once:
 2. **Check the association file:** `curl -i https://<domain>/.well-known/apple-app-site-association` should
    return `200` with `content-type: application/json` and no redirect. Apple's CDN caches it, so a fix can
    take up to a day to reach phones.
-3. **Newsletter sign-up** (`functions/api/subscribe.ts`, a Pages Function at `POST /api/subscribe`): add the
-   secret `LOOPS_API_KEY` (Loops → Settings → API) and, to put sign-ups on a list, `LOOPS_MAILING_LIST_ID`, under
-   Settings → Variables and Secrets. `SITE_ORIGIN` is optional: the one browser Origin the function accepts
+3. **Newsletter sign-up** (`src/pages/api/subscribe.ts`, an Astro server route at `POST /api/subscribe`): on the
+   Worker, under Settings → Variables and Secrets, add the secret `LOOPS_API_KEY` (Residual's own Loops account →
+   Settings → API) and, to put sign-ups on the one Residual list, `LOOPS_MAILING_LIST_ID` (Loops → Audience → Lists). `SITE_ORIGIN` is optional: the one browser Origin the function accepts
    (default `https://residual.fit`; the app sends none). Then set `NEWSLETTER_URL` = `https://<domain>/api/subscribe`
    in the app repo's `Residual/Info.plist`; until it is set, the app's sign-up is hidden (DEBUG builds show it with a note).
    Check it: `curl -X POST https://<domain>/api/subscribe -H 'content-type: application/json' -d '{"email":"you@example.com","source":"curl"}'`.

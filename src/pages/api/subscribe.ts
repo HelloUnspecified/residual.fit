@@ -1,8 +1,10 @@
-// POST /api/subscribe — the newsletter sign-up behind the app's "Newsletter & product updates".
+// POST /api/subscribe — the newsletter sign-up behind the app's "Newsletter & product updates" and the
+// site footer's "Tell me" form.
 //
-// A Cloudflare Pages Function: it runs on the site's own domain, holds the Loops API key as a secret
-// (never in the app), and creates the contact in Loops. The app sends only the email it was given with
-// explicit consent, where it came from, and its own version number.
+// An Astro server route (the one page that isn't prerendered), run by the @astrojs/cloudflare adapter in
+// the site's Worker. It holds the Loops API key as a Worker secret (never in the app) and creates the
+// contact in Loops. The app sends only the email it was given with explicit consent, where it came from,
+// and its own version number.
 //
 // Create and never update: a contact that already exists (Loops answers 409) is left exactly as it is,
 // so someone who unsubscribed is never re-subscribed by signing up again, and the app can't change any
@@ -10,19 +12,25 @@
 //
 // Abuse protection is a Cloudflare WAF rate-limiting rule on this path, not code here (see README).
 //
-// Environment (Cloudflare Pages → Settings → Variables and Secrets):
+// Environment (Cloudflare → Workers & Pages → the site's Worker → Settings → Variables and Secrets;
+// locally, .dev.vars):
 //   LOOPS_API_KEY          secret, required — Loops → Settings → API
 //   LOOPS_MAILING_LIST_ID  optional — the list to add the contact to (Loops → Audience → Lists)
 //   SITE_ORIGIN            optional — the only browser Origin accepted (default https://residual.fit)
 //
 // Request:  { "email": "a@b.co", "source": "ios", "appVersion": "1.0 (12)" }   (JSON)
-// Response: 200 { "ok": true } | 200 { "ok": true, "existing": true } | 400 | 403 | 415 | 502 { "error": "…" }
+// Response: 200 { "ok": true } | 200 { "ok": true, "existing": true } | 400 | 403 | 405 | 415 | 502 | 503 { "error": "…" }
+import type { APIRoute } from 'astro';
+import { env as workerEnv } from 'cloudflare:workers';
+
+export const prerender = false;
 
 interface Env {
-  LOOPS_API_KEY: string;
+  LOOPS_API_KEY?: string;
   LOOPS_MAILING_LIST_ID?: string;
   SITE_ORIGIN?: string;
 }
+const env = workerEnv as unknown as Env;
 
 const json = (status: number, body: unknown) =>
   new Response(JSON.stringify(body), {
@@ -30,7 +38,7 @@ const json = (status: number, body: unknown) =>
     headers: {
       'content-type': 'application/json',
       'cache-control': 'no-store',
-      // Pages `_headers` don't apply to Functions, so the function sets this itself.
+      // `_headers` applies to static assets only, so the route sets this itself.
       'x-content-type-options': 'nosniff',
     },
   });
@@ -38,7 +46,7 @@ const json = (status: number, body: unknown) =>
 // Deliberately simple: one @, something on each side, a dot in the domain, no spaces.
 const looksLikeEmail = (s: string) => s.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
 
-export async function onRequestPost({ request, env }: { request: Request; env: Env }): Promise<Response> {
+export const POST: APIRoute = async ({ request }) => {
   if (!env.LOOPS_API_KEY) return json(503, { error: 'Sign-up is not configured.' });
 
   // The app sends no Origin. A browser does, and only the site's own pages may use this.
@@ -86,8 +94,7 @@ export async function onRequestPost({ request, env }: { request: Request; env: E
   if (res.status === 409) return json(200, { ok: true, existing: true });
   if (!res.ok) return json(502, { error: 'Couldn’t sign you up right now. Try again later.' });
   return json(200, { ok: true });
-}
+};
 
-export async function onRequest(): Promise<Response> {
-  return json(405, { error: 'Use POST.' });
-}
+// Anything but POST gets a plain 405, as the Pages Function did.
+export const ALL: APIRoute = () => json(405, { error: 'Use POST.' });

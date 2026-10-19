@@ -1,0 +1,25 @@
+{
+  // The site's Cloudflare Worker. Same setup as jointroth.com.
+  //
+  // `name` must be the Worker's name in the Cloudflare dashboard (Workers & Pages). Workers Builds
+  // refuses to deploy when it doesn't match, so a wrong name fails the build and leaves the live site
+  // as it was.
+  //
+  // IMPORTANT: do NOT add `main` or `assets.directory` here. @astrojs/cloudflare generates the real
+  // worker entry and assets directory into dist/server/wrangler.json at build time (main: entry.mjs,
+  // assets: ../client), merging in the fields below; deploys read that generated file. A `main` here
+  // makes `npm run build` fail, because the Cloudflare Vite plugin checks it before the build has
+  // produced anything.
+  //
+  // compatibility_date can't be later than the workerd that wrangler bundles (check
+  // node_modules/workerd/package.json after an upgrade).
+  "name": "residual-fit",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "binding": "ASSETS"
+  },
+  "observability": {
+    "enabled": true
+  }
+}
