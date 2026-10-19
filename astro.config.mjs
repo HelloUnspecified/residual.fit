@@ -6,7 +6,8 @@ import sitemap from '@astrojs/sitemap';
 // domain, so this is also what `SHARE_LINK_BASE` in Residual/Info.plist points at.
 export default defineConfig({
   site: 'https://residual.fit',
-  integrations: [sitemap({ filter: (page) => !page.endsWith('/og/') })],
+  // The sitemap lists the pages worth finding: not the social-card render (/og/) or the 404 page.
+  integrations: [sitemap({ filter: (page) => !/\/(og|404)\/?$/.test(new URL(page).pathname) })],
   // Keep HTML-aware whitespace handling: the page sets inline spans on separate source lines.
   compressHTML: true,
 });

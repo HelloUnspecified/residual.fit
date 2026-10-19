@@ -5,12 +5,15 @@ The launch site for Residual, and the domain its share links point to. Built wit
 page and the universal-link association file in `public/`.
 
 ```
-  src/pages/            index, privacy, support (and og, the social card, unlisted)
+  src/pages/            index, privacy, support, 404 (and og, the social card, unlisted)
   src/components/       Hero, HowItWorks, LiveSolve, Band, Promises, Questions, Start, Footer, Ring
+  src/content/faq.ts    the home page's questions: feeds both the visible cards and the FAQPage structured data
   src/scripts/solve.js  a small port of MacroSolver's re-balance for the page's live demo
   src/scripts/demo-day.js  the demo's targets, logged breakfast, lunch, and meals ahead
   src/assets/shots/     real simulator screenshots (dark appearance) the page shows
-  src/site.ts           the App Store link, support address, minimum iOS: change these before launch
+  src/site.ts           the App Store id, titles, description, feature list: change these before launch
+  public/fonts/         Roundo, self-hosted (official Fontshare files, unmodified; the ITF Free Font License allows it)
+  public/llms.txt       a plain summary of Residual for answer engines and AI assistants; keep it true to the app
   public/.well-known/apple-app-site-association   tells iOS that /s links open Residual
   public/s/index.html   the share page, for when the app isn't installed (its script is public/s/share.js)
   public/_headers       serves the association file as JSON, and the security headers (Cloudflare Pages / Netlify)
@@ -62,8 +65,12 @@ Then, once:
 
 ## Before launch
 
-- `src/site.ts`: the real App Store link and a support address on the domain.
-- The price line in the Questions section says "priced on the App Store"; add the number once it is set.
+- `src/site.ts`: set `appStoreId` to the app's numeric Apple ID. That switches every button to the real store
+  page and turns on the Safari Smart App Banner and the App Store link in the structured data.
+- Once the price is set, add an `offers` block (price, currency) to the `MobileApplication` data in
+  `src/pages/index.astro`, and the number to the price answer in `src/content/faq.ts` and `public/llms.txt`.
+- Search and structured data: check the home page with Google's Rich Results Test and submit
+  `/sitemap-index.xml` in Google Search Console and Bing Webmaster Tools.
 - `npm run og` after any hero change, and commit `public/og.png`.
 
 ## If you change the team or bundle id

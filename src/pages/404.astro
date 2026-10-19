@@ -1,0 +1,26 @@
+---
+// Served by Cloudflare Pages for any path that doesn't exist, with a real 404 status. Not indexed,
+// not in the sitemap.
+import Layout from '../layouts/Layout.astro';
+import Footer from '../components/Footer.astro';
+import Ring from '../components/Ring.astro';
+---
+<Layout title="Page not found" description="This page doesn't exist on residual.fit." noindex plain>
+  <article class="doc wrap notfound">
+    <Ring size="5rem" width={0.14} eaten={0.3} lands={0.62} zoneStart={0.84} />
+    <h1 class="head">This page isn't here.</h1>
+    <p class="lead">The link may be old or mistyped. The rest of the site is a short walk away.</p>
+    <ul class="notfound__links">
+      <li><a class="link" href="/">Home: what Residual does</a></li>
+      <li><a class="link" href="/#live">Try the solver</a></li>
+      <li><a class="link" href="/support/">Help and support</a></li>
+      <li><a class="link" href="/privacy/">Privacy policy</a></li>
+    </ul>
+  </article>
+  <Footer />
+</Layout>
+
+<style>
+  .notfound :global(.ring) { margin-bottom: 2rem; color: var(--ink); }
+  .notfound__links { margin-top: 2rem; font-size: var(--step-lead); }
+</style>

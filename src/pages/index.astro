@@ -1,4 +1,5 @@
 ---
+import { getImage } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
 import HowItWorks from '../components/HowItWorks.astro';
@@ -8,8 +9,47 @@ import Promises from '../components/Promises.astro';
 import Questions from '../components/Questions.astro';
 import Start from '../components/Start.astro';
 import Footer from '../components/Footer.astro';
+import { site } from '../site';
+import { faq } from '../content/faq';
+import today from '../assets/shots/today-dark.png';
+import drift from '../assets/shots/today-drift-dark.png';
+import proposed from '../assets/shots/proposed-plan-light.png';
+import logged from '../assets/shots/meal-log-dark.png';
+import targets from '../assets/shots/targets-dark.png';
+
+const home = new URL('/', Astro.site).href;
+const shots = await Promise.all([today, proposed, logged, drift, targets].map((src) => getImage({ src, width: 900, format: 'webp' })));
+
+// The app, as schema.org describes software: what it is, where it runs, what it does. No price or
+// rating until there is a real one; the App Store link only once the app is live.
+const app = {
+  '@type': 'MobileApplication',
+  '@id': `${home}#app`,
+  name: site.name,
+  alternateName: 'Residual: macro meal planner',
+  description: site.definition,
+  url: home,
+  operatingSystem: `${site.minimumOS} or later`,
+  applicationCategory: 'HealthApplication',
+  applicationSubCategory: 'Meal planning',
+  featureList: site.features,
+  isAccessibleForFree: false,
+  image: new URL('/og.png', Astro.site).href,
+  screenshot: shots.map((s) => new URL(s.src, Astro.site).href),
+  author: { '@id': `${home}#publisher` },
+  publisher: { '@id': `${home}#publisher` },
+  inLanguage: 'en',
+  ...(site.appStoreLive ? { installUrl: site.appStoreUrl, downloadUrl: site.appStoreUrl, sameAs: [site.appStoreUrl] } : {}),
+};
+
+const faqPage = {
+  '@type': 'FAQPage',
+  '@id': `${home}#faq`,
+  isPartOf: { '@id': `${home}#webpage` },
+  mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
 ---
-<Layout>
+<Layout schema={[app, faqPage]}>
   <Hero />
   <HowItWorks />
   <LiveSolve />

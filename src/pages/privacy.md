@@ -1,9 +1,10 @@
 ---
 layout: ../layouts/Doc.astro
 title: Privacy
+metaTitle: Privacy policy
 description: What Residual stores, what leaves your phone, who receives it and why, and how to delete it.
 lead: Residual keeps your food and your targets on your iPhone and in your own iCloud. There is no account, no sign-in and no tracking. This page lists everything that leaves your phone, who receives it, and how to delete it.
-updated: 18 October 2026
+updated: 19 October 2026
 ---
 
 ## Who we are
@@ -71,7 +72,7 @@ Residual Plus, the subscription that includes everything in the app, is bought, 
 
 ## This website
 
-This website is hosted on Cloudflare, which sees visitors' IP addresses like any web host and may keep ordinary server logs. Its pages load their typeface from Fontshare, a font service that sees your IP address and browser. The share page and the app load nothing from Fontshare.
+This website is hosted on Cloudflare, which sees visitors' IP addresses like any web host and may keep ordinary server logs. Every page, including its typeface, is served from this domain; nothing is loaded from other sites, and there are no analytics or tracking scripts.
 
 ## Who receives data, and how it's protected
 
@@ -80,7 +81,6 @@ This website is hosted on Cloudflare, which sees visitors' IP addresses like any
 - **USDA FoodData Central**: food search text and barcode numbers.
 - **Loops**: your email address and app version, only if you sign up for the newsletter.
 - **Cloudflare**: hosts this website and the newsletter sign-up.
-- **Fontshare**: serves this website's typeface.
 
 We only use providers whose terms protect your data at least as well as this policy does. Each receives only what it needs for the purpose described above.
 

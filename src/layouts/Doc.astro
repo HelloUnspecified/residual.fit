@@ -1,11 +1,14 @@
 ---
 // The layout for Markdown pages (privacy): the site's chrome, a plain document column, the footer.
-// Frontmatter: title, description, heading (defaults to title), lead, updated.
+// Frontmatter: title, metaTitle (the <title>, defaults to title), description, heading (defaults to
+// title), lead, updated ("18 October 2026", also the page's dateModified).
 import Layout from './Layout.astro';
 import Footer from '../components/Footer.astro';
 const { frontmatter } = Astro.props;
+const parsed = frontmatter.updated ? new Date(`${frontmatter.updated} 12:00 UTC`) : null;
+const modified = parsed && !Number.isNaN(parsed.getTime()) ? parsed.toISOString().slice(0, 10) : undefined;
 ---
-<Layout title={frontmatter.title} description={frontmatter.description} plain>
+<Layout title={frontmatter.metaTitle ?? frontmatter.title} description={frontmatter.description} modified={modified} plain>
   <article class="doc wrap">
     <h1 class="head">{frontmatter.heading ?? frontmatter.title}</h1>
     {frontmatter.lead && <p class="lead">{frontmatter.lead}</p>}

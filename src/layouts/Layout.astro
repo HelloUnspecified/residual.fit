@@ -2,10 +2,40 @@
 import '../styles/global.css';
 import { site } from '../site';
 import Ring from '../components/Ring.astro';
-interface Props { title?: string; description?: string; plain?: boolean }
-const { title, description = site.description, plain = false } = Astro.props;
-const fullTitle = title ? `${title} · ${site.name}` : `${site.name} — ${site.tagline}`;
-const canonical = new URL(Astro.url.pathname, Astro.site);
+interface Props {
+  title?: string;
+  description?: string;
+  plain?: boolean;
+  noindex?: boolean;
+  /** Extra schema.org nodes for this page (the app, its FAQ), added to the site-wide graph. */
+  schema?: Record<string, unknown>[];
+  /** When the page's content last changed, as an ISO date (yyyy-mm-dd). */
+  modified?: string;
+}
+const { title, description = site.description, plain = false, noindex = false, schema = [], modified } = Astro.props;
+const fullTitle = title ? `${title} · ${site.name}` : site.homeTitle;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const home = new URL('/', Astro.site).href;
+const ogImage = new URL('/og.png', Astro.site).href;
+const ogAlt = "Residual's Today screen inside its macro ring, with the line A day of eating, solved.";
+
+// One JSON-LD graph per page: who publishes the site, the site, this page, plus whatever the page adds.
+// Search engines read it for rich results; answer engines read it for the plain facts.
+const graph = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'Person', '@id': `${home}#publisher`, name: site.developer, url: home, email: site.supportEmail },
+    { '@type': 'WebSite', '@id': `${home}#website`, url: home, name: site.name, description: site.description, inLanguage: 'en', publisher: { '@id': `${home}#publisher` } },
+    {
+      '@type': 'WebPage', '@id': `${canonical}#webpage`, url: canonical, name: fullTitle, description, inLanguage: 'en',
+      isPartOf: { '@id': `${home}#website` },
+      primaryImageOfPage: { '@type': 'ImageObject', url: ogImage, width: 1200, height: 630 },
+      ...(modified ? { dateModified: modified } : {}),
+      ...(Astro.url.pathname === '/' ? { about: { '@id': `${home}#app` }, mainEntity: { '@id': `${home}#app` } } : {}),
+    },
+    ...schema,
+  ],
+};
 ---
 <!doctype html>
 <html lang="en">
@@ -14,20 +44,32 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
+    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="theme-color" content="#0A0B10" />
+    <meta name="author" content={site.developer} />
+    {site.appStoreLive && <meta name="apple-itunes-app" content={`app-id=${site.appStoreId}`} />}
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={new URL('/og.png', Astro.site)} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={ogAlt} />
     <meta name="twitter:card" content="summary_large_image" />
-    <link rel="preconnect" href="https://api.fontshare.com" />
-    <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
-    <link href="https://api.fontshare.com/v2/css?f[]=roundo@400,500,600&display=swap" rel="stylesheet" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image:alt" content={ogAlt} />
+    <!-- Roundo, self-hosted (ITF Free Font License allows it): the two weights the first screen uses load first. -->
+    <link rel="preload" href="/fonts/roundo-500.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/roundo-400.woff2" as="font" type="font/woff2" crossorigin />
+    <script type="application/ld+json" set:html={JSON.stringify(graph)} />
     <script is:inline>document.documentElement.classList.add('js');addEventListener('load',()=>setTimeout(()=>document.documentElement.classList.add('settled'),4000))</script>
   </head>
   <body>

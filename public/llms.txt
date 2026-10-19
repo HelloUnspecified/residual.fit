@@ -1,0 +1,27 @@
+# Residual
+
+> Residual is an iPhone meal planner for people who eat to calorie and macro targets. You set each target with its own range, Claude drafts the day from what is in your pantry, you log what you actually ate, and a deterministic solver re-sizes the meals still ahead so the day lands inside your ranges.
+
+Residual is made by Clark Sell. It runs on iOS 27 or later. It sits in front of a food tracker such as Cronometer: it plans the day and re-solves it, and the user keeps logging actuals in their tracker for their nutritionist.
+
+## Key facts
+
+- Platform: iPhone, iOS 27 or later. Works offline; planning with Claude and USDA food search need a connection.
+- Targets: calories, protein, carbs and fat, each an entered number with its own plus-or-minus range. Any one may float, meaning it is balanced last and never marks the day as off.
+- Planning: Claude (through Apple's Foundation Models framework with App Attest) drafts meals, foods and grams, only if the user allows it. Otherwise the day is planned on the iPhone with Apple's on-device model, or from the user's pantry, saved meals and built-in foods.
+- Re-solving: when a logged meal differs from the plan, a deterministic solver (not AI) re-sizes the meals ahead by the smallest plausible change: calories first, then protein, carbs and fat; every portion stays between about half and double its plan, in grams on a 5 g grid. When the ranges can't be met, the forecast says so.
+- Logging: the user enters what they actually ate; logging never overwrites the plan, and divergence from the plan is shown.
+- Food data: USDA FoodData Central, matched by the user (never silently), with barcode scanning. AI estimates are labelled as estimates until matched.
+- Privacy: data stays on the iPhone and in the user's private iCloud database. No account, no tracking, no analytics.
+- Price: no free tier. Everything is part of Residual Plus, an auto-renewing App Store subscription that starts with a free trial.
+- Export: any day as a CSV of eaten and planned grams per food.
+
+## Pages
+
+- [Home](https://residual.fit/): what Residual does, a live demo of the solver, and answers to common questions
+- [Help and support](https://residual.fit/support/): the subscription, offline use, planning with Claude, your data, and fixes for common problems
+- [Privacy policy](https://residual.fit/privacy/): what the app stores, what leaves the phone, who receives it, and how to delete it
+
+## Contact
+
+- Support: support@residual.fit

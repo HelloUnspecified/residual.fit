@@ -2,6 +2,12 @@
    ground, card, the indigo accent (the plan, primary actions), green (eaten, in range), amber and red
    (only when the day is off). One typeface: Roundo. One shape: the ring. */
 
+/* Roundo by the Indian Type Foundry, from Fontshare, served from this site (the ITF Free Font License
+   permits self-hosting; the files are the official ones, unmodified). */
+@font-face { font-family: 'Roundo'; src: url('/fonts/roundo-400.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Roundo'; src: url('/fonts/roundo-500.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Roundo'; src: url('/fonts/roundo-600.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
+
 :root {
   --bg: #0A0B10;
   --surface: #16171E;

@@ -1,21 +1,16 @@
 ---
-const cards = [
-  { tab: 'Tracker', q: 'Does it replace Cronometer?', a: 'No. Residual is the planning layer in front of your tracker. You keep logging actuals there for your nutritionist; Residual plans the day, shows where it lands, and re-solves the meals ahead. Export any day as a CSV with eaten and planned grams, per food.' },
-  { tab: 'AI', q: 'What does the AI do, exactly?', a: 'If you allow it, Claude drafts the day: meals, foods and grams from your pantry, your favorites and what you tell it. If not, the day is planned on your iPhone. That is all the AI owns. Landing the day inside your ranges is deterministic math, the same answer every time, with no AI in the loop.' },
-  { tab: 'Drift', q: 'What if I eat something that was not in the plan?', a: 'Add it to the meal, log it, and the meals ahead re-size by the smallest plausible change. When the ranges cannot be met, the forecast says so plainly, "No room left", rather than shrinking a food to a token portion.' },
-  { tab: 'Data', q: 'Where does my data live?', a: 'On your iPhone and in your private iCloud database. Planning with Claude asks first. A plan then sends your targets, the day so far, pantry foods, saved meals, recent meal names and your instructions to Anthropic through Apple\'s Foundation Models with App Attest; food search text goes to USDA FoodData Central. No account, no tracking, no analytics.' },
-  { tab: 'Phone', q: 'Which iPhone does it need?', a: 'iOS 27 or later. It works offline: targets, logging, the solver and the forecast run on the phone, planning uses Apple\'s on-device model where Apple Intelligence is on (otherwise your pantry, saved meals and built-in foods), and food search shows the foods you\'ve already saved or used. Planning with Claude and USDA food search need a connection.' },
-  { tab: 'Price', q: 'What does it cost?', a: 'There is no free tier. Everything in Residual is part of Residual Plus, an auto-renewing subscription that starts with a free trial, priced on the App Store. Manage or cancel any time in Settings → your name → Subscriptions.' },
-];
+import { faq as cards } from '../content/faq';
+const last = cards.length - 1;
 ---
 <section id="questions" class="faq" aria-labelledby="faq-title">
   <h2 id="faq-title" class="faq__title">Questions</h2>
-  <div class="faq__drawer">
+  <div class="faq__drawer" style={`--last:${last}`}>
     {cards.map((c, i) => (
       <article class="card" data-reveal="scale" style={`--i:${i}; --n:${i}`} class:list={{ 'is-open': i === 0 }}>
         <h3>
           <button type="button" class="card__btn" aria-expanded={i === 0 ? 'true' : 'false'} aria-controls={`faq-a-${i}`} id={`faq-q-${i}`}>
-            <span class="card__tab">{c.tab}</span>
+            <!-- The tab label is drawn from data-tab, so the heading's text is the question alone. -->
+            <span class="card__tab" data-tab={c.tab} aria-hidden="true"></span>
             <span class="card__q">{c.q}</span>
           </button>
         </h3>
@@ -41,13 +36,16 @@ const cards = [
   .faq { margin-top: var(--section); padding-inline: var(--margin); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); }
   .faq__title { grid-column: 3 / 11; font-size: clamp(2rem, 4vw, 3.75rem); line-height: 1.04; letter-spacing: -0.025em; margin-bottom: 2.5rem; }
   .faq__drawer { grid-column: 3 / 11; display: grid; }
-  .card { --tab-w: 200px; --tab-h: 40px; --step: 11%; position: relative; margin-top: calc(-1 * 40px); padding-top: var(--tab-h); background: var(--surface); color: var(--ink);
+  /* Each card's tab steps right; the step divides the room left after one tab by the number of cards, so
+     the last tab always ends at the right edge whatever the width or the number of questions. */
+  .card { --tab-w: 200px; --tab-h: 40px; --step: calc((100% - var(--tab-w)) / var(--last)); position: relative; margin-top: calc(-1 * 40px); padding-top: var(--tab-h); background: var(--surface); color: var(--ink);
     clip-path: polygon(calc(var(--n) * var(--step)) var(--tab-h), calc(var(--n) * var(--step)) 0, calc(var(--n) * var(--step) + var(--tab-w)) 0, calc(var(--n) * var(--step) + var(--tab-w)) var(--tab-h), 100% var(--tab-h), 100% 100%, 0 100%, 0 var(--tab-h)); }
   .card:first-child { margin-top: 0; }
   .card:nth-child(3n+2) { background: var(--surface-2); }
   .card:nth-child(3n) { background: var(--indigo-deep); }
   .card__btn { display: block; width: 100%; text-align: left; color: inherit; }
   .card__tab { position: absolute; top: 0; left: calc(var(--n) * var(--step)); width: var(--tab-w); height: var(--tab-h); display: flex; align-items: center; padding-left: 20px; font-weight: 600; }
+  .card__tab::before { content: attr(data-tab); }
   .card__q { display: block; min-height: 96px; padding: 20px 20px 52px; font-size: 1.25rem; font-weight: 500; line-height: 1.3; }
   .card__panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 320ms var(--ease-out); }
   .card__panel > div { overflow: hidden; }
@@ -58,7 +56,8 @@ const cards = [
   @media (max-width: 64em) {
     .faq__title, .faq__drawer { grid-column: 1 / 13; }
     .faq__title { font-size: 9vw; }
-    .card { --tab-w: 120px; --step: 48px; }
+    .card { --tab-w: 108px; }
+    .card__tab { padding-left: 14px; }
     .card__q { min-height: 112px; padding-bottom: 60px; font-size: 1.125rem; }
     .card__panel p { font-size: 1rem; }
   }

@@ -18,12 +18,12 @@ import today from '../assets/shots/today-dark.png';
       </div>
       <p class="small muted hero__note" data-rise style="--i:4">iPhone · {site.minimumOS} · Your data stays on your phone and in your iCloud.</p>
     </div>
-    <div class="hero__stage" aria-hidden="true">
-      <div class="hero__ringbox">
+    <div class="hero__stage">
+      <div class="hero__ringbox" aria-hidden="true">
         <Ring class="ring--animate" size="100%" eaten={0.62} lands={0.93} zoneStart={0.84} width={0.12} tickLength={0.7} />
       </div>
       <div class="hero__screen">
-        <Image src={today} alt="" widths={[420, 640, 900]} sizes="(min-width: 64em) 26svh, 60vw" loading="eager" fetchpriority="high" />
+        <Image src={today} alt="Residual's Today screen on iPhone: a planned day on track, with rings for protein, carbs and fat and a forecast of where the day lands against 2,700 kcal." widths={[420, 640, 900]} sizes="(min-width: 64em) 26svh, 60vw" loading="eager" fetchpriority="high" />
       </div>
     </div>
   </div>
