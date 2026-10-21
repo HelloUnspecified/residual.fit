@@ -4,7 +4,7 @@ title: Privacy
 metaTitle: Privacy policy
 description: What Residual stores, what leaves your phone, who receives it and why, and how to delete it.
 lead: Residual keeps your food and your targets on your iPhone and in your own iCloud. There is no account, no sign-in and no tracking. This page lists everything that leaves your phone, who receives it, and how to delete it.
-updated: 19 October 2026
+updated: 21 October 2026
 ---
 
 ## Who we are
@@ -17,7 +17,7 @@ Residual is made and published by Clark Sell, the developer ("we" on this page).
 - No analytics SDK, no advertising identifier, and no tracking across apps or websites.
 - We never sell your data or share it for advertising.
 
-Some data does leave your phone so the app can work: the plan request, food search, and the newsletter if you sign up. Each is described below, with who receives it.
+Some data does leave your phone so the app can work: requests to Claude, food search, the list of guide videos, and the newsletter if you sign up. Each is described below, with who receives it.
 
 ## What the app stores, and where
 
@@ -29,30 +29,48 @@ Your targets, days, meals, foods, pantry, favorites, saved foods and food librar
 - **Nutrition-label photos.** The camera scans barcodes and photographs nutrition labels. A label photo is read on the phone by Apple's on-device model and is never uploaded.
 - **Meal names written for you.** Apple's on-device model names meals on the phone.
 
-## Planning a day with Claude
+## Planning with Claude
 
-Residual can ask Claude, an AI model made by Anthropic, to draft a day of meals. **The app asks for your permission first**: a one-time question before your first Claude plan. If you don't allow it, nothing is sent to Anthropic, and plans are made on the device or from built-in foods instead. You can turn it off any time in More → Planning with Claude.
+Residual can ask Claude, an AI model made by Anthropic, to draft a day of meals, and to suggest a food to add when your day can't land in range with the foods you have. **The app asks for your permission first**: a one-time question before your first Claude request. If you don't allow it, nothing is sent to Anthropic, and plans are made on the device or from built-in foods instead. You can turn it off any time in More → Planning with Claude.
 
-When you plan with Claude, the app sends:
+When you plan a day with Claude, the app sends:
 
-- **Your targets.** Your daily targets and their ranges.
+- **Your targets.** Your daily targets, their ranges, and which matter most to you.
 - **The day.** The day being planned. For "the rest of today", also the time of day and what you've already eaten or planned that day (meal and food names, and amounts).
+- **Your foods to avoid.** The foods you've told Residual to avoid, including which of them are allergies, so the plan leaves them out.
 - **Your pantry.** Up to 50 pantry foods: name, brand, nutrition per 100 g and usual serving.
 - **Your saved meals.** Up to 10: their names, notes, foods and amounts.
 - **Recent meals.** The names of your meals and foods from the last 7 days.
 - **Your instructions.** Anything you type for the plan, and, when you refine a plan, the current plan.
 
+When you ask Claude to suggest a food to add, the app sends:
+
+- **Where your day lands.** Each target with its range, where the day lands now, and how far short or over it is.
+- **The meals ahead.** The meals you haven't eaten yet, with their foods and amounts.
+- **Your foods.** Your pantry foods and your foods to avoid, as above.
+- **Foods you skipped.** Any suggestions you've already turned down, so they aren't offered again.
+
 **What you type is limited.** Your instructions for a plan are limited in length and are treated only as food preferences. Before anything is sent, the app strips line breaks and markup from them and from food and meal names.
 
 **How it's sent.** Through Apple's Foundation Models framework with App Attest. App Attest proves the request comes from a genuine copy of Residual and gives Anthropic a key for your installation of the app. The request also carries the app version and iOS version, and Anthropic sees your IP address, as any server does. No name, email or account identifier goes with it.
 
-**What it's used for.** Only to write your plan.
+**What it's used for.** Only to write your plan or suggest a food.
 
 **What Anthropic does with it.** Anthropic processes these requests under its commercial terms, which say it does not train its models on this data. How long Anthropic keeps a request is set by [Anthropic's privacy policy](https://www.anthropic.com/legal/privacy).
 
 ## Food search and barcode scans
 
-When you search for a food or scan a barcode, the search text or barcode number is sent to [USDA FoodData Central](https://fdc.nal.usda.gov), a public database run by the US government. Nothing else is sent with it.
+When you search for a food or scan a barcode, the search text or barcode number is sent to [USDA FoodData Central](https://fdc.nal.usda.gov), a public database run by the US government. The app also asks USDA in a few other cases, sending only a food's name or USDA food number:
+
+- **Matching a plan's foods.** When you match a plan's foods to real ones (Match all), the names of those foods are searched.
+- **Filling in details.** For a food you picked from USDA, the app may look up its USDA food number to get its barcode (for pantry foods) or its weight per cup (for drinks).
+- **Checking a shared food or meal.** When someone shares foods with you, the app checks each USDA match against USDA before you add it.
+
+Nothing else is sent with these requests.
+
+## Guide videos
+
+Each time the app opens, it downloads the list of guide videos from this website. The request carries nothing about you or your food. Like any website request, Cloudflare sees your IP address (see [This website](#this-website)).
 
 ## The newsletter, only if you sign up
 
@@ -79,10 +97,10 @@ This website is hosted on Cloudflare, which sees visitors' IP addresses like any
 ## Who receives data, and how it's protected
 
 - **Apple**: iCloud sync (your private iCloud database), the Foundation Models framework and App Attest that carry plan requests, and subscriptions through the App Store.
-- **Anthropic**: plan requests, only when you've allowed Planning with Claude.
-- **USDA FoodData Central**: food search text and barcode numbers.
+- **Anthropic**: plan requests and food suggestions, only when you've allowed Planning with Claude.
+- **USDA FoodData Central**: food search text, barcode numbers, the names of foods being matched, and USDA food numbers.
 - **Loops**: your email address and where you signed up, only if you sign up for the newsletter.
-- **Cloudflare**: hosts this website and the newsletter sign-up.
+- **Cloudflare**: hosts this website, the newsletter sign-up and the list of guide videos.
 
 We only use providers whose terms protect your data at least as well as this policy does. Each receives only what it needs for the purpose described above.
 
@@ -91,11 +109,11 @@ We only use providers whose terms protect your data at least as well as this pol
 - **App data** stays on your iPhone and in your iCloud until you delete it. Delete individual items in the app. Delete the app to remove its data from the phone. To remove the iCloud copy, open Settings → your name → iCloud → Manage Storage (or Apps Using iCloud) → Residual.
 - **Your newsletter address** is kept until you unsubscribe or ask us to delete it.
 - **Support emails** are kept as long as we need them to answer you, and deleted when you ask.
-- **Plan requests** are kept by Anthropic as its privacy policy describes. We don't keep a copy.
+- **Plan requests and food suggestions** are kept by Anthropic as its privacy policy describes. We don't keep a copy.
 
 ## Withdrawing consent and asking us to delete
 
-- **Stop sending plans to Anthropic**: turn off More → Planning with Claude. Nothing more is sent. For data already sent, see [Anthropic's privacy policy](https://www.anthropic.com/legal/privacy).
+- **Stop sending requests to Anthropic**: turn off More → Planning with Claude. Nothing more is sent. For data already sent, see [Anthropic's privacy policy](https://www.anthropic.com/legal/privacy).
 - **Stop the newsletter**: use the unsubscribe link in any email.
 - **Delete anything we hold**: email [support@residual.fit](mailto:support@residual.fit) and we'll delete it.
 
