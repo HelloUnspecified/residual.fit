@@ -74,7 +74,7 @@ Each time the app opens, it downloads the list of guide videos from this website
 
 ## The newsletter, only if you sign up
 
-You can sign up for the Residual newsletter in the app (More → Newsletter & product updates) or at the bottom of this website. Your email address is sent to this website (hosted on Cloudflare) and on to Loops (loops.so), our mailing-list provider, along with where you signed up. Loops then emails you a link to confirm, and you're subscribed only once you click it, so nobody can sign up an address that isn't theirs. We use your address only to send the Residual newsletter and product updates. It is never linked to anything you log. Every email has an unsubscribe link, and you can ask us to delete your address at any time.
+You can sign up for the Residual newsletter in the app (More → Newsletter & updates) or at the bottom of this website. Your email address is sent to this website (hosted on Cloudflare) and on to Loops (loops.so), our mailing-list provider, along with where you signed up. Loops then emails you a link to confirm, and you're subscribed only once you click it, so nobody can sign up an address that isn't theirs. We use your address only to send the Residual newsletter and product updates. It is never linked to anything you log. Every email has an unsubscribe link, and you can ask us to delete your address at any time.
 
 To stop abuse, the sign-up counts attempts from each IP address for a minute and turns away more than a few. That count isn't stored with your email address and isn't kept.
 
