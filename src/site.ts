@@ -22,6 +22,15 @@ export const site = {
   appStoreUrl: appStoreId ? `https://apps.apple.com/app/id${appStoreId}` : 'https://apps.apple.com/app/residual/id0000000000',
   supportEmail: 'support@residual.fit',
   minimumOS: 'iOS 27',
+  // Residual Plus starts with a free trial this long (App Store Connect → the subscription's introductory offer).
+  trialDays: 14,
+  // Residual Plus, in US dollars on the App Store's price grid. Every plan has everything and the same trial.
+  // The pricing page works out each plan's monthly and daily cost from these, so change them only here.
+  plans: [
+    { name: 'Monthly', price: 12.99, months: 1, per: 'a month' },
+    { name: 'Quarterly', price: 29.99, months: 3, per: 'every 3 months' },
+    { name: 'Yearly', price: 99.99, months: 12, per: 'a year' },
+  ],
   developer: 'Clark Sell',
   // What the app does, as short claims, for structured data and llms.txt. Keep them true to the app.
   features: [

@@ -10,7 +10,7 @@ import { site } from '../site';
     <p>Writing from somewhere else? Say which iPhone and iOS version you have, and what you expected to happen.</p>
 
     <h2>Residual Plus</h2>
-    <p>Everything in Residual is part of Residual Plus, an auto-renewing subscription. There is no free tier. It starts with a free trial, and the price is on the App Store.</p>
+    <p>Everything in Residual is part of Residual Plus, an auto-renewing subscription. There is no free tier. It costs {site.plans.map((p) => `$${p.price} ${p.per}`).join(', ').replace(/, ([^,]*)$/, ' or $1')}, and every plan starts with a {site.trialDays}-day free trial. The App Store shows the price in your currency. <a href="/pricing/">Pricing</a> explains what it pays for.</p>
     <p>Apple handles the payment; we only see whether your subscription is active. To change or cancel, open Settings → your name → Subscriptions. Cancel at least 24 hours before the trial ends and you won't be charged.</p>
     <p>On a new iPhone, sign in with the same Apple Account and install Residual. If it asks you to subscribe, tap Restore Purchases.</p>
     <p>When your subscription or trial ends, the app locks until you subscribe again. Your data stays: from the lock screen you can still export it (More → Export to a spreadsheet) and Restore Purchases.</p>

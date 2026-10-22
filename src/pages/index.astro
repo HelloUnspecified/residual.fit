@@ -20,8 +20,8 @@ import targets from '../assets/shots/targets-dark.png';
 const home = new URL('/', Astro.site).href;
 const shots = await Promise.all([today, proposed, logged, drift, targets].map((src) => getImage({ src, width: 900, format: 'webp' })));
 
-// The app, as schema.org describes software: what it is, where it runs, what it does. No price or
-// rating until there is a real one; the App Store link only once the app is live.
+// The app, as schema.org describes software: what it is, where it runs, what it does. No rating until
+// there is a real one; the App Store link and the prices only once the app is live.
 const app = {
   '@type': 'MobileApplication',
   '@id': `${home}#app`,
@@ -39,7 +39,10 @@ const app = {
   author: { '@id': `${home}#publisher` },
   publisher: { '@id': `${home}#publisher` },
   inLanguage: 'en',
-  ...(site.appStoreLive ? { installUrl: site.appStoreUrl, downloadUrl: site.appStoreUrl, sameAs: [site.appStoreUrl] } : {}),
+  ...(site.appStoreLive ? {
+    installUrl: site.appStoreUrl, downloadUrl: site.appStoreUrl, sameAs: [site.appStoreUrl],
+    offers: site.plans.map((p) => ({ '@type': 'Offer', name: `Residual Plus, ${p.name.toLowerCase()}`, price: p.price.toFixed(2), priceCurrency: 'USD', url: site.appStoreUrl })),
+  } : {}),
 };
 
 const faqPage = {

@@ -1,0 +1,207 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Footer from '../components/Footer.astro';
+import Ring from '../components/Ring.astro';
+import { site } from '../site';
+
+// What Residual costs and why. The prices come from site.plans; the monthly and daily figures are worked
+// out from them here, so the page can't drift from the App Store. The comparisons in "Compare it to the
+// right things" and the promises below (no tiers, no sales, no lifetime deal) must stay true to them.
+
+const money = (n: number) => `$${n.toFixed(2)}`;
+const cents = (n: number) => `${Math.round(n * 100)}¢`;
+const monthly = site.plans[0];
+const plans = site.plans.map((p) => {
+  const perMonth = p.price / p.months;
+  return {
+    ...p,
+    perMonth: money(perMonth),
+    perDay: cents(p.price / (p.months * 30.4375)),
+    saves: Math.round((1 - perMonth / monthly.price) * 100),
+  };
+});
+const yearly = plans[plans.length - 1];
+const perMeal = cents(yearly.price / 365.25 / 3);
+
+// Where the money goes, as two-ended rows like the features inventory. The first group is every real bill;
+// the second is every way an app usually pays them quietly, and Residual's answer to each.
+const groups = [
+  { name: 'What your subscription pays for', tone: 'accent', rows: [
+    ['Claude', 'Paid to Anthropic, per plan'],
+    ['Food data', 'A USDA relay, a paid database next'],
+    ['Apple', 'Its share of every subscription'],
+    ['The app', 'Built, fixed and improved'],
+  ] },
+  { name: 'What doesn’t', tone: 'green', rows: [
+    ['Ads', 'None'],
+    ['Selling your data', 'None. We never collected it'],
+    ['Sponsored foods', 'None'],
+    ['Your account', 'There isn’t one'],
+    ['Tracking and analytics', 'None'],
+  ] },
+];
+---
+<Layout title="Pricing" description={`What Residual costs and why: ${plans.map((p) => `${money(p.price)} ${p.per}`).join(', ')}, each with a ${site.trialDays}-day free trial. No free tier, no ads, no data sold, and where the money goes.`} plain>
+  <section class="intro wrap" aria-labelledby="pricing-title">
+    <Ring class="ring--animate" size="4.5rem" width={0.14} eaten={0.7} lands={0.99} zoneStart={0.976} zoneEnd={1.024} />
+    <p class="intro__kicker" data-rise style="--i:0">Pricing</p>
+    <h1 id="pricing-title" class="head" data-rise style="--i:1">What Residual costs, and why.</h1>
+    <p class="lead" data-rise style="--i:2">One subscription, Residual Plus, with everything in it. Three ways to pay for it, and every one starts with {site.trialDays} days free.</p>
+  </section>
+
+  <section class="plans wrap" aria-label="Plans">
+    <ul class="plans__list">
+      {plans.map((p, i) => (
+        <li class:list={['plan', { 'plan--year': p === yearly }]} data-rise style={`--i:${i + 3}`}>
+          <h2 class="plan__name">{p.name}</h2>
+          <p class="plan__price nums"><strong>{money(p.price)}</strong> <span>{p.per}</span></p>
+          <p class="plan__math nums">
+            {p.months > 1 ? <>{p.perMonth} a month, about {p.perDay} a day</> : <>About {p.perDay} a day</>}
+          </p>
+          <p class="plan__note">{p.saves > 0 ? `${p.saves}% less than paying monthly` : 'Everything, month to month'}</p>
+        </li>
+      ))}
+    </ul>
+    <p class="plans__fine small muted" data-rise style="--i:6">US prices. The App Store shows yours in your currency, and Apple handles the payment. Every plan has every feature.</p>
+  </section>
+
+  <section class="money wrap" aria-labelledby="money-title">
+    <h2 id="money-title" class="money__title" data-reveal>Where the money goes</h2>
+    <p class="money__lead" data-reveal>Residual has two bills that grow with every person and every meal, and none of the usual ways of paying for them quietly.</p>
+    <div class="money__groups">
+      {groups.map((g) => (
+        <div class="money__group" data-reveal style={`--dot: var(--${g.tone})`}>
+          <h3>{g.name}</h3>
+          <ul>
+            {g.rows.map(([name, value]) => <li><span class="money__name">{name}</span><span class="money__value">{value}</span></li>)}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <ol class="why wrap">
+    <li data-reveal>
+      <h2>It isn’t a two-dollar app.</h2>
+      <p>You open Residual at breakfast, at lunch, at the store and before dinner. Something you use that often, for something that matters that much, shouldn’t be priced like a flashlight, and it can’t be built like one. Apps that cost almost nothing are paid for somewhere else: by ads, by selling what they learn about you, or by being abandoned once the downloads level off. We won’t be any of those.</p>
+    </li>
+    <li data-reveal>
+      <h2>You’re the customer, not the product.</h2>
+      <p>Residual makes money one way: you pay for it. No ads, no data sold or shared, no sponsored foods slipped into your plan, no affiliate link to a meal kit. That keeps our interest and yours pointed the same way. We do well when your days land, the weight comes off, and you keep the app because it’s working, not because it’s hard to leave.</p>
+    </li>
+    <li data-reveal>
+      <h2>Every plan costs us something.</h2>
+      <p>When Claude plans your day, we pay Anthropic for that request. Food search runs on USDA FoodData Central, which is free but rationed, so lookups will go through a small relay we run that keeps search fast at every meal and keeps none of what you searched. A paid food database joins it in a coming release.</p>
+      <p>Those bills grow with every person and every meal, and they arrive every month. Your subscription is how they get paid, so nothing else has to be. Turn Claude off and the price is the same: planning on your iPhone, the solver, logging and everything else are all part of it.</p>
+    </li>
+    <li data-reveal>
+      <h2>We can’t sell what we never collected.</h2>
+      <p>There is no Residual account. Your targets, your days and what you eat live on your iPhone and in your own private iCloud. We never spent the money to build a way to collect them, so there is nothing to sell, leak or hand over, and that money went into the app instead. The <a class="link" href="/privacy/">privacy policy</a> lists every request that leaves your phone.</p>
+    </li>
+    <li data-reveal>
+      <h2>Compare it to the right things.</h2>
+      <p>Not to other apps. A year of Residual is {money(yearly.price)}: less than most single visits with a registered dietitian, and you get the plan every day instead of once. A month is {money(monthly.price)}: less than most gym memberships, and less than two takeout lunches. Paid yearly, it’s about {yearly.perDay} a day, or {perMeal} a meal.</p>
+      <p>Then count the food you don’t throw out. Plan the week, and the grocery list buys what the plan uses, by the gram, and nothing more.</p>
+    </li>
+    <li data-reveal>
+      <h2>The price is a bar we hold ourselves to.</h2>
+      <p>Charging real money means you’ll expect real things: plans that land, numbers you can trust, fixes that come quickly. Good. That expectation is what keeps the app getting better. It’s also priced to last: enough to pay the bills and keep building for years, not a number picked to grow fast and sell the company, or your data, later.</p>
+    </li>
+    <li data-reveal>
+      <h2>Less for committing. Nothing else off.</h2>
+      <p>Quarterly costs {plans[1].saves}% less than paying monthly, and yearly {yearly.saves}% less. That isn’t a sale. It’s a thank-you for committing to a real stretch, because changing how you eat takes months, not weeks, and we’d rather plan for that with you.</p>
+      <p>There are no tiers, no Pro on top of Plus, and no feature held back to sell you later. And no lifetime deal: Claude and the food lookups are bills that come every month, so a one-time price would be a promise we couldn’t keep.</p>
+    </li>
+    <li data-reveal>
+      <h2>No sales, no tricks.</h2>
+      <p>No Black Friday, no New Year’s deal, no countdown, no “sale ends Sunday”, no discount for pretending to cancel. Residual is worth the same in January as in July, so you’re never punished for joining on the wrong day. The price is the one your friends pay. If it ever changes, this page will say why before anyone is charged more.</p>
+    </li>
+    <li data-reveal>
+      <h2>No free tier. A free trial.</h2>
+      <p>There is no free version and no ad-supported one. A free app that calls Claude is still paid for, and the person paying is you, with your attention or your data. The free part is the trial: the whole app, for {site.trialDays} days of real meals. Long enough to plan a week, shop it, eat it and watch the residual close.</p>
+      <p>Apple runs the trial; cancel at least 24 hours before it ends and you pay nothing. There are no reminder emails engineered to make you feel behind. Without an account, we couldn’t send one.</p>
+    </li>
+    <li data-reveal>
+      <h2>Leaving is a setting.</h2>
+      <p>Cancel in Settings → your name → Subscriptions. No email, no call, no exit survey. When it ends, the app locks, but your data stays yours: the lock screen still exports every day you logged to a spreadsheet.</p>
+    </li>
+  </ol>
+
+  <div class="wrap"><p class="sign" data-reveal>— Clark</p></div>
+
+  <section class="end wrap" aria-labelledby="end-title">
+    <h2 id="end-title" data-reveal>{site.trialDays} days, then decide.</h2>
+    <p data-reveal>Plan a real week with the whole app. If it isn’t worth {yearly.perDay} a day to you, cancel before the trial ends and you’ve paid nothing.</p>
+    <div class="end__actions" data-reveal style="--i:1">
+      <a class="button" href={site.appStoreUrl}>Get Residual</a>
+      <a class="link" href={`mailto:${site.supportEmail}?subject=Pricing`}>Ask about pricing</a>
+    </div>
+  </section>
+  <Footer />
+</Layout>
+
+<style>
+  /* One reading column on the features page's text axis, so the two pages read as one site. */
+  .wrap > * { margin-left: clamp(0rem, 30vw - 6rem, 30vw); }
+  .intro { padding-top: clamp(8rem, 20svh, 13rem); }
+  .intro > :global(.ring) { color: var(--ink); margin-bottom: 2rem; margin-left: clamp(0rem, 30vw - 6rem, 30vw); }
+  .intro__kicker { color: var(--muted); font-weight: 500; margin-bottom: 0.8rem; }
+  .intro h1 { max-width: 14ch; }
+  .intro .lead { margin-top: 1.5rem; }
+
+  /* The three plans side by side, the yearly one in the accent the app gives the plan. Same facts in each,
+     in the same order, so they compare at a glance. */
+  .plans { margin-top: 3rem; }
+  .plans__list { display: grid; grid-template-columns: repeat(3, minmax(0, 15rem)); gap: 8px; }
+  .plan { background: var(--surface); padding: 1.4rem 1.25rem 1.5rem; display: grid; align-content: start; gap: 0.35rem; }
+  .plan--year { background: var(--accent); color: var(--accent-ink); }
+  .plan__name { font-size: 1rem; font-weight: 500; color: var(--muted); }
+  .plan--year .plan__name, .plan--year .plan__math, .plan--year .plan__note { color: inherit; opacity: 0.75; }
+  .plan__price { margin-top: 0.4rem; display: grid; }
+  .plan__price strong { font-size: clamp(2rem, 1.6rem + 1.4vw, 2.75rem); font-weight: 600; letter-spacing: -0.03em; line-height: 1.1; }
+  .plan__price span { font-size: 1rem; }
+  .plan__math { font-size: 0.9375rem; color: var(--muted); }
+  .plan__note { margin-top: 0.8rem; font-size: 0.9375rem; font-weight: 500; }
+  .plans__fine { margin-top: 1rem; max-width: 46ch; }
+
+  /* The receipt: real bills on one side, the usual quiet revenue on the other, each answered. */
+  .money { margin-top: var(--section); }
+  .money__title, .why h2, .end h2 { font-size: clamp(1.75rem, 1.4rem + 1vw, 2rem); letter-spacing: -0.02em; }
+  .money__lead { margin-top: 1rem; color: var(--muted); font-size: 1.125rem; line-height: 1.6; max-width: 35rem; }
+  .money__groups { margin-top: 2.5rem; display: grid; grid-template-columns: repeat(2, minmax(0, 26rem)); column-gap: clamp(2rem, 5vw, 5rem); row-gap: 2.5rem; }
+  .money__group ul { list-style: none; padding: 0; margin: 0; }
+  .money__group h3 { font-size: 1rem; font-weight: 500; color: var(--muted); margin-bottom: 0.4rem; }
+  .money__group li { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; min-height: 2.4rem; padding-block: 0.35rem; }
+  .money__name { display: flex; align-items: baseline; gap: 0.6rem; font-size: 1rem; }
+  .money__name::before { content: ''; flex: none; width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--dot); transform: translateY(-0.05em); }
+  .money__value { font-size: 0.875rem; color: var(--muted); text-align: right; }
+
+  /* The reasons, numbered the way the list counts them, each a heading and a short paragraph. */
+  .why { margin-top: var(--section); padding-inline: var(--margin); list-style: none; counter-reset: why; }
+  .why > li { counter-increment: why; width: min(100%, 35rem); }
+  .why > li + li { margin-top: 4.5rem; }
+  .why > li::before { content: counter(why, decimal-leading-zero); display: block; margin-bottom: 0.6rem; color: var(--accent); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .why p { margin-top: 1rem; font-size: 1.125rem; line-height: 1.6; color: var(--muted); max-width: none; }
+  .why p + p { margin-top: 0.9em; }
+  .why .link { color: var(--ink); text-decoration-color: var(--muted); }
+
+  .sign { margin-top: 4.5rem; font-size: var(--step-lead); font-weight: 500; }
+
+  /* The close, as on the features page: one sentence and one action on empty ground. */
+  .end { padding-block: 24svh 18svh; }
+  .end p { margin-top: 1rem; font-size: 1.125rem; line-height: 1.6; color: var(--muted); max-width: 35rem; }
+  .end__actions { margin-top: 1.5rem; display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; }
+  .end__actions .link { font-weight: 500; }
+
+  @media (max-width: 64em) {
+    .money__groups { grid-template-columns: minmax(0, 1fr); }
+    .money__group li { min-height: 44px; }
+  }
+  @media (max-width: 48em) {
+    .plans__list { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 40em) {
+    .wrap > *, .intro > :global(.ring) { margin-left: 0; }
+    .end { padding-block: 16svh 12svh; }
+  }
+</style>
