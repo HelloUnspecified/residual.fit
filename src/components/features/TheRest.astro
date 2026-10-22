@@ -1,0 +1,72 @@
+---
+// Everything else the app does, as two-ended rows: the feature on the left, the plain fact on the
+// right. Each is checked against the app; the names are its own where it has one.
+const groups = [
+  { name: 'Your food', tone: 'green', rows: [
+    ['USDA food search', 'Your foods first'],
+    ['Barcode scanning', 'Packaged foods'],
+    ['Nutrition label', 'Read on your iPhone'],
+    ['Match to USDA', 'You pick every match'],
+    ['Units', 'g · oz · cup · tbsp · tsp · mL'],
+    ['Drinks', 'Alcohol counted, never a target'],
+    ['Food library', 'Everything you’ve used'],
+  ] },
+  { name: 'Planning', tone: 'accent', rows: [
+    ['Plan ahead', 'Up to two weeks'],
+    ['Saved meals', 'With a note and a source'],
+    ['Plan the rest of my day', 'Around what you’ve eaten'],
+    ['Suggest a fix', 'From what you have'],
+    ['Foods to avoid', 'Nine common allergies, one tap'],
+    ['Share your day', 'Story, square, sticker'],
+  ] },
+  { name: 'Targets', tone: 'amber', rows: [
+    ['Ranges', '± on every target'],
+    ['Floating', 'Any of them'],
+    ['Landing order', 'Yours to set'],
+    ['Portion rounding', 'Exact, 1, 5 or 10 g'],
+    ['TDEE calculator', 'Every step shown'],
+  ] },
+  { name: 'Your data', tone: 'ink', rows: [
+    ['Account', 'None'],
+    ['Sync', 'Your own iCloud'],
+    ['Offline', 'Plan, log and solve'],
+    ['Export', 'CSV, one row per food'],
+    ['Appearance', 'Match iPhone, light, dark'],
+    ['Practice day', 'Nothing saved'],
+    ['Tracking and ads', 'None'],
+  ] },
+];
+---
+<section class="rest" aria-labelledby="rest-title">
+  <h2 id="rest-title" class="rest__title" data-reveal>And the rest</h2>
+  <div class="rest__groups">
+    {groups.map((g) => (
+      <div class="rest__group" data-reveal style={`--dot: var(--${g.tone})`}>
+        <h3>{g.name}</h3>
+        <ul>
+          {g.rows.map(([name, value]) => <li><span class="rest__name">{name}</span><span class="rest__value nums">{value}</span></li>)}
+        </ul>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  /* A narrow list with two ends. Two columns of groups on a wide screen, so the whole inventory is one
+     glance; one column on a phone. */
+  .rest { margin-top: var(--section); padding-inline: var(--margin); }
+  .rest > * { margin-left: clamp(0rem, 30vw - 6rem, 30vw); }
+  .rest__title { font-size: clamp(1.75rem, 1.4rem + 1vw, 2rem); letter-spacing: -0.02em; margin-bottom: 2rem; }
+  .rest__groups { display: grid; grid-template-columns: repeat(2, minmax(0, 26rem)); column-gap: clamp(2rem, 5vw, 5rem); row-gap: 2.5rem; }
+  .rest__group h3 { font-size: 1rem; font-weight: 500; color: var(--muted); margin-bottom: 0.4rem; }
+  .rest__group ul { list-style: none; padding: 0; margin: 0; }
+  .rest__group li { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; min-height: 2.4rem; padding-block: 0.35rem; }
+  .rest__name { display: flex; align-items: baseline; gap: 0.6rem; font-size: 1rem; }
+  .rest__name::before { content: ''; flex: none; width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--dot); transform: translateY(-0.05em); }
+  .rest__value { font-size: 0.875rem; color: var(--muted); text-align: right; }
+  @media (max-width: 64em) {
+    .rest > * { margin-left: 0; }
+    .rest__groups { grid-template-columns: minmax(0, 1fr); }
+    .rest__group li { min-height: 44px; }
+  }
+</style>

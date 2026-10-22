@@ -1,0 +1,272 @@
+---
+import { site } from '../../site';
+
+// The screenshot day from the app (2,100 kcal, 150 P, 220 C, 70 F with fat floating): breakfast and a
+// lunch that ran over are logged, the snack and dinner are still planned. Every number here, including
+// the result of Close the residual, is the app's own, read off the App Store captures
+// (03a-drift, 03b-review, 03c-after), so this fragment shows what the app really does on that day.
+// The home page's LiveSolve is the one that computes in the browser.
+const target = 2100, tol = 100, scale = 2400;
+const eaten = 1264, landsBefore = 2293, landsAfter = 2199;
+const meals = [
+  { name: 'Breakfast', what: 'Berry yogurt bowl', macros: '33P · 56C · 12F', kcal: 465, state: 'Logged' },
+  { name: 'Lunch', what: 'Chicken and brown rice bowl', macros: '58P · 88C · 24F', kcal: 799, state: 'Logged', off: '+4 P · +35 C · +9 F' },
+  { name: 'Snack', what: 'Apple, peanut butter and yogurt', macros: '20P · 38C · 11F', kcal: 333, state: 'Planned', after: { macros: '19P · 36C · 9F', kcal: 299 } },
+  { name: 'Dinner', what: 'Salmon, sweet potato and broccoli', macros: '46P · 56C · 32F', kcal: 696, state: 'Planned', after: { macros: '40P · 54C · 29F', kcal: 636 } },
+];
+const changes = [
+  { meal: 'Snack', foods: [{ name: 'Apple, Fuji', from: 180, to: 175 }, { name: 'Peanut butter', from: 20, to: 15 }] },
+  { meal: 'Dinner', foods: [{ name: 'Salmon, baked', from: 170, to: 145 }, { name: 'Sweet potato, baked', from: 220, to: 210 }] },
+];
+const lands = [
+  { label: 'Calories', at: 0.92, was: 0.97, value: '2,199 / 2,100', ok: true },
+  { label: 'Protein', at: 0.84, was: 0.89, value: '150 g / 150 g', ok: true },
+  { label: 'Carbs', at: 0.8, was: 0.85, value: '234 g / 220 g', ok: true },
+  { label: 'Fat', at: 0.66, was: 0.72, value: '74 g · floats', ok: false },
+];
+const x = (kcal: number) => `${((kcal / scale) * 100).toFixed(2)}%`;
+const fmt = (n: number) => n.toLocaleString('en-US');
+---
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__copy">
+    <h1 id="hero-title" class="hero__title" data-rise style="--i:0">Off plan? Close the residual.</h1>
+    <p class="hero__lead" data-rise style="--i:1">Real food is never exact. When lunch runs over, Residual re-sizes the meals still ahead by the smallest change that lands your day.</p>
+    <div class="hero__actions" data-rise style="--i:2">
+      <a class="button" href={site.appStoreUrl}>Get Residual</a>
+      <a class="link" href="#plan">See what else it does</a>
+    </div>
+  </div>
+
+  <div class="hero__stage" data-rise style="--i:3">
+    <div class="today" data-ui data-state="drifting" aria-label="Residual's Today screen, working: lunch ran over, and Close the residual re-sizes the snack and dinner.">
+      <div class="today__date"><strong>Today</strong><span>Wednesday, October 21</span></div>
+
+      <div class="today__card">
+        <div class="today__top">
+          <div class="today__status">
+            <strong><span class="today__dot" aria-hidden="true"></span><span data-s-title>Drifting</span></strong>
+            <span data-s-sub>Calories over 193 kcal · 2 meals ahead</span>
+          </div>
+          <div class="today__eaten nums">
+            <strong>{fmt(eaten)}</strong>
+            <span>eaten of {fmt(target)} kcal</span>
+            <em data-lands>lands {fmt(landsBefore)}</em>
+          </div>
+        </div>
+        <svg class="today__bar" width="100%" height="22" aria-hidden="true">
+          <rect x={x(target - tol)} y="3" width={x(2 * tol)} height="16" rx="3" class="today__zone" />
+          <line x1="1%" x2="99%" y1="11" y2="11" class="today__track" />
+          <line x1="1%" x2={x(landsBefore)} y1="11" y2="11" class="today__plan" data-plan />
+          <line x1="1%" x2={x(eaten)} y1="11" y2="11" class="today__eat" />
+          <rect x={x(target)} y="0" width="2" height="22" class="today__tick" />
+          <circle cx={x(landsBefore)} cy="11" r="6" class="today__land" data-land />
+        </svg>
+      </div>
+
+      <ul class="today__meals">
+        {meals.map((m) => (
+          <li class="meal" data-meal={m.name}>
+            <div class="meal__head"><strong>{m.name}</strong><span class:list={['pill', m.state === 'Logged' ? 'pill--logged' : 'pill--planned']}>{m.state}</span></div>
+            <div class="meal__what">{m.what}</div>
+            <div class="meal__nums nums"><span data-macros>{m.macros}</span><span data-kcal>{m.kcal} kcal</span></div>
+            {m.off && <div class="meal__off nums">Off plan <span>{m.off}</span></div>}
+            {m.after && <template data-after={JSON.stringify(m.after)} />}
+          </li>
+        ))}
+        <li class="residual" data-residual>
+          <strong>Lunch put you off plan</strong>
+          <span>Calories over 193 kcal · 2 meals can absorb it</span>
+          <button type="button" class="residual__btn" data-close aria-haspopup="dialog">
+            <strong>Close the residual</strong>
+            <span>Re-size the 2 meals ahead</span>
+          </button>
+        </li>
+        <li class="closed" data-closed hidden>Residual closed · everything in range</li>
+      </ul>
+
+      <div class="sheet" data-sheet role="dialog" aria-modal="false" aria-label="Close the residual" hidden>
+        <div class="sheet__bar">
+          <button type="button" class="sheet__btn" data-cancel>Cancel</button>
+          <strong>Close the residual</strong>
+          <button type="button" class="sheet__btn sheet__btn--go" data-apply>Apply</button>
+        </div>
+        <div class="sheet__lands">
+          <div class="sheet__ok"><span class="check" aria-hidden="true"></span><div><strong>Lands in range</strong><span>Every target lands inside its range.</span></div></div>
+          <ul class="nums">
+            {lands.map((l) => (
+              <li class:list={{ 'is-float': !l.ok }}>
+                <span>{l.label}</span>
+                <span class="sheet__track" aria-hidden="true"><span class="sheet__zone" style={`left:${(l.at - 0.06) * 100}%`}></span><span class="sheet__was" style={`left:${l.was * 100}%`}></span><span class="sheet__at" style={`left:${l.at * 100}%`}></span></span>
+                <span>{l.value}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <p class="sheet__note">Tap a food to keep it or set its amount. The rest re-sizes around it. Nothing changes until you apply.</p>
+        {changes.map((c) => (
+          <div class="sheet__group">
+            <span class="sheet__meal">{c.meal}</span>
+            <ul class="nums">
+              {c.foods.map((f) => <li><span>{f.name}</span><span>{f.from} → {f.to} g</span><span class="cut">−{f.from - f.to}</span></li>)}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+    <button type="button" class="hero__again link" data-again hidden>Put lunch back and try it again</button>
+  </div>
+</section>
+
+<script define:vars={{ landsAfter, landsBefore, scale }}>
+  const root = document.querySelector('.today');
+  const stage = root && root.closest('.hero__stage');
+  if (root && stage) {
+    const sheet = root.querySelector('[data-sheet]');
+    const again = stage.querySelector('[data-again]');
+    const residual = root.querySelector('[data-residual]');
+    const closed = root.querySelector('[data-closed]');
+    const pct = (k) => `${((k / scale) * 100).toFixed(2)}%`;
+    const before = [...root.querySelectorAll('[data-meal]')].map((li) => ({ li, macros: li.querySelector('[data-macros]').textContent, kcal: li.querySelector('[data-kcal]').textContent }));
+    const setLands = (k) => {
+      root.querySelector('[data-lands]').textContent = `lands ${k.toLocaleString('en-US')}`;
+      root.querySelector('[data-plan]').setAttribute('x2', pct(k));
+      root.querySelector('[data-land]').setAttribute('cx', pct(k));
+    };
+    const open = () => { sheet.hidden = false; requestAnimationFrame(() => sheet.classList.add('is-open')); sheet.querySelector('[data-apply]').focus(); };
+    const shut = () => { sheet.classList.remove('is-open'); setTimeout(() => { sheet.hidden = true; }, 320); };
+    root.querySelector('[data-close]').addEventListener('click', open);
+    sheet.querySelector('[data-cancel]').addEventListener('click', () => { shut(); root.querySelector('[data-close]').focus(); });
+    sheet.querySelector('[data-apply]').addEventListener('click', () => {
+      shut();
+      for (const { li } of before) {
+        const t = li.querySelector('template[data-after]');
+        if (!t) continue;
+        const a = JSON.parse(t.dataset.after);
+        li.querySelector('[data-macros]').textContent = a.macros;
+        li.querySelector('[data-kcal]').textContent = `${a.kcal} kcal`;
+        li.classList.remove('is-flash'); void li.offsetWidth; li.classList.add('is-flash');
+      }
+      root.dataset.state = 'onTrack';
+      root.querySelector('[data-s-title]').textContent = 'On track';
+      root.querySelector('[data-s-sub]').textContent = 'Every target inside its range · 2 meals ahead';
+      setLands(landsAfter);
+      residual.hidden = true; closed.hidden = false;
+      again.hidden = false;
+    });
+    again.addEventListener('click', () => {
+      for (const b of before) { b.li.querySelector('[data-macros]').textContent = b.macros; b.li.querySelector('[data-kcal]').textContent = b.kcal; b.li.classList.remove('is-flash'); }
+      root.dataset.state = 'drifting';
+      root.querySelector('[data-s-title]').textContent = 'Drifting';
+      root.querySelector('[data-s-sub]').textContent = 'Calories over 193 kcal · 2 meals ahead';
+      setLands(landsBefore);
+      residual.hidden = false; closed.hidden = true; again.hidden = true;
+      root.querySelector('[data-close]').focus();
+    });
+  }
+</script>
+
+<style>
+  /* The copy hangs on the left third; the app's Today screen stands at its true size on the right, on
+     the page's own ground, with no frame and no panel behind it: the interface is the picture. */
+  .hero { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); align-items: start; padding: 9rem var(--margin) 0; max-width: 1600px; margin-inline: auto; }
+  .hero__copy { grid-column: 1 / 6; padding-top: clamp(1rem, 6vh, 5rem); position: sticky; top: 7rem; }
+  .hero__title { font-size: clamp(2.75rem, 5vw, 5.25rem); line-height: 0.98; letter-spacing: -0.035em; max-width: 11ch; }
+  .hero__lead { margin-top: 1.6rem; font-size: var(--step-lead); line-height: 1.35; max-width: 30ch; }
+  .hero__actions { margin-top: 2.2rem; display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.6rem; }
+  .hero__actions .link { font-weight: 500; }
+  .hero__stage { grid-column: 7 / 13; display: grid; justify-items: center; gap: 1.2rem; }
+  .hero__again { font-weight: 500; color: var(--muted); }
+
+  /* The fragment: the app's dark appearance at iPhone width. Inside data-ui the app's own conventions hold. */
+  [data-ui].today { --tone: var(--amber); position: relative; width: min(100%, 25rem); background: var(--bg); color: var(--ink); font-size: 15px; line-height: 1.3; overflow: hidden; border-radius: 28px; padding: 18px 14px 20px; }
+  [data-ui].today[data-state="onTrack"] { --tone: var(--green); }
+  [data-ui] .today__date { display: grid; justify-items: center; margin-bottom: 14px; }
+  [data-ui] .today__date strong { font-size: 17px; font-weight: 600; }
+  [data-ui] .today__date span { font-size: 12px; color: var(--muted); }
+  [data-ui] .today__card { border: 1.5px solid var(--tone); border-radius: 20px; padding: 14px 14px 10px; transition: border-color 500ms var(--ease-out); }
+  [data-ui] .today__top { display: flex; justify-content: space-between; gap: 12px; }
+  [data-ui] .today__status { display: grid; gap: 2px; }
+  [data-ui] .today__status strong { display: flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 600; color: var(--tone); transition: color 500ms var(--ease-out); }
+  [data-ui] .today__status > span { font-size: 13px; color: var(--muted); max-width: 18ch; }
+  [data-ui] .today__dot { width: 10px; height: 10px; border-radius: 50%; background: var(--tone); transition: background-color 500ms var(--ease-out); }
+  [data-ui] .today__eaten { display: grid; justify-items: end; text-align: right; }
+  [data-ui] .today__eaten strong { font-size: 20px; font-weight: 600; }
+  [data-ui] .today__eaten span { font-size: 12px; color: var(--muted); }
+  [data-ui] .today__eaten em { font-style: normal; font-size: 12px; font-weight: 600; color: var(--tone); transition: color 500ms var(--ease-out); }
+  [data-ui] .today__bar { margin-top: 14px; overflow: visible; }
+  [data-ui] .today__zone { fill: var(--green); fill-opacity: 0.25; }
+  [data-ui] .today__track { stroke: var(--surface-2); stroke-width: 8; stroke-linecap: round; }
+  [data-ui] .today__plan { stroke: var(--accent); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 0.1 7; transition: x2 600ms var(--ease-out); }
+  [data-ui] .today__eat { stroke: var(--green); stroke-width: 8; stroke-linecap: round; }
+  [data-ui] .today__tick { fill: var(--ink); }
+  [data-ui] .today__land { fill: var(--tone); stroke: var(--bg); stroke-width: 3; transition: cx 600ms var(--ease-out), fill 500ms var(--ease-out); }
+
+  [data-ui] .today__meals { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 10px; }
+  [data-ui] .meal { background: var(--surface); border-radius: 18px; padding: 12px 14px; display: grid; gap: 2px; }
+  [data-ui] .meal__head { display: flex; justify-content: space-between; align-items: center; }
+  [data-ui] .meal__head strong { font-size: 17px; font-weight: 600; }
+  [data-ui] .meal__what { font-size: 13px; color: var(--muted); }
+  [data-ui] .meal__nums { display: flex; justify-content: space-between; margin-top: 6px; font-size: 13px; color: var(--muted); }
+  [data-ui] .meal__nums [data-kcal] { color: var(--ink); font-size: 15px; }
+  [data-ui] .meal__off { margin-top: 4px; font-size: 13px; font-weight: 600; color: var(--amber); }
+  [data-ui] .meal__off span { font-weight: 500; margin-left: 4px; }
+  [data-ui] .pill { font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; }
+  [data-ui] .pill--logged { color: var(--green); background: var(--green-deep); }
+  [data-ui] .pill--planned { color: var(--accent); background: var(--indigo-deep); }
+  [data-ui] .meal.is-flash { animation: meal-flash 1200ms var(--ease-out); }
+  @keyframes meal-flash { 0% { background: var(--indigo-deep); } 100% { background: var(--surface); } }
+
+  [data-ui] .residual { order: 0; background: var(--amber-deep); border: 1.5px solid color-mix(in srgb, var(--amber) 45%, transparent); border-radius: 18px; padding: 14px; display: grid; gap: 2px; }
+  [data-ui] .residual > strong { font-size: 16px; font-weight: 600; color: var(--amber); }
+  [data-ui] .residual > span { font-size: 13px; color: var(--muted); }
+  [data-ui] .residual__btn { margin-top: 10px; display: grid; justify-items: center; gap: 1px; padding: 12px; background: var(--amber); color: var(--accent-ink); border-radius: 999px; transition: transform var(--t-press) var(--ease-out), filter var(--t-hover) ease; }
+  [data-ui] .residual__btn strong { font-size: 17px; font-weight: 600; }
+  [data-ui] .residual__btn span { font-size: 12px; opacity: 0.75; }
+  [data-ui] .residual__btn:active { transform: scale(0.97); }
+  @media (hover: hover) and (pointer: fine) { [data-ui] .residual__btn:hover { filter: brightness(1.08); } }
+  @media (prefers-reduced-motion: no-preference) { [data-ui] .residual__btn { animation: nudge 2.6s var(--ease-in-out) 2.2s 2; } }
+  @keyframes nudge { 0%, 100% { transform: none; } 12% { transform: scale(1.035); } 24% { transform: none; } }
+  [data-ui] [hidden] { display: none; }
+  [data-ui] .closed { text-align: center; font-size: 13px; color: var(--muted); padding: 6px 0; }
+  /* Same order as the app: the residual card sits between what you ate and what's still planned. */
+  [data-ui] .today__meals > [data-meal="Snack"], [data-ui] .today__meals > [data-meal="Dinner"] { order: 1; }
+
+  /* The review sheet rises over the screen, the way the app presents it. */
+  [data-ui] .sheet { position: absolute; inset: 56px 0 0; background: var(--surface); border-radius: 26px 26px 0 0; padding: 12px 14px 20px; transform: translateY(100%); transition: transform 320ms var(--ease-out); overflow: hidden; }
+  [data-ui] .sheet.is-open { transform: none; }
+  [data-ui] .sheet__bar { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; margin-bottom: 14px; }
+  [data-ui] .sheet__bar strong { font-size: 16px; font-weight: 600; }
+  [data-ui] .sheet__btn { justify-self: start; padding: 8px 14px; border-radius: 999px; background: var(--surface-2); font-size: 15px; transition: transform var(--t-press) var(--ease-out); }
+  [data-ui] .sheet__btn--go { justify-self: end; background: var(--accent); color: var(--accent-ink); font-weight: 600; }
+  [data-ui] .sheet__btn:active { transform: scale(0.96); }
+  [data-ui] .sheet__lands { background: var(--surface-2); border-radius: 18px; padding: 14px; }
+  [data-ui] .sheet__ok { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; }
+  [data-ui] .sheet__ok strong { display: block; font-size: 16px; font-weight: 600; }
+  [data-ui] .sheet__ok span { font-size: 12px; color: var(--muted); }
+  [data-ui] .check { flex: none; width: 20px; height: 20px; border-radius: 50%; background: var(--green); position: relative; margin-top: 2px; }
+  [data-ui] .check::after { content: ''; position: absolute; left: 7px; top: 4px; width: 5px; height: 9px; border: solid var(--accent-ink); border-width: 0 2px 2px 0; transform: rotate(45deg); }
+  [data-ui] .sheet__lands ul, [data-ui] .sheet__group ul { list-style: none; padding: 0; margin: 0; }
+  [data-ui] .sheet__lands li { display: grid; grid-template-columns: 4.6rem 1fr auto; align-items: center; gap: 10px; font-size: 13px; padding: 4px 0; }
+  [data-ui] .sheet__lands li > span:last-child { color: var(--green); }
+  [data-ui] .sheet__lands li.is-float, [data-ui] .sheet__lands li.is-float > span:last-child { color: var(--muted); }
+  [data-ui] .sheet__track { position: relative; height: 6px; border-radius: 3px; background: var(--bg); }
+  [data-ui] .sheet__zone { position: absolute; top: -3px; width: 12%; height: 12px; border-radius: 3px; background: var(--green); opacity: 0.3; }
+  [data-ui] .sheet__was, [data-ui] .sheet__at { position: absolute; top: 50%; width: 11px; height: 11px; border-radius: 50%; transform: translate(-50%, -50%); }
+  [data-ui] .sheet__was { border: 1.5px solid var(--muted); }
+  [data-ui] .sheet__at { background: var(--green); }
+  [data-ui] .is-float .sheet__at { background: var(--muted); }
+  [data-ui] .sheet__note { margin: 10px 2px 0; font-size: 12px; color: var(--muted); max-width: none; }
+  [data-ui] .sheet__group { margin-top: 12px; }
+  [data-ui] .sheet__meal { display: block; font-size: 14px; font-weight: 600; color: var(--muted); margin: 0 2px 6px; }
+  [data-ui] .sheet__group ul { background: var(--surface-2); border-radius: 16px; padding: 2px 14px; }
+  [data-ui] .sheet__group li { display: grid; grid-template-columns: 1fr auto 2.4rem; gap: 10px; padding: 10px 0; font-size: 15px; }
+  [data-ui] .sheet__group li + li { border-top: 1px solid var(--bg); }
+  [data-ui] .sheet__group .cut { color: var(--red); font-weight: 600; text-align: right; }
+
+  @media (max-width: 64em) {
+    .hero { padding-top: 7rem; row-gap: 2.5rem; }
+    .hero__copy, .hero__stage { grid-column: 1 / 13; }
+    .hero__copy { position: static; padding-top: 0; }
+    .hero__title { font-size: clamp(2.6rem, 10vw, 4rem); }
+  }
+</style>

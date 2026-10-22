@@ -19,6 +19,7 @@ Residual is made by Clark Sell. It runs on iOS 27 or later. It sits in front of 
 ## Pages
 
 - [Home](https://residual.fit/): what Residual does, a live demo of the solver, and answers to common questions
+- [Features](https://residual.fit/features/): everything the app does, screen by screen: Close the residual, AI day plans, planning ahead, your pantry and saved meals, logging, USDA foods and barcodes, grocery lists, sharing, targets and privacy
 - [Help and support](https://residual.fit/support/): the subscription, offline use, planning with Claude, your data, and fixes for common problems
 - [Privacy policy](https://residual.fit/privacy/): what the app stores, what leaves the phone, who receives it, and how to delete it
 

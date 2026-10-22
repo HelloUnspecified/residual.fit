@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "site",
+      "runtimeExecutable": "fnm",
+      "runtimeArgs": ["exec", "--using=.node-version", "npm", "run", "dev"],
+      "port": 4321
+    }
+  ]
+}

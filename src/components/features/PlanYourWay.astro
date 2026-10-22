@@ -1,0 +1,231 @@
+---
+// The proposed plan from the screenshot day (02b-proposal), with the choices the plan sheet offers. The
+// alternatives are what a planner returns for those instructions on that day; the totals are always
+// worked out from the foods' grams and USDA per-100 g values, so they add up whatever the visitor picks.
+type Food = { name: string; per100: [number, number, number]; g: number };
+type Meal = { name: string; what: string; foods: Food[] };
+const yogurt: Food = { name: 'Greek yogurt, nonfat', per100: [10.3, 3.6, 0.4], g: 250 };
+const oil: Food = { name: 'Olive oil', per100: [0, 0, 100], g: 10 };
+const meals: Record<string, Meal> = {
+  breakfast: { name: 'Breakfast', what: 'Berry yogurt bowl', foods: [yogurt, { name: 'Blueberries', per100: [0.7, 14.5, 0.3], g: 100 }, { name: 'Granola', per100: [10, 64, 15], g: 45 }, { name: 'Honey', per100: [0.3, 82, 0], g: 15 }] },
+  oats: { name: 'Breakfast', what: 'Overnight oats', foods: [{ name: 'Rolled oats', per100: [13, 68, 6.5], g: 60 }, { ...yogurt, g: 150 }, { name: 'Strawberries', per100: [0.7, 7.7, 0.3], g: 100 }, { name: 'Almonds', per100: [21, 22, 50], g: 15 }] },
+  lunch: { name: 'Lunch', what: 'Chicken and brown rice bowl', foods: [{ name: 'Chicken breast, roasted', per100: [31, 0, 3.6], g: 150 }, { name: 'Brown rice, cooked', per100: [2.6, 23, 0.9], g: 180 }, { name: 'Avocado', per100: [2, 8.5, 14.7], g: 50 }, { name: 'Spinach', per100: [2.9, 3.6, 0.4], g: 60 }] },
+  snack: { name: 'Snack', what: 'Apple, peanut butter and yogurt', foods: [{ name: 'Apple, Fuji', per100: [0.2, 15.2, 0.2], g: 180 }, { name: 'Peanut butter', per100: [25, 20, 50], g: 20 }, { ...yogurt, g: 150 }] },
+  snackNoPeanut: { name: 'Snack', what: 'Apple, almonds and yogurt', foods: [{ name: 'Apple, Fuji', per100: [0.2, 15.2, 0.2], g: 180 }, { name: 'Almonds', per100: [21, 22, 50], g: 15 }, { ...yogurt, g: 170 }] },
+  dinner: { name: 'Dinner', what: 'Salmon and sweet potato', foods: [{ name: 'Salmon, baked', per100: [22, 0, 12], g: 170 }, { name: 'Sweet potato, baked', per100: [2, 20.7, 0.2], g: 220 }, { name: 'Broccoli, steamed', per100: [2.4, 7.2, 0.4], g: 150 }, oil] },
+  dinnerNoFish: { name: 'Dinner', what: 'Chicken thigh and sweet potato', foods: [{ name: 'Chicken thigh, roasted', per100: [26, 0, 10.9], g: 165 }, { name: 'Sweet potato, baked', per100: [2, 20.7, 0.2], g: 220 }, { name: 'Broccoli, steamed', per100: [2.4, 7.2, 0.4], g: 150 }, oil] },
+};
+const planners = [
+  { id: 'claude', label: 'Claude', says: 'Planned by Claude' },
+  { id: 'device', label: 'On this iPhone', says: 'Planned on-device' },
+  { id: 'pantry', label: 'Your pantry', says: 'Built from your pantry and library' },
+];
+const days = ['W', 'T', 'F', 'S', 'S', 'M', 'T', 'W', 'T', 'F', 'S', 'S', 'M', 'T'];
+---
+<section id="plan" class="plan" aria-labelledby="plan-title">
+  <h2 id="plan-title" class="plan__title" data-reveal>Plan it your way.</h2>
+  <div class="plan__field">
+    <div class="pp" data-ui aria-live="polite" aria-label="A proposed plan that changes with the choices beside it">
+      <div class="pp__bar"><span class="pp__btn">Cancel</span><strong>Proposed plan</strong><span class="pp__btn pp__btn--go">Accept</span></div>
+      <div class="pp__head">
+        <span class="pp__by" data-by><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 0 C6.6 3.6 8.4 5.4 12 6 C8.4 6.6 6.6 8.4 6 12 C5.4 8.4 3.6 6.6 0 6 C3.6 5.4 5.4 3.6 6 0 Z" fill="currentColor" /></svg> <span data-by-text>Planned by Claude</span></span>
+        <span class="pp__small">Daily total</span>
+        <div class="pp__total nums"><strong data-macros></strong><strong class="pp__kcal" data-kcal></strong></div>
+        <span class="pp__small nums" data-target>Target 150P · 220C · 70F</span>
+        <span class="pp__matched"><span class="seal" aria-hidden="true"></span><span data-matched>All 15 foods matched from foods you've used</span></span>
+      </div>
+      <div class="pp__meals" data-meals></div>
+      <div class="pp__repeat" data-repeat hidden>
+        <span><strong>Berry yogurt bowl</strong> on <span data-repeat-n>0</span> more days</span>
+        <ol class="pp__days" aria-hidden="true">{days.map((d, i) => <li data-day={i}>{d}</li>)}</ol>
+      </div>
+    </div>
+  </div>
+
+  <div class="plan__read">
+
+    <div class="block" data-reveal>
+      <p class="block__say">Pick who drafts the day.</p>
+      <p>Claude, if you allow it. Apple's on-device model or your own pantry, if not. Every plan says which.</p>
+      <div class="seg" role="radiogroup" aria-label="Who plans">
+        {planners.map((p, i) => <label><input type="radio" name="planner" value={p.id} data-says={p.says} checked={i === 0} /><span>{p.label}</span></label>)}
+      </div>
+    </div>
+
+    <div class="block" data-reveal>
+      <p class="block__say">Say what you feel like.</p>
+      <p>A line in your own words shapes the whole day.</p>
+      <div class="chips">
+        <button type="button" class="chip" aria-pressed="false" data-ask="nofish">No fish today</button>
+        <button type="button" class="chip" aria-pressed="false" data-ask="oats">Oats for breakfast</button>
+      </div>
+    </div>
+
+    <div class="block" data-reveal>
+      <p class="block__say">Leave out what you can't eat.</p>
+      <p>Foods to avoid, allergies included, stay out of every plan, fix and suggestion.</p>
+      <label class="toggle"><span>Peanuts <em>Allergy</em></span><input type="checkbox" role="switch" data-avoid /><span class="toggle__track" aria-hidden="true"></span></label>
+    </div>
+
+    <div class="block" data-reveal>
+      <p class="block__say">Weigh it your way.</p>
+      <p>Grams, ounces, cups or spoons, food by food. Always stored as grams.</p>
+      <div class="seg seg--two" role="radiogroup" aria-label="Units">
+        <label><input type="radio" name="unit" value="g" checked /><span>Grams</span></label>
+        <label><input type="radio" name="unit" value="oz" /><span>Ounces</span></label>
+      </div>
+    </div>
+
+    <div class="block" data-reveal>
+      <p class="block__say">Put breakfast on every weekday.</p>
+      <p>Copy a meal across the next two weeks in one go. It lands as a plan, never as logged.</p>
+      <div class="chips" role="radiogroup" aria-label="Days">
+        <button type="button" class="chip" role="radio" aria-checked="false" data-days="all">Every day</button>
+        <button type="button" class="chip" role="radio" aria-checked="false" data-days="weekdays">Weekdays</button>
+        <button type="button" class="chip" role="radio" aria-checked="false" data-days="weekends">Weekends</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script define:vars={{ meals, days }}>
+  const root = document.getElementById('plan');
+  if (root) {
+    const state = { planner: 'Planned by Claude', nofish: false, oats: false, avoid: false, unit: 'g', days: null };
+    const box = root.querySelector('[data-meals]');
+    const amount = (g) => state.unit === 'g' ? `${g} g` : `${(g / 28.35).toFixed(1)} oz`;
+    const sum = (foods) => foods.reduce((t, f) => { const k = f.g / 100; t.p += f.per100[0] * k; t.c += f.per100[1] * k; t.f += f.per100[2] * k; return t; }, { p: 0, c: 0, f: 0 });
+    const kcal = (t) => Math.round(4 * t.p + 4 * t.c + 9 * t.f);
+    const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+    let last = '';
+    const render = () => {
+      const day = [state.oats ? meals.oats : meals.breakfast, meals.lunch, state.avoid ? meals.snackNoPeanut : meals.snack, state.nofish ? meals.dinnerNoFish : meals.dinner];
+      const key = day.map((m) => m.what).join('|');
+      box.replaceChildren(...day.map((m) => {
+        const t = sum(m.foods);
+        const wrap = el('div', 'pp__meal');
+        if (last && !last.includes(m.what)) wrap.classList.add('is-new');
+        const head = el('div', 'pp__mhead');
+        head.append(el('strong', null, m.name), el('span', 'nums', `${kcal(t)} kcal · ${Math.round(t.p)}P · ${Math.round(t.c)}C · ${Math.round(t.f)}F`));
+        wrap.append(head, el('span', 'pp__what', m.what));
+        const ul = el('ul', 'pp__foods');
+        for (const f of m.foods) { const li = el('li'); li.append(el('span', 'pp__fname', f.name), el('span', 'nums', amount(f.g))); ul.append(li); }
+        wrap.append(ul);
+        return wrap;
+      }));
+      last = key;
+      const t = day.reduce((a, m) => { const s = sum(m.foods); return { p: a.p + s.p, c: a.c + s.c, f: a.f + s.f }; }, { p: 0, c: 0, f: 0 });
+      root.querySelector('[data-macros]').textContent = `${Math.round(t.p)}P · ${Math.round(t.c)}C · ${Math.round(t.f)}F`;
+      root.querySelector('[data-kcal]').textContent = `${kcal(t).toLocaleString('en-US')} kcal`;
+      root.querySelector('[data-by-text]').textContent = state.planner;
+      const n = day.reduce((a, m) => a + m.foods.length, 0);
+      root.querySelector('[data-matched]').textContent = `All ${n} foods matched from foods you've used`;
+      const repeat = root.querySelector('[data-repeat]');
+      repeat.hidden = !state.days;
+      if (state.days) {
+        let count = 0;
+        root.querySelectorAll('[data-day]').forEach((d) => {
+          const i = Number(d.dataset.day), wd = (3 + i) % 7; // the strip starts on a Wednesday
+          const weekend = wd === 6 || wd === 0;
+          const on = i > 0 && (state.days === 'all' || (state.days === 'weekdays' && !weekend) || (state.days === 'weekends' && weekend));
+          d.classList.toggle('is-on', on); d.classList.toggle('is-today', i === 0);
+          if (on) count++;
+        });
+        root.querySelector('[data-repeat-n]').textContent = String(count);
+      }
+    };
+    root.querySelectorAll('input[name=planner]').forEach((r) => r.addEventListener('change', () => { state.planner = r.dataset.says; render(); }));
+    root.querySelectorAll('[data-ask]').forEach((b) => b.addEventListener('click', () => {
+      const k = b.dataset.ask; state[k] = !state[k]; b.setAttribute('aria-pressed', String(state[k])); render();
+    }));
+    root.querySelector('[data-avoid]').addEventListener('change', (e) => { state.avoid = e.target.checked; render(); });
+    root.querySelectorAll('input[name=unit]').forEach((r) => r.addEventListener('change', () => { state.unit = r.value; render(); }));
+    root.querySelectorAll('[data-days]').forEach((b) => b.addEventListener('click', () => {
+      state.days = state.days === b.dataset.days ? null : b.dataset.days;
+      root.querySelectorAll('[data-days]').forEach((o) => o.setAttribute('aria-checked', String(o.dataset.days === state.days)));
+      render();
+    }));
+    render();
+  }
+</script>
+
+<style>
+  /* A split the reader operates: the plan stays pinned in a full-height field on the left while the
+     choices scroll past on the right, and every choice changes it at once. */
+  .plan { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); margin-top: var(--section); }
+  .plan__field { grid-column: 1 / 7; grid-row: 1 / 3; align-self: start; position: sticky; top: 0; height: 100svh; background: var(--indigo-deep); display: grid; place-items: center; overflow: hidden; padding: 2rem var(--margin); }
+  .plan__read { grid-column: 8 / 12; grid-row: 2; padding-bottom: 30svh; }
+  .plan__title { grid-column: 8 / 12; grid-row: 1; padding-top: 4.5rem; font-size: clamp(1.75rem, 1.4rem + 1vw, 2rem); line-height: 1.04; letter-spacing: -0.03em; }
+  .block { min-height: 50svh; padding-top: 12svh; }
+  .block:first-of-type { padding-top: 8svh; }
+  .block__say { font-size: var(--step-lead); line-height: 1.15; letter-spacing: -0.02em; font-weight: 500; max-width: 22ch; }
+  .block p:not(.block__say) { margin-top: 0.8rem; max-width: 40ch; }
+  .block .seg, .block .chips, .block .toggle { margin-top: 1.4rem; }
+
+  .seg { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: 26rem; background: var(--surface); border-radius: 14px; padding: 4px; }
+  .seg--two { grid-template-columns: 1fr 1fr; max-width: 18rem; }
+  .seg label { position: relative; }
+  .seg input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .seg span { display: grid; place-items: center; min-height: 44px; padding: 0 0.6rem; border-radius: 11px; font-size: 0.95rem; font-weight: 500; color: var(--muted); text-align: center; transition: background-color var(--t-ui) var(--ease-out), color var(--t-ui) ease; }
+  .seg input:checked + span { background: var(--surface-2); color: var(--ink); }
+  .seg input:focus-visible + span { outline: 2px solid var(--accent); }
+  @media (hover: hover) and (pointer: fine) { .seg input:not(:checked) + span:hover { color: var(--ink); } }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .chip { min-height: 44px; padding: 0 1.1rem; border-radius: var(--radius); background: var(--surface); color: var(--ink); font-size: 0.95rem; font-weight: 500; transition: background-color var(--t-hover) ease, color var(--t-hover) ease, transform var(--t-press) var(--ease-out); }
+  .chip:active { transform: scale(0.96); }
+  .chip[aria-pressed="true"], .chip[aria-checked="true"] { background: var(--accent); color: var(--accent-ink); }
+  @media (hover: hover) and (pointer: fine) { .chip:not([aria-pressed="true"]):not([aria-checked="true"]):hover { background: var(--surface-2); } }
+
+  .toggle { display: flex; align-items: center; justify-content: space-between; gap: 1rem; max-width: 20rem; min-height: 56px; padding: 0 1rem; background: var(--surface); border-radius: 14px; cursor: pointer; position: relative; }
+  .toggle em { font-style: normal; color: var(--muted); font-size: 0.9rem; margin-left: 0.4rem; }
+  .toggle input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+  .toggle__track { width: 51px; height: 31px; border-radius: 999px; background: var(--surface-2); position: relative; flex: none; transition: background-color var(--t-ui) ease; }
+  .toggle__track::after { content: ''; position: absolute; top: 2px; left: 2px; width: 27px; height: 27px; border-radius: 50%; background: var(--ink); transition: transform var(--t-ui) var(--ease-snap); }
+  .toggle input:checked + .toggle__track { background: var(--green); }
+  .toggle input:checked + .toggle__track::after { transform: translateX(20px); }
+  .toggle input:focus-visible + .toggle__track { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* The plan card, in the app's dark appearance at true size. */
+  [data-ui].pp { width: min(100%, 25rem); max-height: calc(100svh - 4rem); overflow: hidden; background: var(--surface); border-radius: 26px; padding: 12px 14px 16px; font-size: 15px; line-height: 1.3; color: var(--ink); }
+  [data-ui] .pp__bar { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; margin-bottom: 12px; }
+  [data-ui] .pp__bar strong { font-size: 16px; font-weight: 600; }
+  [data-ui] .pp__btn { justify-self: start; padding: 7px 13px; border-radius: 999px; background: var(--surface-2); font-size: 14px; }
+  [data-ui] .pp__btn--go { justify-self: end; }
+  [data-ui] .pp__head { display: grid; gap: 2px; background: var(--surface-2); border-radius: 18px; padding: 12px 14px; }
+  [data-ui] .pp__by { font-size: 13px; font-weight: 600; color: var(--accent); margin-bottom: 4px; }
+  [data-ui] .pp__small { font-size: 12px; color: var(--muted); }
+  [data-ui] .pp__total { display: flex; justify-content: space-between; font-size: 17px; }
+  [data-ui] .pp__total strong { font-weight: 600; }
+  [data-ui] .pp__kcal { color: var(--accent); }
+  [data-ui] .pp__matched { display: flex; align-items: center; gap: 6px; margin-top: 6px; font-size: 12px; font-weight: 600; color: var(--green); }
+  [data-ui] .seal { width: 14px; height: 14px; border-radius: 50%; background: var(--green); position: relative; flex: none; }
+  [data-ui] .seal::after { content: ''; position: absolute; left: 5px; top: 2.5px; width: 3px; height: 6.5px; border: solid var(--surface-2); border-width: 0 1.5px 1.5px 0; transform: rotate(45deg); }
+  [data-ui] .pp__meals { display: grid; gap: 12px; margin-top: 12px; }
+  [data-ui] .pp__meals :global(.pp__mhead) { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; padding: 0 4px; }
+  [data-ui] .pp__meals :global(.pp__mhead strong) { font-size: 15px; font-weight: 600; }
+  [data-ui] .pp__meals :global(.pp__mhead span) { font-size: 12px; color: var(--muted); }
+  [data-ui] .pp__meals :global(.pp__what) { display: block; padding: 0 4px; font-size: 12px; color: var(--muted); }
+  [data-ui] .pp__meals :global(.pp__foods) { list-style: none; margin: 6px 0 0; padding: 2px 12px; background: var(--surface-2); border-radius: 14px; }
+  [data-ui] .pp__meals :global(.pp__foods li) { display: flex; justify-content: space-between; gap: 10px; padding: 6px 0; font-size: 13px; }
+  [data-ui] .pp__meals :global(.pp__foods li + li) { border-top: 1px solid var(--surface); }
+  [data-ui] .pp__meals :global(.pp__fname::before) { content: ''; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--green); margin-right: 8px; vertical-align: 1px; }
+  [data-ui] .pp__meals :global(.pp__meal.is-new .pp__foods) { animation: pp-new 900ms var(--ease-out); }
+  @keyframes pp-new { from { background: var(--indigo-deep); } to { background: var(--surface-2); } }
+  [data-ui] .pp__repeat { margin-top: 12px; padding: 10px 12px; background: var(--indigo-deep); border-radius: 14px; font-size: 13px; color: var(--muted); }
+  [data-ui] .pp__repeat strong { color: var(--ink); font-weight: 600; }
+  [data-ui] .pp__days { list-style: none; padding: 0; margin: 8px 0 0; display: grid; grid-template-columns: repeat(14, 1fr); gap: 3px; }
+  [data-ui] .pp__days li { display: grid; place-items: center; aspect-ratio: 1; border-radius: 6px; font-size: 10px; background: var(--surface); color: var(--muted); transition: background-color var(--t-ui) ease, color var(--t-ui) ease; }
+  [data-ui] .pp__days li.is-on { background: var(--accent); color: var(--accent-ink); font-weight: 600; }
+  [data-ui] .pp__days li.is-today { background: var(--green); color: var(--accent-ink); font-weight: 600; }
+
+  @media (max-width: 64em) {
+    .plan { grid-template-columns: 1fr; }
+    .plan__title { grid-column: 1; grid-row: auto; padding: 0 var(--margin) 1.5rem; }
+    .plan__field { grid-column: 1; grid-row: auto; height: 46svh; z-index: 1; align-items: start; padding: 1rem var(--margin) 0; }
+    [data-ui].pp { max-height: none; transform-origin: top center; }
+    .plan__read { grid-column: 1; grid-row: auto; padding: 2.5rem var(--margin) 20svh; }
+    .block { min-height: 0; padding-top: 3.5rem; }
+    .block__say { font-size: 1.4rem; }
+  }
+</style>

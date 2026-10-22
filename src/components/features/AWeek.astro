@@ -1,0 +1,76 @@
+---
+import { Image } from 'astro:assets';
+import grocery from '../../assets/shots/features/card-grocery.png';
+import pantry from '../../assets/shots/features/card-pantry.png';
+import log from '../../assets/shots/features/card-log.png';
+
+// The app's own cards, cut from its App Store captures (6.9", dark) at the card's edges, so each sits on
+// the page as a piece of the interface rather than a screenshot in a box.
+// The CSV uses the first columns of DayExport.header in the app; a planned meal leaves the eaten
+// columns empty, because a plan is never reported as eaten.
+const csv = [
+  ['Meal', 'Food', 'Eaten (g)', 'Planned (g)', 'Eaten calories (kcal)'],
+  ['Lunch', 'Chicken breast, roasted', '180', '150', '281'],
+  ['Lunch', 'Brown rice, cooked', '180', '180', '220'],
+  ['Dinner', 'Salmon, baked', '', '145', ''],
+];
+---
+<section class="week wrap" aria-labelledby="week-title">
+  <h2 id="week-title" class="week__title" data-reveal>A week with Residual</h2>
+
+  <div class="stage" data-reveal>
+    <p><strong>On Sunday,</strong> plan the days ahead, by hand or with AI, and the grocery list writes itself: everything planned and not yet eaten, added up per food and sorted by aisle.</p>
+    <figure class="shot"><Image src={grocery} alt="The grocery list's Produce card: apple 360 g, avocado 100 g, blueberries 100 g, broccoli 300 g, spinach 120 g and sweet potato 440 g, each with how many meals use it and its weight in ounces." widths={[560, 1120]} sizes="(min-width: 40em) 560px, 100vw" /></figure>
+  </div>
+
+  <div class="stage" data-reveal>
+    <p><strong>At the store,</strong> scan a barcode, or photograph the Nutrition Facts and your iPhone reads it. What you keep goes in your pantry, matched to real numbers you picked, and plans reach for it first.</p>
+    <figure class="shot"><Image src={pantry} alt="Pantry foods: almonds, apple and avocado, each marked Matched · USDA with its protein, carbs and fat per 100 g." widths={[560, 1120]} sizes="(min-width: 40em) 560px, 100vw" /></figure>
+  </div>
+
+  <div class="stage" data-reveal>
+    <p><strong>At lunch,</strong> the amounts start from the plan. Change what was different and tap Log meal. The plan stays as it was, and the difference shows in amber.</p>
+    <figure class="shot"><Image src={log} alt="Lunch as logged: You'll log 63P, 53C, 16F, 609 calories, and in amber, Diverged from plan +9 P, +1 F." widths={[560, 1120]} sizes="(min-width: 40em) 560px, 100vw" /></figure>
+  </div>
+
+  <div class="stage" data-reveal>
+    <p><strong>On Friday,</strong> export the week for your tracker or your nutritionist: one row per food, what you ate beside what you planned. A meal you only planned is never reported as eaten.</p>
+    <div class="csv" data-ui role="img" aria-label="Rows from an exported CSV: the date, meal, food, eaten grams, planned grams and calories for each food.">
+      <div class="csv__name">Residual export.csv <span>· Wednesday, October 21</span></div>
+      <table class="nums">
+        <thead><tr>{csv[0].map((h) => <th>{h}</th>)}</tr></thead>
+        <tbody>{csv.slice(1).map((r) => <tr>{r.map((c) => <td>{c}</td>)}</tr>)}</tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* One reading column on the page's text axis; each paragraph opens with when it happens, and the
+     evidence under it is exactly as wide as the column. */
+  .week { margin-top: var(--section); }
+  .week > * { width: min(100%, 35rem); margin-left: clamp(0rem, 30vw - 6rem, 30vw); }
+  .week__title { font-size: clamp(1.75rem, 1.4rem + 1vw, 2rem); letter-spacing: -0.02em; margin-bottom: 3rem; }
+  .stage + .stage { margin-top: 4.5rem; }
+  .stage p { font-size: 1.125rem; line-height: 1.6; color: var(--muted); max-width: none; }
+  .stage p strong { color: var(--ink); font-weight: 600; }
+  /* The card's own corner radius, so the screen behind it never shows. */
+  .shot { margin-top: 1.25rem; overflow: hidden; border-radius: 24px; }
+  .shot :global(img) { width: 100%; height: auto; }
+
+  [data-ui].csv { margin-top: 1.25rem; background: var(--ui-card); color: var(--ui-ink); border-radius: 12px; padding: 12px 0 6px; font-size: 13px; overflow-x: auto; }
+  [data-ui] .csv__name { padding: 0 14px 8px; font-weight: 600; font-size: 13px; }
+  [data-ui] .csv__name span { font-weight: 400; color: var(--ui-muted); }
+  [data-ui] table { border-collapse: collapse; width: 100%; white-space: nowrap; }
+  [data-ui] th, [data-ui] td { text-align: left; padding: 6px 14px; border-top: 1px solid var(--ui-fill); }
+  [data-ui] th { color: var(--ui-muted); font-weight: 500; background: var(--ui-paper); }
+  [data-ui] td:nth-child(n+3), [data-ui] th:nth-child(n+3) { text-align: right; }
+
+  @media (max-width: 40em) {
+    .week > * { margin-left: 0; }
+    .week__title { font-size: 1.5rem; margin-bottom: 2rem; }
+    .stage + .stage { margin-top: 3.5rem; }
+    .stage p { font-size: 1.0625rem; }
+    .shot { border-radius: 4.4vw; }
+  }
+</style>

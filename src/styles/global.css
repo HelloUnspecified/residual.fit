@@ -23,6 +23,16 @@
   --amber-deep: #3A2A08;
   --red: #FF6B6B;
   --indigo-deep: #1A1C3A;
+  /* The app's light appearance, for fragments shown in it (Theme.swift: deeper shades so every colour reads as text on white). */
+  --ui-paper: #F2F2F7;
+  --ui-card: #FFFFFF;
+  --ui-ink: #1C1D26;
+  --ui-muted: #6B6E80;
+  --ui-fill: #E6E8F0;
+  --ui-accent: #4F5BD5;
+  --ui-green: #13773F;
+  --ui-amber: #8C5A00;
+  --ui-red: #B83232;
 
   --font-text: 'Roundo', 'SF Pro Rounded', ui-rounded, system-ui, sans-serif;
   --font-display: var(--font-text);

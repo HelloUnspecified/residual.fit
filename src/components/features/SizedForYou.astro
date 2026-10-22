@@ -1,0 +1,160 @@
+---
+// A friend's dinner, shared from their phone, as the app receives it (10-shared). Sizing for you scales
+// every portion by the ratio of the two days' calories, kept between half and double, and snaps each to
+// 5 g: the rule in the app's SharedItem. Per-100 g values are USDA's for these foods.
+const theirs = 2600;
+const yours = 2100;
+const foods = [
+  { name: 'Salmon, baked', per100: [22, 0, 12], g: 200 },
+  { name: 'Sweet potato, baked', per100: [2, 20.7, 0.2], g: 260 },
+  { name: 'Broccoli, steamed', per100: [2.4, 7.2, 0.4], g: 180 },
+  { name: 'Olive oil', per100: [0, 0, 100], g: 10 },
+];
+const ratio = (y: number) => Math.min(2, Math.max(0.5, y / theirs));
+const size = (g: number, r: number) => Math.max(5, Math.round((g * r) / 5) * 5);
+const r0 = ratio(yours);
+const totals = (r: number) => foods.reduce((t, f) => { const g = size(f.g, r) / 100; t.p += f.per100[0] * g; t.c += f.per100[1] * g; t.f += f.per100[2] * g; return t; }, { p: 0, c: 0, f: 0 });
+const t0 = totals(r0);
+const kcal = (t: { p: number; c: number; f: number }) => Math.round(4 * t.p + 4 * t.c + 9 * t.f);
+---
+<section id="share" class="sized" aria-labelledby="sized-title">
+  <div class="sized__in">
+    <div class="sized__ask" data-reveal>
+      <p>A friend shares their dinner. They eat <strong class="nums">2,600</strong> kcal a day.</p>
+      <div class="sized__you">
+        <label for="sized-kcal">You eat</label>
+        <div class="sized__field">
+          <button type="button" data-step="-100" aria-label="100 kcal less">−</button>
+          <input id="sized-kcal" class="nums" type="number" inputmode="numeric" min="800" max="6000" step="50" value={yours} />
+          <button type="button" data-step="100" aria-label="100 kcal more">+</button>
+        </div>
+        <span>kcal a day.</span>
+      </div>
+      <p class="sized__note">Every portion scales with the two days, never below half or past double. Send by link or AirDrop.</p>
+    </div>
+    <h2 id="sized-title" class="sized__word sized__word--a"><span>Sized</span> <span class="sr-only">for you.</span></h2>
+  </div>
+
+  <div class="sized__out">
+    <div class="shared" data-ui data-reveal="scale" aria-live="polite">
+      <div class="shared__title">Shared with you</div>
+      <div class="shared__card">
+        <span class="shared__kind">Meal</span>
+        <strong>Salmon and sweet potato</strong>
+        <span class="shared__note">25 minutes on one sheet pan</span>
+        <span class="shared__nums nums" data-total>{kcal(t0)} kcal · {Math.round(t0.p)}P · {Math.round(t0.c)}C · {Math.round(t0.f)}F</span>
+      </div>
+      <div class="shared__label" data-label>Foods, sized for you</div>
+      <ul class="shared__foods">
+        {foods.map((f, i) => (
+          <li data-food={i}>
+            <span class="shared__name">{f.name}<span class="shared__match"><span class="seal" aria-hidden="true"></span>Matched · USDA</span></span>
+            <span class="shared__g nums"><strong data-g>{size(f.g, r0)} g</strong><span data-theirs>theirs {f.g} g</span></span>
+          </li>
+        ))}
+      </ul>
+      <div class="shared__seg" role="radiogroup" aria-label="Portions">
+        <label><input type="radio" name="portions" value="theirs" /><span>As shared</span></label>
+        <label><input type="radio" name="portions" value="mine" checked /><span data-pct>Sized for me · {Math.round(r0 * 100)}%</span></label>
+      </div>
+      <p class="shared__why nums" data-why>{Math.round(r0 * 100)}% of their portions, from your daily calories ({yours} vs their {theirs}).</p>
+    </div>
+    <p class="sized__word sized__word--b" aria-hidden="true">for you.</p>
+  </div>
+</section>
+
+<script define:vars={{ foods, theirs }}>
+  const root = document.getElementById('share');
+  if (root) {
+    const input = root.querySelector('#sized-kcal');
+    const ratio = (y) => Math.min(2, Math.max(0.5, y / theirs));
+    const size = (g, r) => Math.max(5, Math.round((g * r) / 5) * 5);
+    const render = () => {
+      const yours = Math.min(6000, Math.max(800, Number(input.value) || 2100));
+      const mine = root.querySelector('input[name=portions]:checked').value === 'mine';
+      const r = ratio(yours);
+      const use = mine ? r : 1;
+      const t = { p: 0, c: 0, f: 0 };
+      foods.forEach((f, i) => {
+        const g = size(f.g, use);
+        const li = root.querySelector(`[data-food="${i}"]`);
+        li.querySelector('[data-g]').textContent = `${g} g`;
+        li.querySelector('[data-theirs]').hidden = !mine || g === f.g;
+        t.p += f.per100[0] * g / 100; t.c += f.per100[1] * g / 100; t.f += f.per100[2] * g / 100;
+      });
+      const kcal = Math.round(4 * t.p + 4 * t.c + 9 * t.f);
+      root.querySelector('[data-total]').textContent = `${kcal} kcal · ${Math.round(t.p)}P · ${Math.round(t.c)}C · ${Math.round(t.f)}F`;
+      root.querySelector('[data-pct]').textContent = `Sized for me · ${Math.round(r * 100)}%`;
+      root.querySelector('[data-label]').textContent = mine ? 'Foods, sized for you' : 'Foods, as shared';
+      const capped = yours / theirs < 0.5 ? ' Kept at half, the smallest it goes.' : yours / theirs > 2 ? ' Kept at double, the most it goes.' : '';
+      root.querySelector('[data-why]').textContent = `${Math.round(r * 100)}% of their portions, from your daily calories (${yours} vs their ${theirs}).${capped}`;
+    };
+    input.addEventListener('input', render);
+    input.addEventListener('change', () => { input.value = String(Math.min(6000, Math.max(800, Number(input.value) || 2100))); render(); });
+    root.querySelectorAll('[data-step]').forEach((b) => b.addEventListener('click', () => {
+      input.value = String(Math.min(6000, Math.max(800, (Number(input.value) || 2100) + Number(b.dataset.step))));
+      render();
+    }));
+    root.querySelectorAll('input[name=portions]').forEach((r) => r.addEventListener('change', render));
+  }
+</script>
+
+<style>
+  /* Two fields meet on a vertical edge: what you hand Residual on the dark half, what it makes of it in
+     the app's light appearance on the other. The heading is split across the edge. */
+  .sized { display: grid; grid-template-columns: 1fr 1fr; margin-top: var(--section); }
+  .sized__in, .sized__out { position: relative; min-height: 90svh; padding: clamp(3rem, 8vh, 6rem) var(--margin) clamp(7rem, 16vh, 10rem); }
+  .sized__in { background: var(--surface); display: grid; align-content: start; }
+  .sized__out { background: var(--ui-paper); color: var(--ui-ink); display: grid; justify-items: center; align-content: start; }
+  .sized__ask { margin-top: 12vh; max-width: 30ch; margin-left: clamp(0rem, 6vw, 6rem); font-size: var(--step-lead); line-height: 1.35; }
+  .sized__ask strong { font-weight: 600; }
+  .sized__you { margin-top: 1.2rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.8rem; }
+  .sized__field { display: inline-flex; align-items: center; background: var(--bg); border-radius: var(--radius); padding: 4px; }
+  .sized__field button { width: 44px; height: 44px; border-radius: 50%; color: var(--accent); font-size: 1.4rem; transition: background-color var(--t-hover) ease, transform var(--t-press) var(--ease-out); }
+  .sized__field button:active { transform: scale(0.92); }
+  @media (hover: hover) and (pointer: fine) { .sized__field button:hover { background: var(--surface-2); } }
+  .sized__field input { width: 4.2em; background: none; border: 0; text-align: center; color: var(--accent); font-weight: 600; font-size: inherit; -moz-appearance: textfield; appearance: textfield; }
+  .sized__field input::-webkit-inner-spin-button, .sized__field input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  .sized__note { margin-top: 1.4rem; font-size: var(--step-body); color: var(--muted); max-width: 34ch; }
+
+  .sized__word { position: absolute; bottom: 2rem; font-size: clamp(2.75rem, 5vw, 5.25rem); line-height: 1; letter-spacing: -0.035em; font-weight: 500; margin: 0; }
+  .sized__word--a { right: var(--margin); }
+  .sized__word--b { left: var(--margin); color: var(--ui-ink); max-width: none; }
+
+  [data-ui].shared { margin-top: 6vh; width: min(100%, 27rem); font-size: 15px; line-height: 1.3; color: var(--ui-ink); }
+  [data-ui] .shared__title { text-align: center; font-size: 16px; font-weight: 600; margin-bottom: 16px; }
+  [data-ui] .shared__card { display: grid; gap: 2px; background: var(--ui-card); border-radius: 18px; padding: 16px; }
+  [data-ui] .shared__kind { font-size: 12px; color: var(--ui-muted); }
+  [data-ui] .shared__card strong { font-size: 19px; font-weight: 600; }
+  [data-ui] .shared__note { font-size: 13px; color: var(--ui-muted); }
+  [data-ui] .shared__nums { font-size: 13px; color: var(--ui-accent); margin-top: 2px; }
+  [data-ui] .shared__label { margin: 18px 4px 8px; font-size: 14px; font-weight: 600; color: var(--ui-muted); }
+  [data-ui] .shared__foods { list-style: none; padding: 2px 16px; margin: 0; background: var(--ui-card); border-radius: 18px; }
+  [data-ui] .shared__foods li { display: flex; justify-content: space-between; gap: 12px; padding: 11px 0; }
+  [data-ui] .shared__foods li + li { border-top: 1px solid var(--ui-fill); }
+  [data-ui] .shared__name { display: grid; gap: 3px; }
+  [data-ui] .shared__match { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; color: var(--ui-green); }
+  [data-ui] .seal { width: 13px; height: 13px; border-radius: 50%; background: var(--ui-green); position: relative; }
+  [data-ui] .seal::after { content: ''; position: absolute; left: 4.5px; top: 2.5px; width: 3px; height: 6px; border: solid var(--ui-card); border-width: 0 1.5px 1.5px 0; transform: rotate(45deg); }
+  [data-ui] .shared__g { display: grid; justify-items: end; align-content: start; }
+  [data-ui] .shared__g strong { font-weight: 600; font-size: 16px; }
+  [data-ui] .shared__g span { font-size: 12px; color: var(--ui-muted); }
+  [data-ui] .shared__seg { margin-top: 18px; display: grid; grid-template-columns: 1fr 1fr; background: var(--ui-fill); border-radius: 12px; padding: 3px; }
+  [data-ui] .shared__seg label { position: relative; }
+  [data-ui] .shared__seg input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  [data-ui] .shared__seg span { display: block; text-align: center; padding: 9px 6px; border-radius: 10px; font-size: 14px; font-weight: 500; color: var(--ui-ink); opacity: 0.8; transition: background-color var(--t-ui) var(--ease-out), color var(--t-ui) ease; }
+  [data-ui] .shared__seg input:checked + span { background: var(--ui-card); color: var(--ui-ink); }
+  [data-ui] .shared__seg input:focus-visible + span { outline: 2px solid var(--ui-accent); }
+  [data-ui] .shared__why { margin: 8px 4px 0; font-size: 12px; color: var(--ui-muted); max-width: none; }
+
+  @media (max-width: 64em) {
+    .sized { grid-template-columns: 1fr; margin-top: 5rem; }
+    .sized__in { min-height: 62svh; padding-bottom: 6rem; }
+    .sized__out { min-height: 62svh; padding-top: 6rem; }
+    .sized__ask { margin: 0; }
+    .sized__word { font-size: 11vw; }
+    .sized__word--a { right: auto; left: var(--margin); bottom: 1.2rem; }
+    .sized__word--b { top: 1.4rem; bottom: auto; }
+    [data-ui].shared { margin-top: 0; }
+  }
+</style>
