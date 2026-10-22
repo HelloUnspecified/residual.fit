@@ -4,6 +4,7 @@ import '../styles/global.css';
 import Ring from '../components/Ring.astro';
 import { Image } from 'astro:assets';
 import today from '../assets/shots/today-dark.png';
+import { site } from '../site';
 ---
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8" /><meta name="robots" content="noindex" /><title>Residual</title></head>
@@ -11,16 +12,18 @@ import today from '../assets/shots/today-dark.png';
   <div class="og__ring"><Ring size="100%" width={0.12} tickLength={0.9} /><div class="og__screen"><Image src={today} alt="" width={420} loading="eager" /></div></div>
   <div class="og__copy">
     <p class="og__mark"><Ring size="1.1em" width={0.16} /> Residual</p>
-    <h1>A day of eating,<br>solved.</h1>
-    <p class="og__sub">Set targets with a range. Plan with Claude. Log what you ate. The meals ahead re-size so the day lands.</p>
+    <h1>Ate off plan?<br>The rest of the day fixes&nbsp;it.</h1>
+    <p class="og__sub">The meals still ahead re-size so you land your calories and macros by tonight. Free for {site.trialDays} days on iPhone.</p>
   </div>
 </body></html>
 <style is:global>
   .og { width: 1200px; height: 630px; overflow: hidden; position: relative; background: var(--bg); }
+  /* The card is screenshotted from the dev server, so keep Astro's dev toolbar out of the picture. */
+  astro-dev-toolbar { display: none !important; }
   .og__ring { position: absolute; width: 760px; height: 760px; right: -150px; top: -50px; color: var(--ink); }
   .og__screen { position: absolute; left: 50%; top: 50%; width: 220px; aspect-ratio: 1206 / 2622; transform: translate(-50%, -30%); border-radius: 9% / 4.2%; overflow: hidden; }
-  .og__copy { position: absolute; left: 64px; top: 90px; width: 620px; }
-  .og__mark { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; font-size: 28px; margin-bottom: 36px; }
-  .og h1 { font-size: 96px; line-height: 0.98; letter-spacing: -0.03em; }
-  .og__sub { margin-top: 28px; font-size: 26px; line-height: 1.35; max-width: 22ch; color: var(--muted); }
+  .og__copy { position: absolute; left: 64px; top: 64px; width: 620px; }
+  .og__mark { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; font-size: 28px; margin-bottom: 28px; }
+  .og h1 { font-size: 84px; line-height: 0.98; letter-spacing: -0.03em; }
+  .og__sub { margin-top: 24px; font-size: 26px; line-height: 1.35; max-width: 28ch; color: var(--muted); }
 </style>
