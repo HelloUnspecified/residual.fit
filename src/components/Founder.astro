@@ -1,0 +1,46 @@
+---
+import { Image } from 'astro:assets';
+import Ring from './Ring.astro';
+import { site } from '../site';
+import portrait from '../assets/founder.webp';
+---
+<!-- The maker's note, in the maker's own words, lightly edited. It sits just before the questions because it answers
+     the ones a page can't: who made this, why, and what it deliberately isn't. -->
+<section id="why" class="founder" aria-labelledby="founder-title">
+  <div class="founder__side" data-reveal style="--i:0">
+    <!-- A circle with a green ring around it, the site's one shape: a real face says a person stands behind the app. -->
+    <Image class="founder__photo" src={portrait} alt={`${site.developer}, who made Residual`} width={480} widths={[240, 480]} sizes="11rem" loading="lazy" />
+    <h2 id="founder-title" class="founder__eyebrow">Why I built Residual</h2>
+    <p class="founder__pull head">You don't need friction when you're trying to build a habit.</p>
+  </div>
+
+  <div class="founder__letter" data-reveal style="--i:1">
+    <p class="founder__open">I felt like a data-entry nerd. Too many taps, text I couldn't read, and the same entries over and over, all day long. I only used those apps because everyone else did, and my nutritionist needed to see the data.</p>
+    <p>She kept warning me it would get hard. Tracking calories is the easy part. Tracking calories and macros together turns into a puzzle, and that's where people who started strong get worn out and quit.</p>
+    <p>She was right. So I started asking AI to plan a day of meals from what I had on hand, every portion included, and logging that plan ahead of time. Planning matters as much as logging: when you're really tracking, having a plan is the difference between seeing results and giving up.</p>
+    <p>Then the first meal would happen. The egg was bigger, or I was short on something, and the numbers were off before breakfast was over. So I'd take the actuals back to the AI, have it re-plan the rest of the day, and go back and forth between the two all day.</p>
+    <p>So I wrote the app. Planning and logging in one place, with AI to help. A pantry and saved meals, because people are predictable and eat the same simple food on repeat. I don't need exotic dinners I can't shop for; I need food I can make that gets me to my numbers. And sharing that's one AirDrop: my wife and I both track now, and a meal I make lands right in her day.</p>
+    <p>Residual is new, and it isn't everything to everyone. It doesn't have every food database, though adding a food takes a photo of its label. It won't guess at a picture of your restaurant plate, and if you're serious about your numbers, a guessed-at 1,500-calorie dinner was never going to fit anyway.</p>
+    <p>But it's the thing that helped me lose the weight, stop playing food games, and keep going.</p>
+    <p class="founder__sign"><Ring size="1.6rem" width={0.16} /> <span><strong>{site.developer}</strong> <span class="muted">made Residual</span></span></p>
+    <p class="small">The workouts and the whole journey are on Instagram: <a class="link founder__ig" href={site.instagram.url} rel="me noopener">@{site.instagram.handle}</a></p>
+  </div>
+</section>
+
+<style>
+  .founder { margin-top: var(--section); padding-inline: var(--margin); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); row-gap: 2.5rem; align-items: start; }
+  .founder__side { grid-column: 2 / 6; position: sticky; top: 6rem; }
+  .founder__photo { width: clamp(7rem, 11vw, 11rem); aspect-ratio: 1; object-fit: cover; object-position: 50% 38%; border-radius: 50%; outline: 3px solid var(--green); outline-offset: 6px; margin: 9px 0 2rem 9px; }
+  .founder__eyebrow { font-size: var(--step-body); font-weight: 600; color: var(--accent-strong); margin-bottom: 1.2rem; }
+  .founder__pull { text-wrap: balance; }
+  .founder__letter { grid-column: 7 / 12; display: grid; gap: 1.1em; max-width: 60ch; }
+  .founder__letter p { color: var(--muted); }
+  .founder__letter .founder__open { font-size: var(--step-lead); line-height: 1.35; color: var(--ink); }
+  .founder__ig { color: var(--accent-strong); font-weight: 600; }
+  .founder__sign { margin-top: 0.8em; display: flex; align-items: center; gap: 0.75rem; color: var(--ink); }
+
+  @media (max-width: 64em) {
+    .founder__side, .founder__letter { grid-column: 1 / 13; }
+    .founder__side { position: static; }
+  }
+</style>

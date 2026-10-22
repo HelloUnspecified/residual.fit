@@ -16,7 +16,8 @@ const meals = ['Dinner', 'Snack'];
 <section id="live" class="live" data-state={r.status.severity} aria-labelledby="live-title">
   <div class="live__head wrap" data-reveal style="--i:0">
     <h2 id="live-title" class="head"><span data-word>Lunch as planned.</span> <span data-word2>Nothing moves.</span></h2>
-    <p>Drag what you actually ate at lunch. The two meals ahead re-size with the same rules the app runs: calories first, then protein, then carbs; fat floats; nothing shrinks below half its plan or grows past double; portions on a 5 g grid.</p>
+    <p>Lunch was planned at 200 g of chicken. Drag it to what you really ate and watch dinner and the snack re-size so the day still lands. This is the app's own solver, running in your browser.</p>
+    <p class="small live__rules">How it decides: calories first, then protein, then carbs; fat floats; nothing shrinks below half its plan or grows past double; portions on a 5 g grid.</p>
   </div>
 
   <div class="live__control" data-ui data-reveal="scale" style="--i:1">
@@ -137,6 +138,7 @@ const meals = ['Dinner', 'Snack'];
   .live[data-state="drifting"] { --field: var(--amber); }
   .live__head { grid-column: 1 / 8; }
   .live__head p { margin-top: 1rem; max-width: 52ch; }
+  .live__head .live__rules { margin-top: 0.75rem; color: var(--field-muted); }
   .live__head .muted, .live .muted { color: var(--field-muted); }
   .live__control { grid-column: 8 / 13; align-self: start; justify-self: end; width: min(100%, 34rem); padding-inline: var(--margin); }
   .live__result { grid-column: 1 / 13; display: grid; grid-template-columns: minmax(14rem, 22rem) 1fr 1.2fr; gap: 2rem var(--gutter); align-items: center; padding-inline: var(--margin); }

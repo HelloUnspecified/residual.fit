@@ -7,16 +7,19 @@ import today from '../assets/shots/today-dark.png';
 <section class="hero" aria-labelledby="hero-title">
   <div class="hero__inner">
     <div class="hero__copy">
+      <!-- The headline names the moment every macro counter knows (the day went off plan, and what's left
+           is a puzzle) before it names the product; the brand line rides above it as the eyebrow. -->
+      <p class="hero__eyebrow" data-rise style="--i:0">{site.tagline}</p>
       <h1 id="hero-title" class="display lines">
-        <span class="line"><span data-line style="--i:0">A day of eating,</span></span>
-        <span class="line"><span data-line style="--i:1">solved.</span></span>
+        <span class="line"><span data-line style="--i:0">Ate off plan?</span></span>
+        <span class="line"><span data-line style="--i:1">The rest of the day fixes it.</span></span>
       </h1>
-      <p class="lead" data-rise style="--i:2">Set the numbers your nutritionist gave you. Plan with Claude, log what you really ate, and Residual re-sizes the meals ahead so the day lands in range.</p>
+      <p class="lead" data-rise style="--i:2">Most trackers count what you ate and leave the food puzzle to you. Residual plans your day, and when you go off plan it re-sizes the meals still ahead so you land your calories and macros by tonight.</p>
       <div class="hero__actions" data-rise style="--i:3">
-        <a class="button" href={site.appStoreUrl}><Ring size="1.1em" width={0.2} tick={false} dot={false} eaten={0.62} lands={0.93} zoneStart={0.84} /> Get Residual on the App Store</a>
-        <a class="link hero__try" href="#live">Or try the solver first</a>
+        <a class="button" href={site.appStoreUrl}><Ring size="1.1em" width={0.2} tick={false} dot={false} eaten={0.62} lands={0.93} zoneStart={0.84} /> Try it free for {site.trialDays} days</a>
+        <a class="link hero__try" href="#live">Or try the solver right here</a>
       </div>
-      <p class="small muted hero__note" data-rise style="--i:4">iPhone · {site.minimumOS} · Your data stays on your phone and in your iCloud.</p>
+      <p class="small muted hero__note" data-rise style="--i:4">On the App Store · iPhone · {site.minimumOS} · No account · Your data stays on your phone and in your iCloud.</p>
     </div>
     <div class="hero__stage">
       <div class="hero__ringbox" aria-hidden="true">
@@ -35,6 +38,7 @@ import today from '../assets/shots/today-dark.png';
   .hero { position: relative; min-height: 100svh; display: grid; align-items: center; overflow: clip; padding: 5rem var(--margin) 1.5rem; }
   .hero__inner { width: 100%; max-width: 1600px; margin-inline: auto; display: grid; grid-template-columns: minmax(0, 11fr) minmax(0, 9fr); column-gap: var(--gutter); align-items: center; }
   .hero__copy { max-width: 40rem; }
+  .hero__eyebrow { margin-bottom: 1rem; font-weight: 600; color: var(--accent-strong); }
   .hero__copy h1 { max-width: 16ch; font-size: clamp(3rem, 5.6vw, 5.5rem); }
   .lead { margin-top: 1.4rem; max-width: 36ch; font-size: clamp(1.125rem, 1rem + 0.6vw, 1.4rem); }
   .hero__actions { margin-top: 2rem; display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; }

@@ -7,11 +7,12 @@ Residual is made by Clark Sell. It runs on iOS 27 or later, iPhone only; there i
 ## Key facts
 
 - Platform: iPhone, iOS 27 or later. Works offline; planning with Claude and USDA food search need a connection.
-- Targets: calories, protein, carbs and fat, each an entered number with its own plus-or-minus range. Any one may float, meaning it is balanced last and never marks the day as off.
+- Targets: calories, protein, carbs and fat, each with its own plus-or-minus range. The user enters numbers from a coach or dietitian, or a built-in TDEE calculator works them out from body, activity and goal. Any one may float, meaning it is balanced last and never marks the day as off. Residual doesn't adjust targets from a weight trend.
 - AI: Claude, from Anthropic, and Apple's on-device model. Neither sizes the final portions.
 - Planning: Claude (through Apple's Foundation Models framework with App Attest) drafts meals, foods and grams, only if the user allows it. Otherwise the day is planned on the iPhone with Apple's on-device model, or from the user's pantry, saved meals and built-in foods.
 - Re-solving: when a logged meal differs from the plan, a deterministic solver (not AI) re-sizes the meals ahead by the smallest plausible change: calories first, then protein, carbs and fat; every portion stays between about half and double its plan, in grams on a 5 g grid. When the ranges can't be met, the forecast says so.
-- Logging: the user enters what they actually ate; logging never overwrites the plan, and divergence from the plan is shown.
+- Logging: amounts start from the plan, so a meal eaten as planned is logged with one tap; the user changes only what differed. Logging never overwrites the plan, and divergence from the plan is shown. Portions are stored in grams and can be shown in ounces, cups, tablespoons or millilitres, so a food scale helps but isn't required.
+- Not yet: no import from other trackers; Apple Health support is planned for a later version.
 - Food data: USDA FoodData Central, matched by the user (never silently), with barcode scanning. AI estimates are labelled as estimates until matched.
 - Privacy: data stays on the iPhone and in the user's private iCloud database. No account, no tracking, no analytics.
 - Price: no free tier. Everything is part of Residual Plus, an auto-renewing App Store subscription: $12.99 a month, $29.99 every 3 months or $99.99 a year (US prices), each starting with a 14-day free trial. No ads, no data sold, no lifetime deal, no sales.
@@ -19,7 +20,7 @@ Residual is made by Clark Sell. It runs on iOS 27 or later, iPhone only; there i
 
 ## Pages
 
-- [Home](https://residual.fit/): what Residual does, a live demo of the solver, and answers to common questions
+- [Home](https://residual.fit/): what Residual does, a live demo of the solver, and answers to common questions (weight loss, logging effort, food scales, targets, switching from another app)
 - [Features](https://residual.fit/features/): everything the app does, screen by screen: Close the residual, AI day plans, planning ahead, your pantry and saved meals, logging, USDA foods and barcodes, grocery lists, sharing, targets and privacy
 - [Pricing](https://residual.fit/pricing/): what Residual costs and why: $12.99 a month, $29.99 a quarter or $99.99 a year, a 14-day trial, no free tier, and where the money goes (Claude and food data)
 - [Help and support](https://residual.fit/support/): the subscription, offline use, planning with Claude, your data, and fixes for common problems

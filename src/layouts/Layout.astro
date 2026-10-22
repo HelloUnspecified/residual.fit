@@ -24,7 +24,7 @@ const ogAlt = "Residual's Today screen inside its macro ring, with the line A da
 const graph = {
   '@context': 'https://schema.org',
   '@graph': [
-    { '@type': 'Person', '@id': `${home}#publisher`, name: site.developer, url: home, email: site.supportEmail },
+    { '@type': 'Person', '@id': `${home}#publisher`, name: site.developer, url: home, email: site.supportEmail, sameAs: [site.instagram.url] },
     { '@type': 'WebSite', '@id': `${home}#website`, url: home, name: site.name, description: site.description, inLanguage: 'en', publisher: { '@id': `${home}#publisher` } },
     {
       '@type': 'WebPage', '@id': `${canonical}#webpage`, url: canonical, name: fullTitle, description, inLanguage: 'en',
@@ -80,15 +80,14 @@ const graph = {
       </a>
       {!plain && (
         <nav class="top__nav" aria-label="Sections">
-          <a class="link" href="#how">How it works</a>
+          <a class="link" href="/#live">Try it</a>
+          <a class="link" href="/#how">How it works</a>
           <a class="link" href="/features/">Features</a>
           <a class="link" href="/pricing/">Pricing</a>
-          <a class="link" href="#live">Try it</a>
-          <a class="link" href="#promises">Promises</a>
-          <a class="link" href="#questions">Questions</a>
+          <a class="link" href="/#questions">Questions</a>
         </nav>
       )}
-      <a class="button top__cta" href={site.appStoreUrl}>Get Residual</a>
+      <a class="button top__cta" href={site.appStoreUrl}>Try free</a>
     </header>
     <main>
       <slot />

@@ -76,6 +76,9 @@ Then, once:
 
 - `src/site.ts`: set `appStoreId` to the app's numeric Apple ID. That switches every button to the real store
   page and turns on the Safari Smart App Banner and the App Store link in the structured data.
+- `public/s/index.html`: point the share page's "Try it free" link at the App Store page, and add
+  `<meta name="apple-itunes-app" content="app-id=…">` so Safari shows the Smart App Banner there too. It is a
+  static file, so `site.ts` doesn't reach it.
 - Once the price is set, add an `offers` block (price, currency) to the `MobileApplication` data in
   `src/pages/index.astro`, and the number to the price answer in `src/content/faq.ts` and `public/llms.txt`.
 - Search and structured data: check the home page with Google's Rich Results Test and submit

@@ -6,6 +6,7 @@ import HowItWorks from '../components/HowItWorks.astro';
 import LiveSolve from '../components/LiveSolve.astro';
 import Band from '../components/Band.astro';
 import Promises from '../components/Promises.astro';
+import Founder from '../components/Founder.astro';
 import Questions from '../components/Questions.astro';
 import Start from '../components/Start.astro';
 import Footer from '../components/Footer.astro';
@@ -54,10 +55,11 @@ const faqPage = {
 ---
 <Layout schema={[app, faqPage]}>
   <Hero />
-  <HowItWorks />
   <LiveSolve />
+  <HowItWorks />
   <Band />
   <Promises />
+  <Founder />
   <Questions />
   <Start />
   <Footer />

@@ -32,9 +32,12 @@ export const site = {
     { name: 'Yearly', price: 99.99, months: 12, per: 'a year' },
   ],
   developer: 'Clark Sell',
+  // The maker's Instagram: the workouts and the health journey behind the app, linked from the founder note.
+  instagram: { handle: 'theclarksell', url: 'https://www.instagram.com/theclarksell/' },
   // What the app does, as short claims, for structured data and llms.txt. Keep them true to the app.
   features: [
     'Daily targets for calories, protein, carbs and fat, each with its own plus-or-minus range and a landing order you set; any of them may float',
+    'A TDEE calculator that works out targets from your body, activity and goal, or enter the numbers a coach gave you',
     'Day plans drafted by Claude from your pantry, saved meals and instructions, only if you allow it',
     "Planning with Apple's on-device model, or from your pantry and saved foods, when Claude is off or offline",
     'Plan any day up to two weeks ahead, and copy a meal to every weekday at once',

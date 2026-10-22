@@ -7,9 +7,9 @@ import log from '../assets/shots/meal-log-dark.png';
 import drift from '../assets/shots/today-drift-dark.png';
 
 const stages = [
-  { id: 'targets', clause: 'Set targets with a range.', body: 'Calories, protein, carbs and fat: each a number with its own ± band. One may float; it is balanced last, never judged.', shot: targets, alt: 'The Daily Targets screen: calories 2700 ±100, protein 210 ±10, carbs 230 ±25, fat 104 floats ±15, and a note that the macros add up to 2700 kcal.' },
+  { id: 'targets', clause: 'Set targets with a range.', body: 'Bring the numbers your coach gave you, or work them out in the app from your body, activity and goal. Each gets its own ± band, and landing anywhere inside it counts.', shot: targets, alt: 'The Daily Targets screen: calories 2700 ±100, protein 210 ±10, carbs 230 ±25, fat 104 floats ±15, and a note that the macros add up to 2700 kcal.' },
   { id: 'plan', clause: 'Claude drafts the day.', body: 'From what is in your pantry and what you tell it. You pick each food\'s real USDA match; an estimate is shown as one until you do.', shot: proposed, alt: 'A proposed plan from Claude: breakfast, lunch, dinner and a snack with grams, 6 of 14 foods matched.' },
-  { id: 'log', clause: 'Log what you really ate.', body: 'Amounts start from the plan. Nothing counts until you tap Log meal, and the plan stays exactly as it was.', shot: log, alt: 'A meal in Log mode, green: what you ate, with a Log meal button for 761 kcal.' },
+  { id: 'log', clause: 'Log what you really ate.', body: 'Amounts start from the plan, so a meal eaten as planned is one tap on Log meal. Change what differed; the plan stays exactly as it was.', shot: log, alt: 'A meal in Log mode, green: what you ate, with a Log meal button for 761 kcal.' },
   { id: 'solve', clause: 'The rest re-sizes to land.', body: 'A deterministic solver resizes the meals ahead by the smallest plausible change. The forecast says where the day lands, before you eat it.', shot: drift, alt: 'The Today screen after a logged breakfast ran over: the solver offers to re-solve the three meals ahead.' },
 ];
 ---
