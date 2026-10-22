@@ -14,7 +14,7 @@ const last = cards.length - 1;
             <span class="card__q">{c.q}</span>
           </button>
         </h3>
-        <div class="card__panel" id={`faq-a-${i}`} role="region" aria-labelledby={`faq-q-${i}`}><div><p>{c.a}</p></div></div>
+        <div class="card__panel" id={`faq-a-${i}`} role="region" aria-labelledby={`faq-q-${i}`}><div><p>{c.a}</p>{c.more && <a class="card__more link" href={c.more.href}>{c.more.label} →</a>}</div></div>
       </article>
     ))}
   </div>
@@ -50,6 +50,11 @@ const last = cards.length - 1;
   .card__panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 320ms var(--ease-out); }
   .card__panel > div { overflow: hidden; }
   .card__panel p { padding: 0 20px 64px; max-width: 50ch; }
+  /* A card with a link gives the link the bottom padding the paragraph would otherwise carry. */
+  .card__panel p:has(+ .card__more) { padding-bottom: 1rem; }
+  .card__more { display: inline-block; margin: 0 20px 64px; font-weight: 600; color: var(--accent-strong); }
+  /* A closed card's link is out of sight, so it leaves the tab order too, once the panel has finished closing. */
+  .card:not(.is-open) .card__more { visibility: hidden; transition: visibility 0s 320ms; }
   .card.is-open .card__panel { grid-template-rows: 1fr; }
   .card.is-open .card__q { color: var(--ink); }
   @media (hover: hover) and (pointer: fine) { .card__btn:hover .card__q { color: var(--accent-strong); } }
