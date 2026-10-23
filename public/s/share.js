@@ -5,7 +5,7 @@
   const $ = (id) => document.getElementById(id);
   const payload = location.hash.slice(1);
   $('open').href = 'residual://share#' + payload;
-  const kinds = { meal: 'Meal', favoriteMeal: 'Favorite meal', favoriteFood: 'Favorite food', pantryItem: 'Pantry item', food: 'Food' };
+  const kinds = { meal: 'Meal', favoriteMeal: 'Favorite meal', favoriteFood: 'Favorite food', pantryItem: 'Pantry item', food: 'Food', recipe: 'Recipe' };
   const text = (v, fallback = '') => (typeof v === 'string' ? v : fallback).slice(0, 120);
   const maxBytes = 262144; // a share is a few KB; anything past this is not one
 
@@ -49,7 +49,25 @@
     document.title = name + ' · Residual';
     if (typeof item.note === 'string' && item.note) { $('note').textContent = text(item.note); $('note').hidden = false; }
     const isMeal = item.kind === 'meal' || item.kind === 'favoriteMeal';
+    const isRecipe = item.kind === 'recipe';
     const foods = Array.isArray(item.foods) ? item.foods.slice(0, 100) : [];
+    // A recipe: what it makes. A meal made with recipes: they come along.
+    const lines = [];
+    if (isRecipe) {
+      const servings = Number.isInteger(item.servings) && item.servings > 1 ? 'Makes ' + item.servings : null;
+      const yieldGrams = typeof item.yieldGrams === 'number' && item.yieldGrams > 0 ? Math.round(item.yieldGrams) + ' g finished' : null;
+      lines.push(['Ingredients, as shared', servings, yieldGrams].filter(Boolean).join(' · '));
+    }
+    if (isMeal && Array.isArray(item.recipes) && item.recipes.length) {
+      const names = item.recipes.slice(0, 10).map((r) => (r && typeof r === 'object' ? text(r.name) : '')).filter(Boolean);
+      if (names.length) lines.push('Comes with ' + (names.length === 1 ? 'a recipe: ' : names.length + ' recipes: ') + names.join(', '));
+    }
+    if (lines.length) {
+      const extra = document.createElement('p'); extra.className = 'note'; extra.textContent = lines.join(' — ');
+      $('note').insertAdjacentElement('afterend', extra);
+    }
+    if (isRecipe) $('hint').textContent = 'In Residual it\'s saved to your recipes: one food you add to any meal by weight.';
+    else if (!isMeal) $('hint').textContent = 'In Residual it goes to your pantry or favorites with its numbers.';
     for (const f of foods) {
       if (typeof f !== 'object' || f === null) continue;
       const li = document.createElement('li');
@@ -58,7 +76,7 @@
       const brand = text(f.brand);
       if (brand) { const b = document.createElement('div'); b.className = 'brand'; b.textContent = brand; left.appendChild(b); }
       li.appendChild(left);
-      if (isMeal && typeof f.grams === 'number' && f.grams > 0) {
+      if ((isMeal || isRecipe) && typeof f.grams === 'number' && f.grams > 0) {
         const g = document.createElement('div'); g.className = 'grams'; g.textContent = Math.round(f.grams) + ' g';
         li.appendChild(g);
       }
