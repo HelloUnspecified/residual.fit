@@ -4,7 +4,7 @@ title: Privacy
 metaTitle: Privacy policy
 description: What Residual stores, what leaves your phone, who receives it and why, and how to delete it.
 lead: Residual keeps your food and your targets on your iPhone and in your own iCloud. There is no account, no sign-in and no tracking. This page lists everything that leaves your phone, who receives it, and how to delete it.
-updated: 21 October 2026
+updated: 23 October 2026
 ---
 
 ## Who we are
@@ -39,6 +39,7 @@ When you plan a day with Claude, the app sends:
 - **The day.** The day being planned. For "the rest of today", also the time of day and what you've already eaten or planned that day (meal and food names, and amounts).
 - **Your foods to avoid.** The foods you've told Residual to avoid, including which of them are allergies, so the plan leaves them out.
 - **Your pantry.** Up to 50 pantry foods: name, brand, nutrition per 100 g and usual serving.
+- **Your recipes.** Up to 20 dishes you make: their names, nutrition per 100 g and one serving.
 - **Your saved meals.** Up to 10: their names, notes, foods and amounts.
 - **Recent meals.** The names of your meals and foods from the last 7 days.
 - **Your instructions.** Anything you type for the plan, and, when you refine a plan, the current plan.
