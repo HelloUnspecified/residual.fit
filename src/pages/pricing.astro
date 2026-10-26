@@ -41,7 +41,7 @@ const groups = [
   ] },
 ];
 ---
-<Layout title="Pricing" description={`What Residual costs and why: ${plans.map((p) => `${money(p.price)} ${p.per}`).join(', ')}, each with a ${site.trialDays}-day free trial. No free tier, no ads, no data sold, and where the money goes.`} plain>
+<Layout title={`Pricing: ${site.trialDays}-day free trial, then ${money(monthly.price)} ${monthly.per}`} description={`What Residual costs and why: ${plans.map((p) => `${money(p.price)} ${p.per}`).join(', ')}, each with a ${site.trialDays}-day free trial. No free tier, no ads, no data sold.`} plain>
   <section class="intro wrap" aria-labelledby="pricing-title">
     <Ring class="ring--animate" size="4.5rem" width={0.14} eaten={0.7} lands={0.99} zoneStart={0.976} zoneEnd={1.024} />
     <p class="intro__kicker" data-rise style="--i:0">Pricing</p>

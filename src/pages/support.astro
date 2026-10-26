@@ -2,44 +2,41 @@
 import Layout from '../layouts/Layout.astro';
 import Footer from '../components/Footer.astro';
 import { site } from '../site';
+import { help } from '../content/support';
+
+// The problems are drawn as one list where the first of them falls, under its own heading.
+const problems = help.filter((h) => h.problem);
+const sections = help.filter((h) => !h.problem || h === problems[0]);
+const url = new URL(Astro.url.pathname, Astro.site).href;
+const faqPage = {
+  '@type': 'FAQPage',
+  '@id': `${url}#faq`,
+  isPartOf: { '@id': `${url}#webpage` },
+  mainEntity: help.map((h) => ({
+    '@type': 'Question', name: h.q,
+    acceptedAnswer: { '@type': 'Answer', text: h.a.map((p) => p.replace(/<[^>]+>/g, '')).join('\n\n') },
+  })),
+};
 ---
-<Layout title="Help and support" description="Help with Residual: contact, the subscription, using it offline, planning with Claude, your data, and fixes for common problems." plain>
+<Layout title="Help: subscription, offline use, sync and data" description="Help with Residual: contact, the subscription, using it offline, planning with Claude, your data, and fixes for common problems." schema={[faqPage]} plain>
   <article class="doc wrap">
     <h1 class="head">Support</h1>
     <p class="lead">Write to <a class="link" href={`mailto:${site.supportEmail}?subject=Residual`}>{site.supportEmail}</a>. In the app, More → Support &amp; feedback opens the email with your app version, iOS version and iPhone model filled in.</p>
     <p>Writing from somewhere else? Say which iPhone and iOS version you have, and what you expected to happen.</p>
 
-    <h2>Residual Plus</h2>
-    <p>Everything in Residual is part of Residual Plus, an auto-renewing subscription. There is no free tier. It costs {site.plans.map((p) => `$${p.price} ${p.per}`).join(', ').replace(/, ([^,]*)$/, ' or $1')}, and every plan starts with a {site.trialDays}-day free trial. The App Store shows the price in your currency. <a href="/pricing/">Pricing</a> explains what it pays for.</p>
-    <p>Apple handles the payment; we only see whether your subscription is active. To change or cancel, open Settings → your name → Subscriptions. Cancel at least 24 hours before the trial ends and you won't be charged.</p>
-    <p>On a new iPhone, sign in with the same Apple Account and install Residual. If it asks you to subscribe, tap Restore Purchases.</p>
-    <p>When your subscription or trial ends, the app locks until you subscribe again. Your data stays: from the lock screen you can still export it (More → Export to a spreadsheet) and Restore Purchases.</p>
-
-    <h2>Using it offline</h2>
-    <p>Residual works without a connection. Targets, logging, the solver and the forecast run on your iPhone. Planning uses Apple Intelligence on iPhones that have it turned on; otherwise plans are built from your pantry, saved meals and built-in foods. Food search shows the foods you've already saved, used or put in your pantry.</p>
-    <p>Planning with Claude and USDA food search need a connection, and the app shows when you're offline. iCloud sync catches up when you're back online.</p>
-
-    <h2>Planning with Claude</h2>
-    <p>Before your first plan, the app asks once: "Who writes your plans?" Nothing goes to Anthropic unless you choose Claude. Turn it on or off any time in More → AI planning. If it's off, or Claude can't be reached, Apple Intelligence plans on your iPhone (or, without it, your own foods do), and every plan says who wrote it. The <a href="/privacy/">privacy policy</a> lists what each request sends.</p>
-    <p>Claude can also suggest a food to add when Close the residual can't bring the day into range with the foods you have. If you haven't allowed Claude yet, the app asks first ("Ask Claude?"). Claude picks the food; the solver sizes it.</p>
-    <p>A plan says which planner made it. "Planned on-device" or "Built from your pantry and library" means Claude didn't plan that day: it's turned off, you're offline, or Claude couldn't be reached, and the plan says which. The solver still sizes every portion.</p>
-
-    <h2>Your data</h2>
-    <p>Your days, foods and targets are stored on your iPhone and, with iCloud on, in your private iCloud database, which keeps your devices in sync. More → iCloud sync shows whether it's on.</p>
-    <p>More → Export to a spreadsheet saves the days you pick as a CSV file, one row per food, to open in Numbers, Excel or Google Sheets.</p>
-    <p>Delete single items in the app. Deleting the app removes its data from the phone. To remove the iCloud copy, open Settings → your name → iCloud → Manage Storage → Residual. To delete anything we hold, such as a support email or your newsletter address, write to us.</p>
-
-    <h2>Something isn't working</h2>
-    <ul>
-      <li><strong>Plans say "Planned by Apple Intelligence" while you're online.</strong> Check that Plan with Claude is on in More → AI planning and that you have a connection. If Claude couldn't be reached, the plan says why; try again in a minute.</li>
-      <li><strong>Food search says the database is busy.</strong> USDA limits how often it answers. Try again in a minute; your saved foods and pantry still work.</li>
-      <li><strong>Sync doesn't show on another device.</strong> Both devices must be signed in to the same Apple Account, with iCloud on for Residual (Settings → your name → iCloud). More → iCloud sync shows whether it's on.</li>
-    </ul>
-
-    <h2>The day says "No room left"</h2>
-    <p>The meals ahead cannot absorb what has been eaten without shrinking a food below half its plan or growing one past double. Use Plan the rest of my day, or Suggest a fix, which finds the best few changes from what you already have.</p>
-    <h2>A planned food shows "to match"</h2>
-    <p>It is still an AI estimate. Tap Match on the Today screen or the food itself and pick its real USDA entry; the plan then uses real numbers, and the match carries into the log.</p>
+    {sections.map((h) => h.problem ? (
+      <>
+        <h2>Something isn't working</h2>
+        <ul>
+          {problems.map((p) => <li><strong>{p.q}</strong> <Fragment set:html={p.a.join(' ')} /></li>)}
+        </ul>
+      </>
+    ) : (
+      <>
+        <h2>{h.q}</h2>
+        {h.a.map((p) => <p set:html={p} />)}
+      </>
+    ))}
   </article>
   <Footer />
 </Layout>
