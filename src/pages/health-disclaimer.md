@@ -9,6 +9,10 @@ updated: 26 October 2026
 
 <!-- The same text the app shows, from HealthDisclaimer.swift in the app repo. Change the two together. -->
 
+## For adults 18 and older
+
+Residual is made for adults. If you're under 18, don't use it.
+
 ## Not your doctor or dietitian
 
 Residual doesn't give medical or nutrition advice, and it doesn't diagnose, treat, or prevent any condition.
