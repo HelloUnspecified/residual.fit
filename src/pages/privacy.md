@@ -125,7 +125,7 @@ Residual is not directed to children under 13, and we don't knowingly collect da
 
 ## A note on health
 
-Residual's numbers are estimates for planning. They are not medical advice.
+Residual's numbers are estimates for planning. They are not medical advice; the [health disclaimer](/health-disclaimer/) says what that means.
 
 ## Changes to this policy
 

@@ -27,6 +27,7 @@ const year = new Date().getFullYear();
       <li><a class="link" href={site.appStoreUrl}>App Store</a></li>
       <li><a class="link" href="/support/">Support</a></li>
       <li><a class="link" href="/privacy/">Privacy</a></li>
+      <li><a class="link" href="/health-disclaimer/">Health disclaimer</a></li>
     </ul>
     <div class="foot__contact">
       <form class="foot__news" data-news novalidate>
@@ -41,7 +42,7 @@ const year = new Date().getFullYear();
     </div>
   </div>
   <div class="foot__last">
-    <p class="small muted">© {year} {site.developer}. Residual is not medical advice; your targets come from you and your nutritionist.</p>
+    <p class="small muted">© {year} {site.developer}. Residual is <a class="link" href="/health-disclaimer/">not medical advice</a>; your targets come from you and your nutritionist.</p>
     <a class="button button--ink foot__btn" href={site.appStoreUrl}>Try it free for {site.trialDays} days</a>
   </div>
 </footer>

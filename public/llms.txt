@@ -25,6 +25,7 @@ Residual is made by Clark Sell. It runs on iOS 27 or later, iPhone only; there i
 - [Pricing](https://residual.fit/pricing/): what Residual costs and why: $12.99 a month, $34.99 a quarter or $99.99 a year, a 14-day trial, no free tier, and where the money goes (Claude and food data)
 - [Help and support](https://residual.fit/support/): the subscription, offline use, planning with Claude, your data, and fixes for common problems
 - [Privacy policy](https://residual.fit/privacy/): what the app stores, what leaves the phone, who receives it, and how to delete it
+- [Health disclaimer](https://residual.fit/health-disclaimer/): the disclaimer every user agrees to in the app: Residual is not medical or nutrition advice, its numbers are estimates, check allergies and conditions with a doctor or registered dietitian first, and the user is responsible for what they eat
 
 ## Contact
 
