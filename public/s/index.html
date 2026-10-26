@@ -8,6 +8,7 @@
 <meta property="og:title" content="Shared from Residual">
 <meta property="og:description" content="Open it in Residual to add it to your day, sized for you.">
 <meta name="robots" content="noindex">
+<meta name="apple-itunes-app" content="app-id=6782665400">
 <!--
   The share page. With Residual installed, iOS opens the app straight from this link (a universal
   link: see /.well-known/apple-app-site-association) and this page never shows. Without it, or when a
@@ -71,9 +72,9 @@
   <a class="open" id="open" href="residual://share">Open in Residual</a>
   <p class="hint" id="hint">In Residual it's sized for your targets and added as a plan.</p>
   <!-- A recipient without the app is the warmest visitor the site gets: someone they know just sent them
-       a meal. Send them where they can get it. This is a static file, so it can't read site.ts: point it
-       at the App Store page once the app has its Apple ID (see "Before launch" in the README). -->
-  <a class="get" href="/">Don't have Residual? Try it free for 14 days</a>
+       a meal. Send them where they can get it. This is a static file, so it can't read site.ts: the App
+       Store link and the Smart App Banner above repeat its appStoreId. -->
+  <a class="get" href="https://apps.apple.com/app/id6782665400">Don't have Residual? Try it free for 14 days</a>
 </main>
 <script src="/s/share.js" defer></script>
 </body>

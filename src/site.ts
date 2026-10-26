@@ -1,10 +1,11 @@
 // One place for the facts the site repeats. Change them here before launch.
 
-// TODO before launch: the app's numeric Apple ID (App Store Connect → App Information → Apple ID).
-// While it is empty the site links a placeholder, and leaves the App Store out of its structured data
-// and the Safari Smart App Banner, so nothing published points search engines at a store page that
-// doesn't exist.
-const appStoreId = '';
+// The app's numeric Apple ID (App Store Connect → App Information → Apple ID; the store page is
+// apps.apple.com/us/app/residual-ai-macro-planner/id6782665400). It turns on every App Store button, the
+// Safari Smart App Banner and the App Store link in the structured data. Left empty, the site links a
+// placeholder and leaves both out, so nothing published points at a store page that doesn't exist.
+// The link has no storefront (/us/) so Apple sends each visitor to their own country's store.
+const appStoreId = '6782665400';
 
 export const site = {
   name: 'Residual',
