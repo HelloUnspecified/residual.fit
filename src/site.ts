@@ -39,7 +39,7 @@ export const site = {
     'Daily targets for calories, protein, carbs and fat, each with its own plus-or-minus range and a landing order you set; any of them may float',
     'A TDEE calculator that works out targets from your body, activity and goal, or enter the numbers a coach gave you',
     'Day plans drafted by Claude from your pantry, saved meals and instructions, only if you allow it',
-    "Planning with Apple's on-device model, or from your pantry and saved foods, when Claude is off or offline",
+    "Planning with Apple Intelligence on your iPhone, or from your pantry and saved foods, when Claude is off or can't be reached",
     'Plan any day up to two weeks ahead, and copy a meal to every weekday at once',
     'Log what you actually ate; the plan is never overwritten',
     'Close the residual: a deterministic solver re-sizes the meals still ahead by the smallest plausible change',

@@ -16,11 +16,11 @@ import { site } from '../site';
     <p>When your subscription or trial ends, the app locks until you subscribe again. Your data stays: from the lock screen you can still export it (More → Export to a spreadsheet) and Restore Purchases.</p>
 
     <h2>Using it offline</h2>
-    <p>Residual works without a connection. Targets, logging, the solver and the forecast run on your iPhone. Planning uses Apple's on-device model on iPhones with Apple Intelligence turned on; otherwise plans are built from your pantry, saved meals and built-in foods. Food search shows the foods you've already saved, used or put in your pantry.</p>
+    <p>Residual works without a connection. Targets, logging, the solver and the forecast run on your iPhone. Planning uses Apple Intelligence on iPhones that have it turned on; otherwise plans are built from your pantry, saved meals and built-in foods. Food search shows the foods you've already saved, used or put in your pantry.</p>
     <p>Planning with Claude and USDA food search need a connection, and the app shows when you're offline. iCloud sync catches up when you're back online.</p>
 
     <h2>Planning with Claude</h2>
-    <p>Before your first Claude plan, the app asks once: "Plan with Claude?" Nothing goes to Anthropic unless you allow it. Turn it on or off any time in More → Planning with Claude. If it's off, plans are made on your iPhone. The <a href="/privacy/">privacy policy</a> lists what each request sends.</p>
+    <p>Before your first plan, the app asks once: "Who writes your plans?" Nothing goes to Anthropic unless you choose Claude. Turn it on or off any time in More → AI planning. If it's off, or Claude can't be reached, Apple Intelligence plans on your iPhone (or, without it, your own foods do), and every plan says who wrote it. The <a href="/privacy/">privacy policy</a> lists what each request sends.</p>
     <p>Claude can also suggest a food to add when Close the residual can't bring the day into range with the foods you have. If you haven't allowed Claude yet, the app asks first ("Ask Claude?"). Claude picks the food; the solver sizes it.</p>
     <p>A plan says which planner made it. "Planned on-device" or "Built from your pantry and library" means Claude didn't plan that day: it's turned off, you're offline, or Claude couldn't be reached, and the plan says which. The solver still sizes every portion.</p>
 
@@ -31,7 +31,7 @@ import { site } from '../site';
 
     <h2>Something isn't working</h2>
     <ul>
-      <li><strong>Plans say "Planned on-device" while you're online.</strong> Check that More → Planning with Claude is on and that you have a connection. If Claude couldn't be reached, the plan says why; try again in a minute.</li>
+      <li><strong>Plans say "Planned by Apple Intelligence" while you're online.</strong> Check that Plan with Claude is on in More → AI planning and that you have a connection. If Claude couldn't be reached, the plan says why; try again in a minute.</li>
       <li><strong>Food search says the database is busy.</strong> USDA limits how often it answers. Try again in a minute; your saved foods and pantry still work.</li>
       <li><strong>Sync doesn't show on another device.</strong> Both devices must be signed in to the same Apple Account, with iCloud on for Residual (Settings → your name → iCloud). More → iCloud sync shows whether it's on.</li>
     </ul>

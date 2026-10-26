@@ -46,7 +46,7 @@ const days = ['W', 'T', 'F', 'S', 'S', 'M', 'T', 'W', 'T', 'F', 'S', 'S', 'M', '
 
     <div class="block" data-reveal>
       <p class="block__say">Pick who drafts the day.</p>
-      <p>Claude, if you allow it. Apple's on-device model or your own pantry, if not. Every plan says which.</p>
+      <p>Claude, if you allow it. Apple Intelligence on your iPhone or your own pantry, if not, or if Claude can't be reached. Every plan says which.</p>
       <div class="seg" role="radiogroup" aria-label="Who plans">
         {planners.map((p, i) => <label><input type="radio" name="planner" value={p.id} data-says={p.says} checked={i === 0} /><span>{p.label}</span></label>)}
       </div>

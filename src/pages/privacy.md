@@ -4,7 +4,7 @@ title: Privacy
 metaTitle: Privacy policy
 description: What Residual stores, what leaves your phone, who receives it and why, and how to delete it.
 lead: Residual keeps your food and your targets on your iPhone and in your own iCloud. There is no account, no sign-in and no tracking. This page lists everything that leaves your phone, who receives it, and how to delete it.
-updated: 23 October 2026
+updated: 26 October 2026
 ---
 
 ## Who we are
@@ -26,12 +26,13 @@ Your targets, days, meals, foods, pantry, favorites, saved foods and food librar
 ## What never leaves your iPhone
 
 - **Body measurements.** The age, sex, height, weight and body fat you enter in the target calculator.
-- **Nutrition-label photos.** The camera scans barcodes and photographs nutrition labels. A label photo is read on the phone by Apple's on-device model and is never uploaded.
-- **Meal names written for you.** Apple's on-device model names meals on the phone.
+- **Nutrition-label photos.** The camera scans barcodes and photographs nutrition labels. A label photo is read on the phone, with Apple Intelligence where the iPhone has it, and is never uploaded.
+- **Meal names written for you.** Apple Intelligence names meals on the phone.
+- **Plans written by Apple Intelligence.** When you don't use Claude, or Claude can't be reached, Apple Intelligence plans the day on the phone, and nothing is sent. On an iPhone without Apple Intelligence, plans are built on the phone from your own foods and Residual's food library.
 
 ## Planning with Claude
 
-Residual can ask Claude, an AI model made by Anthropic, to draft a day of meals, and to suggest a food to add when your day can't land in range with the foods you have. **The app asks for your permission first**: a one-time question before your first Claude request. If you don't allow it, nothing is sent to Anthropic, and plans are made on the device or from built-in foods instead. You can turn it off any time in More → Planning with Claude.
+Residual can ask Claude, an AI model made by Anthropic, to draft a day of meals, and to suggest a food to add when your day can't land in range with the foods you have. **The app asks for your permission first**: a one-time question before your first Claude request. If you don't allow it, nothing is sent to Anthropic, and Apple Intelligence plans on your iPhone instead (or, without it, plans are built from your own foods). The same happens whenever Claude can't be reached. You can turn Claude off any time in More → AI planning, which also says what Apple Intelligence does.
 
 When you plan a day with Claude, the app sends:
 
@@ -98,7 +99,7 @@ This website is hosted on Cloudflare, which sees visitors' IP addresses like any
 ## Who receives data, and how it's protected
 
 - **Apple**: iCloud sync (your private iCloud database), the Foundation Models framework and App Attest that carry plan requests, and subscriptions through the App Store.
-- **Anthropic**: plan requests and food suggestions, only when you've allowed Planning with Claude.
+- **Anthropic**: plan requests and food suggestions, only when you've allowed Claude (More → AI planning).
 - **USDA FoodData Central**: food search text, barcode numbers, the names of foods being matched, and USDA food numbers.
 - **Loops**: your email address and where you signed up, only if you sign up for the newsletter.
 - **Cloudflare**: hosts this website, the newsletter sign-up and the list of guide videos.
@@ -114,7 +115,7 @@ We only use providers whose terms protect your data at least as well as this pol
 
 ## Withdrawing consent and asking us to delete
 
-- **Stop sending requests to Anthropic**: turn off More → Planning with Claude. Nothing more is sent. For data already sent, see [Anthropic's privacy policy](https://www.anthropic.com/legal/privacy).
+- **Stop sending requests to Anthropic**: turn off Claude in More → AI planning. Nothing more is sent. For data already sent, see [Anthropic's privacy policy](https://www.anthropic.com/legal/privacy).
 - **Stop the newsletter**: use the unsubscribe link in any email.
 - **Delete anything we hold**: email [support@residual.fit](mailto:support@residual.fit) and we'll delete it.
 
