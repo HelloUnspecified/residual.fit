@@ -39,6 +39,6 @@ You decide what to eat and how much, and you use Residual at your own risk.
 
 ## In the app
 
-Residual asks you to agree to this before you start: by continuing, you agree that Residual isn't medical advice and that you're responsible for what you eat. You can read it again any time in More → Health disclaimer. It's part of our [Terms of Use](/terms/), which you accept at the same time.
+Residual asks you to agree to this before you start: by continuing, you agree that Residual isn't medical advice and that you're responsible for what you eat. You can read it again any time in More → Legal → Health disclaimer. It's part of our [Terms of Use](/terms/), which you accept at the same time.
 
 Questions go to [support@residual.fit](mailto:support@residual.fit).
