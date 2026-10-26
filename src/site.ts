@@ -33,6 +33,9 @@ export const site = {
     { name: 'Yearly', price: 99.99, months: 12, per: 'a year' },
   ],
   developer: 'Clark Sell',
+  // The company that publishes Residual: the footer's copyright and maker line. The Terms and the privacy policy
+  // name it too, with its mailing address, in their own Markdown.
+  publisher: 'Unspecified LLC',
   // The maker's Instagram: the workouts and the health journey behind the app, linked from the founder note.
   instagram: { handle: 'theclarksell', url: 'https://www.instagram.com/theclarksell/' },
   // What the app does, as short claims, for structured data and llms.txt. Keep them true to the app.

@@ -7,9 +7,11 @@ lead: Residual keeps your food and your targets on your iPhone and in your own i
 updated: 26 October 2026
 ---
 
+Using Residual is also governed by our [Terms of Use](/terms/).
+
 ## Who we are
 
-Residual is made and published by Clark Sell, the developer ("we" on this page). Questions about this policy go to [support@residual.fit](mailto:support@residual.fit).
+Residual is made and published by Unspecified LLC, an Illinois limited liability company ("we" on this page). Questions about this policy go to [support@residual.fit](mailto:support@residual.fit), or by mail to Unspecified LLC, 9109 Carol Lane, Spring Grove, IL 60081.
 
 ## What we never do
 
@@ -18,6 +20,12 @@ Residual is made and published by Clark Sell, the developer ("we" on this page).
 - We never sell your data or share it for advertising.
 
 Some data does leave your phone so the app can work: requests to Claude, food search, the list of guide videos, and the newsletter if you sign up. Each is described below, with who receives it.
+
+## Age check and your agreement
+
+Residual is for adults 18 and older. The first time you open the app, it asks iOS whether you are 18 or older, using Apple's Declared Age Range feature. Apple shows you its own prompt, and you choose whether to share. Residual receives only an age range, never your birthday. It then asks you to confirm you are 18 or older and to accept the [health disclaimer](/health-disclaimer/) and [Terms of Use](/terms/).
+
+The app keeps only the outcome on your iPhone: whether the check passed, plus the date and version of the terms you accepted. It does not keep the age range Apple returned. None of this is sent to us or anyone else.
 
 ## What the app stores, and where
 
@@ -29,6 +37,7 @@ Your targets, days, meals, foods, pantry, favorites, saved foods and food librar
 - **Nutrition-label photos.** The camera scans barcodes and photographs nutrition labels. A label photo is read on the phone, with Apple Intelligence where the iPhone has it, and is never uploaded.
 - **Meal names written for you.** Apple Intelligence names meals on the phone.
 - **Plans written by Apple Intelligence.** When you don't use Claude, or Claude can't be reached, Apple Intelligence plans the day on the phone, and nothing is sent. On an iPhone without Apple Intelligence, plans are built on the phone from your own foods and Residual's food library.
+- **Your age check and agreement record.** Described [above](#age-check-and-your-agreement).
 
 ## Planning with Claude
 
@@ -98,7 +107,7 @@ This website is hosted on Cloudflare, which sees visitors' IP addresses like any
 
 ## Who receives data, and how it's protected
 
-- **Apple**: iCloud sync (your private iCloud database), the Foundation Models framework and App Attest that carry plan requests, and subscriptions through the App Store.
+- **Apple**: the age check (Declared Age Range), iCloud sync (your private iCloud database), the Foundation Models framework and App Attest that carry plan requests, and subscriptions through the App Store.
 - **Anthropic**: plan requests and food suggestions, only when you've allowed Claude (More → AI planning).
 - **USDA FoodData Central**: food search text, barcode numbers, the names of foods being matched, and USDA food numbers.
 - **Loops**: your email address and where you signed up, only if you sign up for the newsletter.
@@ -119,13 +128,13 @@ We only use providers whose terms protect your data at least as well as this pol
 - **Stop the newsletter**: use the unsubscribe link in any email.
 - **Delete anything we hold**: email [support@residual.fit](mailto:support@residual.fit) and we'll delete it.
 
-## Children
+## Adults only
 
-Residual is not directed to children under 13, and we don't knowingly collect data from them.
+Residual is for adults 18 and older and is not directed to anyone under 18. We don't knowingly collect data from minors. If you believe a minor has sent us information, such as a support email or newsletter sign-up, write to [support@residual.fit](mailto:support@residual.fit) and we'll delete it.
 
 ## A note on health
 
-Residual's numbers are estimates for planning. They are not medical advice; the [health disclaimer](/health-disclaimer/) says what that means.
+Residual's numbers are estimates for planning. They are not medical advice; the [health disclaimer](/health-disclaimer/) and our [Terms of Use](/terms/) say what that means.
 
 ## Changes to this policy
 
@@ -133,4 +142,4 @@ When this policy changes, we update this page and the date below. Material chang
 
 ## Contact
 
-Write to [support@residual.fit](mailto:support@residual.fit).
+Write to [support@residual.fit](mailto:support@residual.fit), or to Unspecified LLC, 9109 Carol Lane, Spring Grove, IL 60081.

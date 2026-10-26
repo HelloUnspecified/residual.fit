@@ -138,11 +138,13 @@ p + p { margin-top: 0.9em; }
 @keyframes ring-travel { to { transform: rotate(var(--to, 0deg)); } }
 @keyframes ring-fade { to { opacity: 1; } }
 
-/* Plain documents: privacy, support. */
+/* Plain documents: privacy, terms, health disclaimer, support. */
 .doc { padding-top: 8rem; padding-bottom: 6rem; max-width: 46rem; }
 .doc .lead { margin-top: 1.5rem; }
 .doc h2 { font-size: var(--step-lead); margin-top: 2.5rem; margin-bottom: 0.6rem; }
 .doc__list, .doc ul, .doc ol { display: grid; gap: 0.8rem; max-width: 62ch; padding: 0; list-style: none; }
+/* The Terms number their lists and refer to items by number, so ordered lists keep their numerals. */
+.doc ol { list-style: decimal; padding-left: 1.6em; }
 .doc :is(p, ul, ol) + :is(p, ul, ol) { margin-top: 0.9em; }
 .doc a:not([class]) { text-decoration: underline; text-decoration-color: var(--muted); text-underline-offset: 0.2em; text-decoration-thickness: 0.07em; transition: text-decoration-color var(--t-hover) ease; }
 @media (hover: hover) and (pointer: fine) { .doc a:not([class]):hover { text-decoration-color: currentColor; } }
