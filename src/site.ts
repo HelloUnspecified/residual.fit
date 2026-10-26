@@ -28,7 +28,7 @@ export const site = {
   // The pricing page works out each plan's monthly and daily cost from these, so change them only here.
   plans: [
     { name: 'Monthly', price: 12.99, months: 1, per: 'a month' },
-    { name: 'Quarterly', price: 29.99, months: 3, per: 'every 3 months' },
+    { name: 'Quarterly', price: 34.99, months: 3, per: 'every 3 months' },
     { name: 'Yearly', price: 99.99, months: 12, per: 'a year' },
   ],
   developer: 'Clark Sell',
