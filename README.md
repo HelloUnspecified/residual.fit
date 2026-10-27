@@ -58,7 +58,8 @@ Then, once:
    link and subscribes the contact only once it's clicked. Its settings are `vars` in `wrangler.jsonc`, so they
    ship with the code (a deploy replaces any plain-text variables set in the dashboard): `LOOPS_FORM_ENDPOINT`
    (Loops → Forms → Settings), `LOOPS_LIST_NEWSLETTER` and `LOOPS_LIST_PRODUCT_UPDATES` (Audience → Lists; each
-   list must be **Public**, or the form can't subscribe anyone to it). A sign-up may name its lists
+   list must be **Public**, or the form can't subscribe anyone to it; Loops skips a private list without an error,
+   so the sign-up still succeeds and the list just stays empty — seen 2026-10-27). A sign-up may name its lists
    (`"lists": ["newsletter", "product-updates"]`); without them the app's (`source: "ios"`) joins both and the
    footer's the newsletter alone (`src/lib/mailingLists.ts`, tested by `npm test`). No API key is needed. `SITE_ORIGIN` is optional: the one browser Origin the route accepts
    (default `https://residual.fit`; the app sends none). Then set `NEWSLETTER_URL` = `https://<domain>/api/subscribe`
