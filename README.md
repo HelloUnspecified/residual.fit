@@ -18,6 +18,7 @@ page and the universal-link association file in `public/`.
   public/s/index.html   the share page, for when the app isn't installed (its script is public/s/share.js)
   public/_headers       serves the association file as JSON, and the security headers (static assets only)
   src/pages/api/subscribe.ts  POST /api/subscribe: the newsletter sign-up (app and site footer), forwarded to Loops
+  src/lib/mailingLists.ts     which Loops lists a sign-up joins (tests/mailingLists.test.ts, `npm test`)
   wrangler.jsonc        the Cloudflare Worker's name and settings; the adapter fills in the rest at build time
 ```
 
@@ -31,6 +32,7 @@ npm run dev       # http://localhost:4321
 npm run build     # pages in dist/client, the Worker in dist/server
 npm run preview   # the built site in the local Workers runtime, /api/subscribe included
 npm run og        # with the dev server running: renders public/og.png (needs Google Chrome)
+npm test          # the route's list choice (tests/)
 ```
 
 Set `ASTRO_TELEMETRY_DISABLED=1` in the shell to keep Astro from phoning home. `npm run preview` runs
@@ -55,8 +57,10 @@ Then, once:
    posts to the Residual Loops account's form endpoint, which has double opt-in on: Loops emails a confirmation
    link and subscribes the contact only once it's clicked. Its settings are `vars` in `wrangler.jsonc`, so they
    ship with the code (a deploy replaces any plain-text variables set in the dashboard): `LOOPS_FORM_ENDPOINT`
-   (Loops → Forms → Settings) and `LOOPS_MAILING_LIST_ID` (Audience → Lists; the list must be **Public**, or the
-   form can't subscribe anyone to it). No API key is needed. `SITE_ORIGIN` is optional: the one browser Origin the route accepts
+   (Loops → Forms → Settings), `LOOPS_LIST_NEWSLETTER` and `LOOPS_LIST_PRODUCT_UPDATES` (Audience → Lists; each
+   list must be **Public**, or the form can't subscribe anyone to it). A sign-up may name its lists
+   (`"lists": ["newsletter", "product-updates"]`); without them the app's (`source: "ios"`) joins both and the
+   footer's the newsletter alone (`src/lib/mailingLists.ts`, tested by `npm test`). No API key is needed. `SITE_ORIGIN` is optional: the one browser Origin the route accepts
    (default `https://residual.fit`; the app sends none). Then set `NEWSLETTER_URL` = `https://<domain>/api/subscribe`
    in the app repo's `Residual/Info.plist`; until it is set, the app's sign-up is hidden (DEBUG builds show it with a note).
    Check it: `curl -X POST https://<domain>/api/subscribe -H 'content-type: application/json' -d '{"email":"you@example.com","source":"curl"}'`.
@@ -66,7 +70,7 @@ Then, once:
      best-effort extra: Cloudflare documents it as permissive and eventually consistent, and it never refused
      a request in production testing on 2026-10-19. Loops also rate-limits its form endpoint per IP.
    - The form endpoint never unsubscribes anyone and can change only `userGroup` on an existing contact, which
-     the route never sends, so signing up again leaves the contact as it was.
+     the route never sends, so signing up again only adds lists the contact isn't on yet.
 4. **Point the app at it** (in the Residual app repo): `Residual/Info.plist` → `SHARE_LINK_BASE` = `https://<domain>/s/`,
    and `Residual/Residual.entitlements` → `com.apple.developer.associated-domains` = `applinks:<domain>`
    (for a development build, `applinks:<domain>?mode=developer`). Turn on Associated Domains for the App ID

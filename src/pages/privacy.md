@@ -4,7 +4,7 @@ title: Privacy
 metaTitle: Privacy policy
 description: What Residual stores, what leaves your phone, who receives it and why, and how to delete it.
 lead: Residual keeps your food and your targets on your iPhone and in your own iCloud. There is no account, no sign-in and no tracking. This page lists everything that leaves your phone, who receives it, and how to delete it.
-updated: 26 October 2026
+updated: 27 October 2026
 ---
 
 Using Residual is also governed by our [Terms of Use](/terms/).
@@ -19,7 +19,7 @@ Residual is made and published by Unspecified LLC, an Illinois limited liability
 - No analytics SDK, no advertising identifier, and no tracking across apps or websites.
 - We never sell your data or share it for advertising.
 
-Some data does leave your phone so the app can work: requests to Claude, food search, the list of guide videos, and the newsletter if you sign up. Each is described below, with who receives it.
+Some data does leave your phone so the app can work: requests to Claude, food search, the list of guide videos, and your email address if you sign up for the newsletter and product updates. Each is described below, with who receives it.
 
 ## Age check and your agreement
 
@@ -83,9 +83,11 @@ Nothing else is sent with these requests.
 
 Each time the app opens, it downloads the list of guide videos from this website. The request carries nothing about you or your food. Like any website request, Cloudflare sees your IP address (see [This website](#this-website)).
 
-## The newsletter, only if you sign up
+## The newsletter and product updates, only if you sign up
 
-You can sign up for the Residual newsletter in the app (More → Newsletter & updates) or at the bottom of this website. Your email address is sent to this website (hosted on Cloudflare) and on to Loops (loops.so), our mailing-list provider, along with where you signed up. Loops then emails you a link to confirm, and you're subscribed only once you click it, so nobody can sign up an address that isn't theirs. We use your address only to send the Residual newsletter and product updates. It is never linked to anything you log. Every email has an unsubscribe link, and you can ask us to delete your address at any time.
+We send two kinds of email: the Residual newsletter, and product updates about what's new in the app. Signing up in the app (More → Newsletter & updates) adds you to both. Signing up at the bottom of this website adds you to the newsletter.
+
+Your email address is sent to this website (hosted on Cloudflare) and on to Loops (loops.so), our mailing-list provider, along with where you signed up and which emails you signed up for. Loops then emails you a link to confirm, and you're subscribed only once you click it, so nobody can sign up an address that isn't theirs. We use your address only to send the newsletter and product updates. It is never linked to anything you log. Every email has an unsubscribe link, and you can ask us to delete your address at any time.
 
 To stop abuse, the sign-up counts attempts from each IP address for a minute and turns away more than a few. That count isn't stored with your email address and isn't kept.
 
@@ -110,7 +112,7 @@ This website is hosted on Cloudflare, which sees visitors' IP addresses like any
 - **Apple**: the age check (Declared Age Range), iCloud sync (your private iCloud database), the Foundation Models framework and App Attest that carry plan requests, and subscriptions through the App Store.
 - **Anthropic**: plan requests and food suggestions, only when you've allowed Claude (More → AI planning).
 - **USDA FoodData Central**: food search text, barcode numbers, the names of foods being matched, and USDA food numbers.
-- **Loops**: your email address and where you signed up, only if you sign up for the newsletter.
+- **Loops**: your email address, where you signed up and which emails you chose, only if you sign up for the newsletter or product updates.
 - **Cloudflare**: hosts this website, the newsletter sign-up and the list of guide videos.
 
 We only use providers whose terms protect your data at least as well as this policy does. Each receives only what it needs for the purpose described above.
@@ -118,14 +120,14 @@ We only use providers whose terms protect your data at least as well as this pol
 ## How long we keep it, and how to delete it
 
 - **App data** stays on your iPhone and in your iCloud until you delete it. Delete individual items in the app. Delete the app to remove its data from the phone. To remove the iCloud copy, open Settings → your name → iCloud → Manage Storage (or Apps Using iCloud) → Residual.
-- **Your newsletter address** is kept until you unsubscribe or ask us to delete it.
+- **Your email address for the newsletter and product updates** is kept until you unsubscribe or ask us to delete it.
 - **Support emails** are kept as long as we need them to answer you, and deleted when you ask.
 - **Plan requests and food suggestions** are kept by Anthropic as its privacy policy describes. We don't keep a copy.
 
 ## Withdrawing consent and asking us to delete
 
 - **Stop sending requests to Anthropic**: turn off Claude in More → AI planning. Nothing more is sent. For data already sent, see [Anthropic's privacy policy](https://www.anthropic.com/legal/privacy).
-- **Stop the newsletter**: use the unsubscribe link in any email.
+- **Stop the newsletter or product updates**: use the unsubscribe link in any email.
 - **Delete anything we hold**: email [support@residual.fit](mailto:support@residual.fit) and we'll delete it.
 
 ## Adults only

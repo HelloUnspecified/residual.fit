@@ -4,14 +4,20 @@
 // An Astro server route (the one page that isn't prerendered), run by the @astrojs/cloudflare adapter in
 // the site's Worker. It passes the sign-up to the Residual Loops account's form endpoint
 // (https://loops.so/docs/forms/custom-form), the one Loops endpoint gated behind double opt-in: Loops
-// emails the address a confirmation link, and the contact joins the newsletter list only once they click
-// it. So a sign-up can't subscribe someone else's address, and nobody is subscribed without saying yes.
+// emails the address a confirmation link, and the contact joins its lists only once they click it. So a
+// sign-up can't subscribe someone else's address, and nobody is subscribed without saying yes.
+//
+// Lists (2026-10-27, Clark): the newsletter and product updates, both public in Loops. A sign-up names the
+// lists it wants (`lists`); without them the app's joins both and the footer's the newsletter alone. The
+// names map to ids here (src/lib/mailingLists.ts), so a caller can't pick a list we don't offer.
 //
 // Existing contacts: the form endpoint can add a contact to a list but never unsubscribes anyone, and the
 // only field it can change on an existing contact is userGroup, which this route never sends. Signing up
-// again therefore changes nothing on the contact; Loops decides whether to send another confirmation.
+// again therefore only adds lists the contact isn't on yet (a footer subscriber who signs up in the app
+// gains product updates); Loops decides whether to send another confirmation, and never re-adds an address
+// that unsubscribed.
 //
-// What reaches Loops: the email address, `source` ("Residual ios", "Residual site", …) and the list. The
+// What reaches Loops: the email address, `source` ("Residual ios", "Residual site", …) and the lists. The
 // app also sends its version; that isn't forwarded.
 //
 // Abuse protection: the SUBSCRIBE_LIMITER binding (wrangler.jsonc) allows 5 attempts a minute per IP
@@ -20,24 +26,26 @@
 // dependable limit. Loops also rate-limits its form endpoint, and its 429 is passed through.
 //
 // Settings (plain vars in wrangler.jsonc, so they deploy with the code):
-//   LOOPS_FORM_ENDPOINT    the Residual account's form endpoint (Loops → Forms → Settings)
-//   LOOPS_MAILING_LIST_ID  the newsletter list; it must be Public in Loops for the form to use it
-//   SITE_ORIGIN            optional — the only browser Origin accepted (default https://residual.fit)
+//   LOOPS_FORM_ENDPOINT         the Residual account's form endpoint (Loops → Forms → Settings)
+//   LOOPS_LIST_NEWSLETTER       the newsletter list        } each must be Public in Loops
+//   LOOPS_LIST_PRODUCT_UPDATES  the product updates list   } for the form to use it
+//   SITE_ORIGIN                 optional — the only browser Origin accepted (default https://residual.fit)
 //
-// Request:  { "email": "a@b.co", "source": "ios", "appVersion": "1.0 (12)" }   (JSON)
+// Request:  { "email": "a@b.co", "source": "ios", "lists": ["newsletter", "product-updates"],
+//             "appVersion": "1.0 (12)" }   (JSON; `lists` optional)
 // Response: 200 { "ok": true } | 400 | 403 | 405 | 415 | 429 | 502 | 503 { "error": "…" }
 // (`existing: true`, which the app understands, is no longer sent: the form endpoint doesn't say.)
 import type { APIRoute } from 'astro';
 import { env as workerEnv } from 'cloudflare:workers';
+import { mailingListsField, requestedLists, type ListIds } from '../../lib/mailingLists';
 
 export const prerender = false;
 
 interface RateLimit {
   limit(options: { key: string }): Promise<{ success: boolean }>;
 }
-interface Env {
+interface Env extends ListIds {
   LOOPS_FORM_ENDPOINT?: string;
-  LOOPS_MAILING_LIST_ID?: string;
   SITE_ORIGIN?: string;
   SUBSCRIBE_LIMITER?: RateLimit;
 }
@@ -92,14 +100,15 @@ export const POST: APIRoute = async ({ request }) => {
     return json(400, { error: 'Send JSON.' });
   }
   if (typeof body !== 'object' || body === null || Array.isArray(body)) return json(400, { error: 'Send JSON.' });
-  const fields = body as { email?: unknown; source?: unknown };
+  const fields = body as { email?: unknown; source?: unknown; lists?: unknown };
 
   const email = typeof fields.email === 'string' ? fields.email.trim().toLowerCase() : '';
   if (!looksLikeEmail(email)) return json(400, { error: 'That email address doesn’t look right.' });
   const source = typeof fields.source === 'string' ? fields.source.replace(/[^\w .-]/g, '').slice(0, 40) : 'unknown';
 
   const form = new URLSearchParams({ email, source: `Residual ${source}` });
-  if (env.LOOPS_MAILING_LIST_ID) form.set('mailingLists', env.LOOPS_MAILING_LIST_ID);
+  const lists = mailingListsField(requestedLists(source, fields.lists), env);
+  if (lists) form.set('mailingLists', lists);
 
   let res: Response;
   try {

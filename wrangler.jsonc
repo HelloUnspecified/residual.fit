@@ -20,13 +20,15 @@
     "binding": "ASSETS"
   },
   // Plain settings for src/pages/api/subscribe.ts. They deploy with the code: a deploy from this file
-  // replaces any plain-text variables set in the dashboard, so keep them here, not there. Neither is a
+  // replaces any plain-text variables set in the dashboard, so keep them here, not there. None is a
   // secret: the form endpoint is meant to be public, and the route needs no API key.
-  //   LOOPS_FORM_ENDPOINT    the Residual Loops account's form endpoint (Forms → Settings); double opt-in
-  //   LOOPS_MAILING_LIST_ID  the Residual newsletter list (Audience → Lists); must be Public in Loops
+  //   LOOPS_FORM_ENDPOINT         the Residual Loops account's form endpoint (Forms → Settings); double opt-in
+  //   LOOPS_LIST_NEWSLETTER       the Newsletter list (Audience → Lists); must be Public in Loops
+  //   LOOPS_LIST_PRODUCT_UPDATES  the Product Updates list; must be Public in Loops
   "vars": {
     "LOOPS_FORM_ENDPOINT": "https://app.loops.so/api/newsletter-form/cmvfq7cdv02990jyfclibhiz7",
-    "LOOPS_MAILING_LIST_ID": "cmvft2uvb0hpg0jyua8boex04"
+    "LOOPS_LIST_NEWSLETTER": "cmvft2uvb0hpg0jyua8boex04",
+    "LOOPS_LIST_PRODUCT_UPDATES": "cmvprdrtv0hrm0jxu2ufhcxja"
   },
   // The newsletter sign-up's rate limit (src/pages/api/subscribe.ts): 5 attempts a minute per IP
   // address. period can only be 10 or 60 seconds. namespace_id is any number unique within the Cloudflare
