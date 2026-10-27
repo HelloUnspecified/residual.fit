@@ -32,7 +32,7 @@ const year = new Date().getFullYear();
     </ul>
     <div class="foot__contact">
       <form class="foot__news" data-news novalidate>
-        <label for="news-email">The Residual newsletter: product updates and what's new, by email.</label>
+        <label for="news-email">The Residual newsletter, by email.</label>
         <div class="foot__row">
           <input id="news-email" name="email" type="email" required autocomplete="email" inputmode="email" placeholder="you@example.com" />
           <button class="button button--ink" type="submit">Subscribe</button>
@@ -50,6 +50,7 @@ const year = new Date().getFullYear();
 
 <script>
   // The newsletter sign-up: the same endpoint the app uses (src/pages/api/subscribe.ts), from the site's own origin.
+  // It joins the newsletter alone; the app's joins product updates too (src/lib/mailingLists.ts).
   const form = document.querySelector<HTMLFormElement>('[data-news]');
   if (form) {
     const input = form.querySelector<HTMLInputElement>('input')!;
@@ -62,7 +63,7 @@ const year = new Date().getFullYear();
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { say('That doesn’t look like an email address.', false); input.focus(); return; }
       button.disabled = true; say('Sending…');
       try {
-        const res = await fetch('/api/subscribe', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ email, source: 'site' }) });
+        const res = await fetch('/api/subscribe', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ email, source: 'site', lists: ['newsletter'] }) });
         const data = await res.json().catch(() => ({}));
         if (res.ok) { say('Check your inbox: click the link in our email to confirm your subscription.', true); form.reset(); }
         else say(data.error || 'Sign-up didn’t go through. Try again in a minute.', false);
