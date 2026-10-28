@@ -19,7 +19,7 @@ Residual is made and published by Unspecified LLC, an Illinois limited liability
 - No analytics SDK, no advertising identifier, and no tracking across apps or websites.
 - We never sell your data or share it for advertising.
 
-Some data does leave your phone so the app can work: requests to Claude, food search, the list of guide videos, and your email address if you sign up for the newsletter and product updates. Each is described below, with who receives it.
+Some data does leave your phone so the app can work: requests to Claude, food search, and your email address if you sign up for the newsletter and product updates. Each is described below, with who receives it.
 
 ## Age check and your agreement
 
@@ -81,10 +81,6 @@ When you search for a food or scan a barcode, the search text or barcode number 
 
 Nothing else is sent with these requests.
 
-## Guide videos
-
-Each time the app opens, it downloads the list of guide videos from this website. The request carries nothing about you or your food. Like any website request, Cloudflare sees your IP address (see [This website](#this-website)).
-
 ## The newsletter and product updates, only if you sign up
 
 We send two kinds of email: the Residual newsletter, and product updates about what's new in the app. Signing up in the app (More → Newsletter & updates) adds you to both. Signing up at the bottom of this website adds you to the newsletter.
@@ -115,7 +111,7 @@ This website is hosted on Cloudflare, which sees visitors' IP addresses like any
 - **Anthropic**: plan requests and food suggestions, only when you've allowed Claude (More → AI planning).
 - **USDA FoodData Central**: food search text, barcode numbers, the names of foods being matched, and USDA food numbers.
 - **Loops**: your email address, where you signed up and which emails you chose, only if you sign up for the newsletter or product updates.
-- **Cloudflare**: hosts this website, the newsletter sign-up and the list of guide videos.
+- **Cloudflare**: hosts this website and the newsletter sign-up.
 
 We choose providers whose terms limit their use of your data to providing their service to us. Each one receives only what its job requires.
 
