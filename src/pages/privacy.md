@@ -4,7 +4,7 @@ title: Privacy
 metaTitle: Privacy policy
 description: What Residual stores, what leaves your phone, who receives it and why, and how to delete it.
 lead: Residual keeps your food and your targets on your iPhone and in your own iCloud. There is no account, no sign-in and no tracking. This page lists everything that leaves your phone, who receives it, and how to delete it.
-updated: 27 October 2026
+updated: 28 October 2026
 ---
 
 Using Residual is also governed by our [Terms of Use](/terms/).
@@ -23,9 +23,9 @@ Some data does leave your phone so the app can work: requests to Claude, food se
 
 ## Age check and your agreement
 
-Residual is for adults 18 and older. The first time you open the app, it asks iOS whether you are 18 or older, using Apple's Declared Age Range feature. Apple shows you its own prompt, and you choose whether to share. Residual receives only an age range, never your birthday. It then asks you to confirm you are 18 or older and to accept the [health disclaimer](/health-disclaimer/) and [Terms of Use](/terms/).
+Residual is for adults 18 and older. Residual asks iOS for your age range using Apple's Declared Age Range feature, and you choose whether to share it. The app uses the range once, on your iPhone, to confirm you're 18 or older. It never stores the range and never sends it to us or anyone else. If you don't share a range, or Apple can't give one, the app asks you to confirm you're 18 or older yourself. It then asks you to accept the [health disclaimer](/health-disclaimer/) and [Terms of Use](/terms/).
 
-The app keeps only the outcome on your iPhone: whether the check passed, plus the date and version of the terms you accepted. It does not keep the age range Apple returned. None of this is sent to us or anyone else.
+Your iPhone keeps only whether the check passed, when, and whether Apple or you confirmed it, plus the date and version of the terms you accepted.
 
 ## What the app stores, and where
 
@@ -54,6 +54,8 @@ When you plan a day with Claude, the app sends:
 - **Recent meals.** The names of your meals and foods from the last 7 days.
 - **Your instructions.** Anything you type for the plan, and, when you refine a plan, the current plan.
 
+Allergies and foods you avoid can be health information. They're sent to Anthropic only after you agree to use Claude, and only to write your plan.
+
 When you ask Claude to suggest a food to add, the app sends:
 
 - **Where your day lands.** Each target with its range, where the day lands now, and how far short or over it is.
@@ -67,7 +69,7 @@ When you ask Claude to suggest a food to add, the app sends:
 
 **What it's used for.** Only to write your plan or suggest a food.
 
-**What Anthropic does with it.** Anthropic processes these requests under its commercial terms, which say it does not train its models on this data. How long Anthropic keeps a request is set by [Anthropic's privacy policy](https://www.anthropic.com/legal/privacy).
+**What Anthropic does with it.** Anthropic acts as our service provider (processor) under its commercial terms, which include a data processing agreement and exclude training on this data. How long Anthropic keeps a request is set by [Anthropic's privacy policy](https://www.anthropic.com/legal/privacy).
 
 ## Food search and barcode scans
 
@@ -115,13 +117,13 @@ This website is hosted on Cloudflare, which sees visitors' IP addresses like any
 - **Loops**: your email address, where you signed up and which emails you chose, only if you sign up for the newsletter or product updates.
 - **Cloudflare**: hosts this website, the newsletter sign-up and the list of guide videos.
 
-We only use providers whose terms protect your data at least as well as this policy does. Each receives only what it needs for the purpose described above.
+We choose providers whose terms limit their use of your data to providing their service to us. Each one receives only what its job requires.
 
 ## How long we keep it, and how to delete it
 
 - **App data** stays on your iPhone and in your iCloud until you delete it. Delete individual items in the app. Delete the app to remove its data from the phone. To remove the iCloud copy, open Settings → your name → iCloud → Manage Storage (or Apps Using iCloud) → Residual.
 - **Your email address for the newsletter and product updates** is kept until you unsubscribe or ask us to delete it.
-- **Support emails** are kept as long as we need them to answer you, and deleted when you ask.
+- **Support emails** are kept for up to 2 years so we can follow up, then deleted. Ask and we'll delete yours sooner.
 - **Plan requests and food suggestions** are kept by Anthropic as its privacy policy describes. We don't keep a copy.
 
 ## Withdrawing consent and asking us to delete
