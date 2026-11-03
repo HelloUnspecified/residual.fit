@@ -68,6 +68,7 @@ const graph = {
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image:alt" content={ogAlt} />
     <!-- The wordmark's one weight of Roundo, self-hosted; everything else is the system's own type. -->
+    <link rel="preload" href="/fonts/roundo-500.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/roundo-600.woff2" as="font" type="font/woff2" crossorigin />
     <script type="application/ld+json" set:html={JSON.stringify(graph)} />
     <script is:inline>document.documentElement.classList.add('js');addEventListener('load',()=>setTimeout(()=>document.documentElement.classList.add('settled'),4000))</script>

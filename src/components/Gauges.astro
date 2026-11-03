@@ -53,6 +53,9 @@ const gauges = [
 <style>
   .gauges { margin-top: var(--section); }
   .gauges__grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: clamp(2rem, 6vw, 6rem); align-items: center; }
+  /* "Five questions." stays on one line in Roundo: about 7 em wide in this column. */
+  .gauges__copy { container-type: inline-size; }
+  .gauges__copy h2 { font-size: min(var(--step-head), 13.5cqi); }
   .gauges__copy .lead { margin-top: 1.25rem; }
   .gauges__list { margin-top: 2rem; background: var(--card); border-radius: var(--radius-card); padding-inline: 1rem; max-width: 30rem; }
   .gauges__list label { position: relative; display: block; cursor: pointer; }

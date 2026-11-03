@@ -2,9 +2,10 @@
    DESIGN.md §3.1), a light and a dark value, and the page follows the visitor's appearance the way the app
    follows the iPhone's. Data has color: eaten is solid green, the plan a ghost of it, amber and red only when
    the day is off. Controls have one color, the key blue. Type is the system's: SF, with SF Rounded on the big
-   titles and the numbers the way Fitness and Health set theirs. Roundo is the wordmark alone. */
+   numbers the way Fitness and Health set theirs. Roundo is the wordmark and the headings (2026-11-03, Clark: they match the wordmark). */
 
-/* The wordmark, self-hosted (ITF Free Font License allows it; the file is the official one, unmodified). */
+/* The wordmark and the headings, self-hosted (ITF Free Font License allows it; the files are the official ones, unmodified). */
+@font-face { font-family: 'Roundo'; src: url('/fonts/roundo-500.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: swap; }
 @font-face { font-family: 'Roundo'; src: url('/fonts/roundo-600.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
 
 :root {
@@ -39,6 +40,7 @@
   --font-text: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --font-round: ui-rounded, 'SF Pro Rounded', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --font-mark: 'Roundo', ui-rounded, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-head: var(--font-mark);
 
   --step-small: 0.875rem;
   --step-body: clamp(1.0625rem, 1rem + 0.2vw, 1.1875rem);
@@ -104,10 +106,10 @@ a { color: inherit; }
 :focus-visible { outline: 3px solid var(--key); outline-offset: 3px; }
 
 h1, h2, h3 { font-weight: 700; text-wrap: balance; hyphens: none; }
-.display, .head { font-family: var(--font-round); font-weight: 700; }
+.display, .head { font-family: var(--font-head); font-weight: 500; }
 .display { font-size: var(--step-display); line-height: 1.02; letter-spacing: -0.028em; }
 .head { font-size: var(--step-head); line-height: 1.05; letter-spacing: -0.026em; }
-.title { font-family: var(--font-round); font-size: var(--step-title); line-height: 1.15; letter-spacing: -0.02em; font-weight: 700; }
+.title { font-family: var(--font-head); font-size: var(--step-title); line-height: 1.15; letter-spacing: -0.02em; font-weight: 500; }
 .lead { font-size: var(--step-lead); line-height: 1.35; letter-spacing: -0.01em; max-width: 40ch; }
 .small { font-size: var(--step-small); line-height: 1.45; }
 .muted { color: var(--label2); }
@@ -151,7 +153,7 @@ p + p { margin-top: 0.9em; }
 .doc { padding-top: 8rem; padding-bottom: 6rem; }
 .doc > * { max-width: 46rem; margin-inline: auto; }
 .doc .lead { margin-top: 1.5rem; }
-.doc h2 { font-family: var(--font-round); font-size: var(--step-lead); letter-spacing: -0.015em; margin-top: 2.5rem; margin-bottom: 0.6rem; }
+.doc h2 { font-family: var(--font-head); font-weight: 500; font-size: var(--step-lead); letter-spacing: -0.015em; margin-top: 2.5rem; margin-bottom: 0.6rem; }
 .doc__list, .doc ul, .doc ol { display: grid; gap: 0.8rem; padding: 0; list-style: none; }
 /* The Terms number their lists and refer to items by number, so ordered lists keep their numerals. */
 .doc ol { list-style: decimal; padding-left: 1.6em; }

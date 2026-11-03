@@ -38,8 +38,9 @@ import { site } from '../site';
      so the ring, the verdict and the one button are all seen at once, the way they are in the hand. */
   .hero { min-height: 100svh; display: grid; align-items: center; padding-block: 5.5rem 2.5rem; }
   .hero__inner { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: clamp(2rem, 6vw, 6rem); align-items: center; }
-  /* Keeps the three lines three on the smallest phones. */
-  .hero__copy h1 { font-size: min(var(--step-display), 11.6vw); }
+  /* Keeps the three lines three at every width: "Tracking without" is about 7.5 of Roundo's em wide. */
+  .hero__copy { container-type: inline-size; }
+  .hero__copy h1 { font-size: min(var(--step-display), 13cqi); }
   .lead { margin-top: 1.5rem; max-width: 36rem; text-wrap: balance; }
   .sides { margin-top: 1.25rem; display: grid; gap: 0.75rem; max-width: 36rem; }
   .side { display: grid; grid-template-columns: 0.3rem 3.5rem minmax(0, 1fr); column-gap: 0.75rem; align-items: baseline; }

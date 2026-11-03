@@ -13,7 +13,7 @@ page and the universal-link association file in `public/`.
   src/scripts/demo-day.js  the demo's targets, logged breakfast, lunch, and meals ahead
   src/assets/shots/     real simulator captures, each in light and dark: scripts/screenshots/capture.sh in the app's repo
   src/site.ts           the App Store id, titles, description, feature list: change these before launch
-  public/fonts/         Roundo for the wordmark, self-hosted (the official Fontshare file, unmodified; the ITF Free Font License allows it)
+  public/fonts/         Roundo for the wordmark and headings, self-hosted (the official Fontshare files, unmodified; the ITF Free Font License allows it)
   public/llms.txt       a plain summary of Residual for answer engines and AI assistants; keep it true to the app
   public/.well-known/apple-app-site-association   tells iOS that /s links open Residual
   public/s/index.html   the share page, for when the app isn't installed (its script is public/s/share.js)
