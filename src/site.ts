@@ -14,7 +14,7 @@ export const site = {
   homeTitle: 'Residual: the macro meal planner and tracker for iPhone',
   // The default meta description. Keep it under about 160 characters so search results show it whole.
   description:
-    'An iPhone meal planner and macro tracker in one app. Build a plan that hits your targets, log against it, and the meals ahead re-size to keep you on target.',
+    'An iPhone macro planner and tracker. Plan from your own food, log against it, and when real food doesn\'t match, the same meals re-size to keep you on target.',
   // One plain sentence that says what Residual is: the definition answer engines and link previews quote.
   definition:
     'Residual is an iPhone meal planner and tracker for people who eat to calorie and macro targets: it builds a plan that hits them, and as you log what you actually ate, a deterministic solver re-sizes the meals still ahead so the day lands inside your ranges.',
