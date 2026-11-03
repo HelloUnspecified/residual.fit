@@ -70,8 +70,8 @@ const year = new Date().getFullYear();
   .foot__mark { display: flex; align-items: center; gap: 0.3em; font-family: var(--font-mark); font-weight: 600; font-size: clamp(2.5rem, 7vw, 5.5rem); line-height: 1; letter-spacing: -0.02em; }
   .foot__links { margin-top: 3rem; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); row-gap: 2rem; }
   .foot__col { display: grid; gap: 0.5rem; align-content: start; grid-column: span 3; font-size: 0.9375rem; }
-  .foot__contact { grid-column: 7 / 13; display: grid; gap: 1.25rem; align-content: start; }
-  .foot__news { display: grid; gap: 0.6rem; max-width: 30rem; }
+  .foot__contact { grid-column: 7 / 13; min-width: 0; display: grid; gap: 1.25rem; align-content: start; }
+  .foot__news { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0.6rem; max-width: 30rem; }
   .foot__news label { font-weight: 500; }
   .foot__row { display: flex; gap: 0.5rem; }
   .foot__row input { flex: 1; min-width: 0; min-height: 2.75rem; padding: 0 1rem; background: var(--bg); border: 0; border-radius: 999px; color: var(--text); font-size: max(1rem, var(--step-small)); }
@@ -83,5 +83,9 @@ const year = new Date().getFullYear();
   @media (max-width: 64em) {
     .foot__col { grid-column: span 6; }
     .foot__contact { grid-column: 1 / 13; }
+  }
+  @media (max-width: 23.5em) {
+    .foot__row { flex-wrap: wrap; }
+    .foot__row input { flex-basis: 100%; }
   }
 </style>
