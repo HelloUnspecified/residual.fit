@@ -7,7 +7,7 @@
 // build/screenshots/raw/6.3, each as <frame>-light.png and <frame>-dark.png. Cuts are rectangles in the captures'
 // own pixels (iPhone 18 Pro, 1206 × 2622); `find` then walks in from the rectangle's middle to the card's true edge,
 // so a card that grew by a line is still cut right. If a screen's layout changes, look at the result. The Home Screen
-// captures are home-1 and home-2 in each appearance, from testTheSitesWidgets in the app's WidgetShots.swift; each
+// captures are home-1, home-2 and home-3 in each appearance, from testTheSitesWidgets in the app's WidgetShots.swift; each
 // widget is cut with its corners made clear, so it sits on the page's own ground.
 import sharp from 'sharp';
 import { mkdirSync, existsSync } from 'node:fs';
@@ -84,8 +84,9 @@ if (home) {
     { name: 'widget-landing-large', page: 1, left: col[0], top: row[1], width: wide, height: tall },
     { name: 'widget-left-small', page: 2, left: col[0], top: row[0], width: small, height: small },
     { name: 'widget-plan-small', page: 2, left: col[1], top: row[0], width: small, height: small },
-    { name: 'widget-next-medium', page: 2, left: col[0], top: row[1], width: wide, height: small },
-    { name: 'widget-eaten-medium', page: 2, left: col[0], top: row[2], width: wide, height: small },
+    { name: 'widget-clock-small', page: 2, left: col[0], top: row[1], width: small, height: small },
+    { name: 'widget-next-medium', page: 2, left: col[0], top: row[2], width: wide, height: small },
+    { name: 'widget-eaten-medium', page: 3, left: col[0], top: row[0], width: wide, height: small },
   ];
   for (const mode of modes) {
     for (const w of widgets) {
