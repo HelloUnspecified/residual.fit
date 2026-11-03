@@ -4,7 +4,7 @@
 [data-ui] .today__hero { display: grid; grid-template-columns: 148px minmax(0, 1fr); gap: 18px; align-items: center; }
 [data-ui] .today__ring { position: relative; }
 [data-ui] .today__center { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
-[data-ui] .today__center strong { font-family: var(--font-round); font-size: 32px; line-height: 1; font-weight: 700; letter-spacing: -0.03em; transition: color var(--t-ui) ease; }
+[data-ui] .today__center strong { font-family: var(--font-mark); font-size: 32px; line-height: 1; font-weight: 600; letter-spacing: -0.02em; transition: color var(--t-ui) ease; }
 [data-ui] .today__center strong[data-off="true"] { color: var(--amber); }
 [data-ui] .today__center span { margin-top: 3px; font-size: 12px; font-weight: 500; color: var(--label2); }
 [data-ui] .today__bars { display: grid; gap: 10px; }
