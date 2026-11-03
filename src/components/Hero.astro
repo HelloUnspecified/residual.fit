@@ -1,77 +1,43 @@
 ---
-import { Image } from 'astro:assets';
-import Ring from './Ring.astro';
+import Phone from './Phone.astro';
 import { site } from '../site';
-import today from '../assets/shots/today-dark.png';
 ---
-<section class="hero" aria-labelledby="hero-title">
-  <div class="hero__inner">
+<section class="hero wrap" aria-labelledby="hero-title">
+  <div class="frame hero__inner">
     <div class="hero__copy">
-      <!-- The headline names the moment every macro counter knows (the day went off plan, and what's left
-           is a puzzle) before it names the product; the brand line rides above it as the eyebrow. -->
-      <p class="hero__eyebrow" data-rise style="--i:0">{site.tagline}</p>
+      <!-- The headline names the moment every macro counter knows (the day went off plan, and what's left is a
+           puzzle) before it names the product. -->
       <h1 id="hero-title" class="display lines">
         <span class="line"><span data-line style="--i:0">Ate off plan?</span></span>
         <span class="line"><span data-line style="--i:1">The rest of the day fixes it.</span></span>
       </h1>
       <p class="lead" data-rise style="--i:2">Most trackers count what you ate and leave the food puzzle to you. Residual plans your day, and when you go off plan it re-sizes the meals still ahead so you land your calories and macros by tonight.</p>
       <div class="hero__actions" data-rise style="--i:3">
-        <a class="button" href={site.appStoreUrl}><Ring size="1.1em" width={0.2} tick={false} dot={false} eaten={0.62} lands={0.93} zoneStart={0.84} /> Try it free for {site.trialDays} days</a>
-        <a class="link hero__try" href="#live">Or try the solver right here</a>
+        <a class="button" href={site.appStoreUrl}>Try it free for {site.trialDays} days</a>
+        <a class="link" href="#live">Or try the solver right here</a>
       </div>
       <p class="small muted hero__note" data-rise style="--i:4">On the App Store · iPhone · {site.minimumOS} · No account · Your data stays on your phone and in your iCloud.</p>
     </div>
-    <div class="hero__stage">
-      <div class="hero__ringbox" aria-hidden="true">
-        <Ring class="ring--animate" size="100%" eaten={0.62} lands={0.93} zoneStart={0.84} width={0.12} tickLength={0.7} />
-      </div>
-      <div class="hero__screen">
-        <Image src={today} alt="Residual's Today screen on iPhone: a planned day on track, with rings for protein, carbs and fat and a forecast of where the day lands against 2,700 kcal." widths={[420, 640, 900]} sizes="(min-width: 64em) 26svh, 60vw" loading="eager" fetchpriority="high" />
-      </div>
+    <div class="hero__stage" data-rise style="--i:2">
+      <Phone name="01-today" alt="Residual's Today screen. A ring shows 465 of 2,100 calories eaten and the day planned all the way round, with bars for protein, carbs and fat. Under it: Lands in range. Three meals ahead, sized to fit. Breakfast is logged, lunch, snack and dinner are planned, and one button says Log lunch." sizes="(min-width: 64em) 26rem, 80vw" loading="eager" fetchpriority="high" />
     </div>
   </div>
 </section>
 
 <style>
-  /* One contained composition: the copy and the ring share a 1600px frame so they sit together on a
-     wide screen instead of drifting to opposite edges. The stage sets the height; the copy centres on it. */
-  .hero { position: relative; min-height: 100svh; display: grid; align-items: center; overflow: clip; padding: 5rem var(--margin) 1.5rem; }
-  .hero__inner { width: 100%; max-width: 1600px; margin-inline: auto; display: grid; grid-template-columns: minmax(0, 11fr) minmax(0, 9fr); column-gap: var(--gutter); align-items: center; }
-  .hero__copy { max-width: 40rem; }
-  .hero__eyebrow { margin-bottom: 1rem; font-weight: 600; color: var(--accent-strong); }
-  .hero__copy h1 { max-width: 16ch; font-size: clamp(3rem, 5.6vw, 5.5rem); }
-  .lead { margin-top: 1.4rem; max-width: 36ch; font-size: clamp(1.125rem, 1rem + 0.6vw, 1.4rem); }
+  /* One thing on the first screen: the sentence, and the phone it's true on. The whole phone stands in the fold,
+     so the ring, the verdict and the one button are all seen at once, the way they are in the hand. */
+  .hero { min-height: 100svh; display: grid; align-items: center; padding-block: 5.5rem 2.5rem; }
+  .hero__inner { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: clamp(2rem, 6vw, 6rem); align-items: center; }
+  .hero__copy h1 { max-width: 13ch; }
+  .lead { margin-top: 1.5rem; max-width: 34ch; }
   .hero__actions { margin-top: 2rem; display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; }
-  .hero__try { font-weight: 500; }
-  .hero__note { margin-top: 1.4rem; }
-
-  /* The ring is the stage; the real Today screen stands whole in its lower half, so the tick, the range
-     and the landing dot stay in view while the ring draws itself in. */
-  .hero__stage { position: relative; height: 86svh; min-height: 540px; }
-  .hero__ringbox { position: absolute; left: 50%; top: 44%; width: min(116svh, 128%); aspect-ratio: 1; transform: translate(-50%, -50%); color: var(--ink); }
-  .hero__screen { position: absolute; left: 50%; top: 44%; width: min(24svh, 36%); aspect-ratio: 1206 / 2622; transform: translate(-50%, -6%); border-radius: 9% / 4.2%; overflow: hidden; }
-  .hero__screen img { width: 100%; height: 100%; object-fit: cover; }
-
-  @media (prefers-reduced-motion: no-preference) {
-    .js .hero__screen { opacity: 0; transform: translate(-50%, -2%) scale(0.98); animation: settle 900ms var(--ease-out) 1100ms forwards; }
-    @supports (animation-timeline: scroll()) {
-      .hero__stage { animation: turn linear both; animation-timeline: scroll(root); animation-range: 0 100vh; }
-    }
-  }
-  @keyframes settle { to { opacity: 1; transform: translate(-50%, -6%) scale(1); } }
-  @keyframes turn { to { transform: translateY(-6vh); } }
+  .hero__note { margin-top: 1.4rem; max-width: 40ch; }
+  .hero__stage { width: min(calc((100svh - 8rem) * 0.468), 26rem); }
 
   @media (max-width: 64em) {
-    .hero { align-items: start; padding-top: 5rem; }
-    .hero__inner { grid-template-columns: minmax(0, 1fr); row-gap: 1rem; }
-    .hero__stage { height: auto; min-height: 0; aspect-ratio: 1 / 1.1; width: min(100%, 72vh); margin-inline: auto; }
-    .hero__ringbox { width: 100%; top: 46%; }
-    .hero__screen { width: 26%; top: 46%; }
-    @supports (animation-timeline: scroll()) { .hero__stage { animation: none; } }
-  }
-  @media (max-width: 40em) {
-    .hero__copy h1 { max-width: none; font-size: 2.65rem; }
-    .hero__stage { width: 100%; }
-    .hero__screen { width: 30%; }
+    .hero { min-height: 0; padding-top: 6rem; padding-bottom: 0; }
+    .hero__inner { grid-template-columns: minmax(0, 1fr); row-gap: 3rem; }
+    .hero__stage { width: min(80vw, 24rem); margin-inline: auto; }
   }
 </style>

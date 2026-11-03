@@ -1,50 +1,41 @@
 ---
 import { site } from '../site';
 import Ring from './Ring.astro';
-const letters = [...'Residual'];
-const heights = [100, 100, 100, 100, 100, 100, 100, 100];
 const year = new Date().getFullYear();
 ---
-<footer class="foot" aria-labelledby="foot-title">
-  <h2 id="foot-title" class="sr-only">Residual</h2>
-  <div class="foot__mark" aria-hidden="true" data-reveal>
-    <div class="foot__ring"><Ring size="100%" dotSpacing={0.0455} /></div>
-    <div class="foot__blocks">
-      {letters.map((l, i) => <span class="foot__block" style={`--h:${heights[i]}%`}>{l}</span>)}
+<footer class="foot wrap" aria-labelledby="foot-title">
+  <div class="frame">
+    <h2 id="foot-title" class="foot__mark"><Ring size="1.05em" /> Residual</h2>
+    <div class="foot__links">
+      <ul class="foot__col">
+        <li><a class="nav-link" href="/#live">Try the solver</a></li>
+        <li><a class="nav-link" href="/#gauges">The gauges</a></li>
+        <li><a class="nav-link" href="/#how">How it works</a></li>
+        <li><a class="nav-link" href="/features/">Features</a></li>
+        <li><a class="nav-link" href="/pricing/">Pricing</a></li>
+        <li><a class="nav-link" href="/#why">Why I built it</a></li>
+        <li><a class="nav-link" href="/#questions">Questions</a></li>
+      </ul>
+      <ul class="foot__col">
+        <li><a class="nav-link" href={site.appStoreUrl}>App Store</a></li>
+        <li><a class="nav-link" href="/support/">Support</a></li>
+        <li><a class="nav-link" href="/privacy/">Privacy</a></li>
+        <li><a class="nav-link" href="/terms/">Terms of use</a></li>
+        <li><a class="nav-link" href="/health-disclaimer/">Health disclaimer</a></li>
+      </ul>
+      <div class="foot__contact">
+        <form class="foot__news" data-news novalidate>
+          <label for="news-email">The Residual newsletter, by email.</label>
+          <div class="foot__row">
+            <input id="news-email" name="email" type="email" required autocomplete="email" inputmode="email" placeholder="you@example.com" />
+            <button class="button" type="submit">Subscribe</button>
+          </div>
+          <p class="small muted" data-news-msg aria-live="polite">A few emails a month at most. Every one has an unsubscribe link.</p>
+        </form>
+        <p class="small muted">Made by {site.publisher}. <a class="link" href={`mailto:${site.supportEmail}`}>{site.supportEmail}</a></p>
+      </div>
     </div>
-  </div>
-  <div class="foot__links">
-    <ul class="foot__col">
-      <li><a class="link" href="/#live">Try the solver</a></li>
-      <li><a class="link" href="/#how">How it works</a></li>
-      <li><a class="link" href="/features/">Features</a></li>
-      <li><a class="link" href="/pricing/">Pricing</a></li>
-      <li><a class="link" href="/#promises">Why it sticks</a></li>
-      <li><a class="link" href="/#why">Why I built it</a></li>
-      <li><a class="link" href="/#questions">Questions</a></li>
-    </ul>
-    <ul class="foot__col">
-      <li><a class="link" href={site.appStoreUrl}>App Store</a></li>
-      <li><a class="link" href="/support/">Support</a></li>
-      <li><a class="link" href="/privacy/">Privacy</a></li>
-      <li><a class="link" href="/terms/">Terms of use</a></li>
-      <li><a class="link" href="/health-disclaimer/">Health disclaimer</a></li>
-    </ul>
-    <div class="foot__contact">
-      <form class="foot__news" data-news novalidate>
-        <label for="news-email">The Residual newsletter, by email.</label>
-        <div class="foot__row">
-          <input id="news-email" name="email" type="email" required autocomplete="email" inputmode="email" placeholder="you@example.com" />
-          <button class="button button--ink" type="submit">Subscribe</button>
-        </div>
-        <p class="small muted" data-news-msg aria-live="polite">A few emails a month at most. Every one has an unsubscribe link.</p>
-      </form>
-      <p class="small">Made by {site.publisher}. <a class="link" href={`mailto:${site.supportEmail}`}>{site.supportEmail}</a></p>
-    </div>
-  </div>
-  <div class="foot__last">
-    <p class="small muted">© {year} {site.publisher}. Residual is <a class="link" href="/health-disclaimer/">not medical advice</a>; your targets come from you and your nutritionist.</p>
-    <a class="button button--ink foot__btn" href={site.appStoreUrl}>Try it free for {site.trialDays} days</a>
+    <p class="small muted foot__last">© {year} {site.publisher}. Residual is <a class="link" href="/health-disclaimer/">not medical advice</a>; your targets come from you and your nutritionist.</p>
   </div>
 </footer>
 
@@ -74,30 +65,22 @@ const year = new Date().getFullYear();
 </script>
 
 <style>
-  .foot { background: var(--surface); padding: clamp(3rem, 6vw, 5rem) var(--margin) 2rem; margin-top: 0; }
+  /* The close: the name, once, in the wordmark's own type, on a step of tone. */
+  .foot { background: var(--card); padding-block: clamp(3rem, 6vw, 5rem) 2rem; }
+  .foot__mark { display: flex; align-items: center; gap: 0.3em; font-family: var(--font-mark); font-weight: 600; font-size: clamp(2.5rem, 7vw, 5.5rem); line-height: 1; letter-spacing: -0.02em; }
+  .foot__links { margin-top: 3rem; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); row-gap: 2rem; }
+  .foot__col { display: grid; gap: 0.5rem; align-content: start; grid-column: span 3; font-size: 0.9375rem; }
+  .foot__contact { grid-column: 7 / 13; display: grid; gap: 1.25rem; align-content: start; }
   .foot__news { display: grid; gap: 0.6rem; max-width: 30rem; }
   .foot__news label { font-weight: 500; }
   .foot__row { display: flex; gap: 0.5rem; }
-  .foot__row input { flex: 1; min-width: 0; min-height: 2.75rem; padding: 0 1rem; background: var(--bg); border: 0; border-radius: var(--radius); color: var(--ink); font-size: max(1rem, var(--step-small)); }
-  .foot__row input::placeholder { color: var(--muted); }
-  .foot__row .button { min-height: 2.75rem; padding-inline: 1.1rem; font-size: 0.95rem; }
-  .foot__news .is-ok { color: var(--green); }
+  .foot__row input { flex: 1; min-width: 0; min-height: 2.75rem; padding: 0 1rem; background: var(--bg); border: 0; border-radius: 999px; color: var(--text); font-size: max(1rem, var(--step-small)); }
+  .foot__row input::placeholder { color: var(--label3); }
+  .foot__row .button { min-height: 2.75rem; padding-inline: 1.1rem; }
+  .foot__news .is-ok { color: var(--eaten); }
   .foot__news .is-err { color: var(--amber); }
-  .foot__contact > p { margin-top: 1.4rem; }
-  .foot__mark { display: grid; grid-template-columns: auto 1fr; gap: 4px; height: 34svh; min-height: 180px; align-items: end; }
-  .foot__ring { height: 100%; width: auto; aspect-ratio: 1; }
-  .foot__blocks { display: flex; gap: 4px; height: 100%; align-items: flex-end; }
-  .foot__block { flex: 1; height: var(--h); display: flex; align-items: center; justify-content: center; background: var(--ink); color: var(--surface); font-size: clamp(2.6rem, 9.5vw, 13rem); line-height: 1; font-weight: 600; overflow: hidden; }
-  .foot__block:nth-child(2n) { background: var(--accent); color: var(--accent-ink); }
-  .foot__block:nth-child(5) { background: var(--green); color: var(--accent-ink); }
-  .foot__links { margin-top: 56px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); row-gap: 1.5rem; }
-  .foot__col { display: grid; gap: 0.5rem; grid-column: span 3; }
-  .foot__contact { grid-column: 9 / 13; }
-  .foot__last { margin-top: 3rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
-  .foot__btn { min-height: 2.6rem; padding-inline: 1.1rem; font-size: 0.95rem; }
+  .foot__last { margin-top: 3rem; max-width: none; }
   @media (max-width: 64em) {
-    .foot__mark { height: 22svh; grid-template-columns: 1fr; }
-    .foot__ring { display: none; }
     .foot__col { grid-column: span 6; }
     .foot__contact { grid-column: 1 / 13; }
   }

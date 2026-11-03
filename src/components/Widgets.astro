@@ -1,0 +1,46 @@
+---
+import Shot from './Shot.astro';
+
+// The real widgets, off a real Home Screen (WidgetShots in the app's repo; scripts/shots.mjs cuts them out). Each has
+// its own corners on the page's own ground, the way it sits among your apps. The Clock isn't shown: it reads the
+// real time, so it agrees with this day only when captured after the day's first meal.
+const small = [
+  { name: 'widget-landing-small', alt: 'The small Landing widget: the ring zoomed in on the range, In range, 44 calories under, and Log lunch.' },
+  { name: 'widget-eaten-small', alt: 'The small Eaten widget: 465 of 2,100 on the ring, and Lands in range.' },
+  { name: 'widget-left-small', alt: 'The small Left widget: 1,635 calories left on the ring, and Lands in range.' },
+  { name: 'widget-plan-small', alt: 'The small Plan widget: the ring split into the day’s meals, lunch next at 562 calories, 12:15 PM.' },
+];
+---
+<section id="widgets" class="widgets wrap" aria-labelledby="widgets-title">
+  <div class="frame">
+    <div class="widgets__head">
+      <h2 id="widgets-title" class="head" data-reveal>The day, without opening the app.</h2>
+      <p class="lead" data-reveal style="--i:1">Six widgets for the Home Screen and the Lock Screen: Landing, Clock, Next Up, Eaten, Left and Plan. Same numbers, same words as the ring. A widget's Log button opens the meal; it never logs by itself.</p>
+    </div>
+    <div class="widgets__grid">
+      <figure class="w" data-reveal><Shot name="widget-landing-large" alt="The large Landing widget: the ring and each macro zoomed in on its range, every one in range; Lands in range, three meals ahead, sized to fit; the day's meals with their times; and a button, Log lunch at 12:15 PM." sizes="(min-width: 64em) 30rem, 100vw" widths={[480, 960]} /></figure>
+      <div class="w__small">
+        {small.map((w, i) => <figure class="w" data-reveal style={`--i:${i}`}><Shot name={w.name} alt={w.alt} sizes="(min-width: 64em) 18rem, 45vw" widths={[300, 492]} /></figure>)}
+      </div>
+      <figure class="w" data-reveal style="--i:1"><Shot name="widget-next-medium" alt="The medium Next Up widget: Lands in range; next at 12:15 PM, lunch, 562 calories, 54 protein, 53 carbs, 15 fat; and the day's meals around the ring." sizes="(min-width: 64em) 30rem, 100vw" widths={[480, 960]} /></figure>
+      <figure class="w" data-reveal style="--i:2"><Shot name="widget-eaten-medium" alt="The medium Eaten widget: 465 of 2,100 on the ring, and bars for protein, carbs and fat with what's eaten and where each lands." sizes="(min-width: 64em) 30rem, 100vw" widths={[480, 960]} /></figure>
+    </div>
+  </div>
+</section>
+
+<style>
+  .widgets { margin-top: var(--section); }
+  .widgets__head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: var(--gutter); align-items: end; }
+  .widgets__head h2 { max-width: 14ch; }
+  /* Laid out the way a Home Screen lays them out: a large beside four smalls, which come to the same height, and
+     two mediums under them. The gap is the Home Screen's, in proportion. */
+  .widgets__grid { margin-top: clamp(2rem, 4vw, 3.5rem); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(10px, 1.6vw, 22px); align-items: start; }
+  .w { margin: 0; }
+  .w :global(img) { width: 100%; height: auto; }
+  .w__small { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: inherit; }
+
+  @media (max-width: 64em) {
+    .widgets__head { grid-template-columns: minmax(0, 1fr); row-gap: 1.25rem; }
+    .widgets__grid { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>

@@ -6,13 +6,14 @@ page and the universal-link association file in `public/`.
 
 ```
   src/pages/            index, privacy, support, 404 (and og, the social card, unlisted)
-  src/components/       Hero, HowItWorks, LiveSolve, Band, Promises, Questions, Start, Footer, Ring
+  src/components/       Hero, LiveSolve, Gauges, HowItWorks, Widgets, Promises, Founder, Questions, Start, Footer;
+                        DayRing, MacroBar, Phone, Shot (the app's pieces); Ring (the mark)
   src/content/faq.ts    the home page's questions: feeds both the visible cards and the FAQPage structured data
   src/scripts/solve.js  a small port of MacroSolver's re-balance for the page's live demo
   src/scripts/demo-day.js  the demo's targets, logged breakfast, lunch, and meals ahead
-  src/assets/shots/     real simulator screenshots (dark appearance) the page shows
+  src/assets/shots/     real simulator captures, each in light and dark: scripts/screenshots/capture.sh in the app's repo
   src/site.ts           the App Store id, titles, description, feature list: change these before launch
-  public/fonts/         Roundo, self-hosted (official Fontshare files, unmodified; the ITF Free Font License allows it)
+  public/fonts/         Roundo for the wordmark, self-hosted (the official Fontshare file, unmodified; the ITF Free Font License allows it)
   public/llms.txt       a plain summary of Residual for answer engines and AI assistants; keep it true to the app
   public/.well-known/apple-app-site-association   tells iOS that /s links open Residual
   public/s/index.html   the share page, for when the app isn't installed (its script is public/s/share.js)
@@ -21,6 +22,21 @@ page and the universal-link association file in `public/`.
   src/lib/mailingLists.ts     which Loops lists a sign-up joins (tests/mailingLists.test.ts, `npm test`)
   wrangler.jsonc        the Cloudflare Worker's name and settings; the adapter fills in the rest at build time
 ```
+
+## The app's screens
+
+Everything the site shows of the app is a real capture, in light and dark. Re-capture after the app changes, in the
+app's repo, then bring them here:
+
+```
+scripts/screenshots/capture.sh 6.3     # in the app's repo: build/screenshots/raw/6.3
+node scripts/shots.mjs <raw folder> [<Home Screen folder>]
+```
+
+The Home Screen folder holds `home-1-*` and `home-2-*` from `testTheSitesWidgets` in the app's `WidgetShots.swift`,
+run once per appearance on a throwaway simulator booted in it (the test's comment says how). The fragments you can
+operate (`LiveSolve`, `CloseHero`, `PlanYourWay`, `SizedForYou`) are HTML with the app's own numbers and words; when
+the app changes a state's wording (`TodayState` in its Kit), change them too.
 
 ## Run it
 

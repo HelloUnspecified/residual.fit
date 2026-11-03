@@ -1,69 +1,35 @@
 ---
-import { faq as cards } from '../content/faq';
-const last = cards.length - 1;
+import { faq } from '../content/faq';
 ---
-<section id="questions" class="faq" aria-labelledby="faq-title">
-  <h2 id="faq-title" class="faq__title">Questions</h2>
-  <div class="faq__drawer" style={`--last:${last}`}>
-    {cards.map((c, i) => (
-      <article class="card" data-reveal="scale" style={`--i:${i}; --n:${i}`} class:list={{ 'is-open': i === 0 }}>
-        <h3>
-          <button type="button" class="card__btn" aria-expanded={i === 0 ? 'true' : 'false'} aria-controls={`faq-a-${i}`} id={`faq-q-${i}`}>
-            <!-- The tab label is drawn from data-tab, so the heading's text is the question alone. -->
-            <span class="card__tab" data-tab={c.tab} aria-hidden="true"></span>
-            <span class="card__q">{c.q}</span>
-          </button>
-        </h3>
-        <div class="card__panel" id={`faq-a-${i}`} role="region" aria-labelledby={`faq-q-${i}`}><div><p>{c.a}</p>{c.more && <a class="card__more link" href={c.more.href}>{c.more.label} →</a>}</div></div>
-      </article>
-    ))}
+<section id="questions" class="faq wrap" aria-labelledby="faq-title">
+  <div class="frame faq__grid">
+    <h2 id="faq-title" class="head" data-reveal>Questions</h2>
+    <!-- A grouped list, the way Settings draws one. Native disclosure, so it works without script, and `name` lets
+         one answer open at a time where the browser supports it. -->
+    <div class="faq__list" data-reveal>
+      {faq.map((c, i) => (
+        <details name="faq" open={i === 0}>
+          <summary><span>{c.q}</span><svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M2 4.25 6 8.25l4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg></summary>
+          <div class="faq__a"><p>{c.a}</p>{c.more && <a class="link" href={c.more.href}>{c.more.label}</a>}</div>
+        </details>
+      ))}
+    </div>
   </div>
 </section>
 
-<script>
-  const cards = [...document.querySelectorAll<HTMLElement>('.faq .card')];
-  cards.forEach((card) => {
-    const btn = card.querySelector<HTMLButtonElement>('.card__btn')!;
-    btn.addEventListener('click', () => {
-      const open = card.classList.contains('is-open');
-      cards.forEach((k) => { k.classList.remove('is-open'); k.querySelector('.card__btn')!.setAttribute('aria-expanded', 'false'); });
-      if (!open) { card.classList.add('is-open'); btn.setAttribute('aria-expanded', 'true'); }
-    });
-  });
-</script>
-
 <style>
-  .faq { margin-top: var(--section); padding-inline: var(--margin); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); }
-  .faq__title { grid-column: 3 / 11; font-size: clamp(2rem, 4vw, 3.75rem); line-height: 1.04; letter-spacing: -0.025em; margin-bottom: 2.5rem; }
-  .faq__drawer { grid-column: 3 / 11; display: grid; }
-  /* Each card's tab steps right; the step divides the room left after one tab by the number of cards, so
-     the last tab always ends at the right edge whatever the width or the number of questions. */
-  .card { --tab-w: 200px; --tab-h: 40px; --step: calc((100% - var(--tab-w)) / var(--last)); position: relative; margin-top: calc(-1 * 40px); padding-top: var(--tab-h); background: var(--surface); color: var(--ink);
-    clip-path: polygon(calc(var(--n) * var(--step)) var(--tab-h), calc(var(--n) * var(--step)) 0, calc(var(--n) * var(--step) + var(--tab-w)) 0, calc(var(--n) * var(--step) + var(--tab-w)) var(--tab-h), 100% var(--tab-h), 100% 100%, 0 100%, 0 var(--tab-h)); }
-  .card:first-child { margin-top: 0; }
-  .card:nth-child(3n+2) { background: var(--surface-2); }
-  .card:nth-child(3n) { background: var(--indigo-deep); }
-  .card__btn { display: block; width: 100%; text-align: left; color: inherit; }
-  .card__tab { position: absolute; top: 0; left: calc(var(--n) * var(--step)); width: var(--tab-w); height: var(--tab-h); display: flex; align-items: center; padding-left: 20px; font-weight: 600; }
-  .card__tab::before { content: attr(data-tab); }
-  .card__q { display: block; min-height: 96px; padding: 20px 20px 52px; font-size: 1.25rem; font-weight: 500; line-height: 1.3; }
-  .card__panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 320ms var(--ease-out); }
-  .card__panel > div { overflow: hidden; }
-  .card__panel p { padding: 0 20px 64px; max-width: 50ch; }
-  /* A card with a link gives the link the bottom padding the paragraph would otherwise carry. */
-  .card__panel p:has(+ .card__more) { padding-bottom: 1rem; }
-  .card__more { display: inline-block; margin: 0 20px 64px; font-weight: 600; color: var(--accent-strong); }
-  /* A closed card's link is out of sight, so it leaves the tab order too, once the panel has finished closing. */
-  .card:not(.is-open) .card__more { visibility: hidden; transition: visibility 0s 320ms; }
-  .card.is-open .card__panel { grid-template-rows: 1fr; }
-  .card.is-open .card__q { color: var(--ink); }
-  @media (hover: hover) and (pointer: fine) { .card__btn:hover .card__q { color: var(--accent-strong); } }
+  .faq { margin-top: var(--section); }
+  .faq__grid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); column-gap: var(--gutter); align-items: start; }
+  .faq__list { background: var(--card); border-radius: var(--radius-card); padding-inline: clamp(1rem, 2vw, 1.5rem); }
+  details + details { border-top: 1px solid var(--separator); }
+  summary { display: flex; justify-content: space-between; align-items: center; gap: 1rem; min-height: 3.5rem; padding-block: 0.8rem; cursor: pointer; list-style: none; font-weight: 600; font-size: 1.0625rem; line-height: 1.3; }
+  summary::-webkit-details-marker { display: none; }
+  summary svg { flex: none; color: var(--label3); transition: transform var(--t-ui) var(--ease-out); }
+  details[open] summary svg { transform: rotate(180deg); }
+  .faq__a { padding-bottom: 1.25rem; }
+  .faq__a p { color: var(--label2); max-width: 62ch; }
+  .faq__a .link { display: inline-block; margin-top: 0.6rem; }
   @media (max-width: 64em) {
-    .faq__title, .faq__drawer { grid-column: 1 / 13; }
-    .faq__title { font-size: 9vw; }
-    .card { --tab-w: 108px; }
-    .card__tab { padding-left: 14px; }
-    .card__q { min-height: 112px; padding-bottom: 60px; font-size: 1.125rem; }
-    .card__panel p { font-size: 1rem; }
+    .faq__grid { grid-template-columns: minmax(0, 1fr); row-gap: 2rem; }
   }
 </style>

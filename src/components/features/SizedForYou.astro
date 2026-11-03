@@ -17,9 +17,11 @@ const totals = (r: number) => foods.reduce((t, f) => { const g = size(f.g, r) / 
 const t0 = totals(r0);
 const kcal = (t: { p: number; c: number; f: number }) => Math.round(4 * t.p + 4 * t.c + 9 * t.f);
 ---
-<section id="share" class="sized" aria-labelledby="sized-title">
+<section id="share" class="sized wrap" aria-labelledby="sized-title">
+  <div class="frame sized__grid">
   <div class="sized__in">
-    <div class="sized__ask" data-reveal>
+    <h2 id="sized-title" class="head" data-reveal>A shared meal, sized for you.</h2>
+    <div class="sized__ask" data-reveal style="--i:1">
       <p>A friend shares their dinner. They eat <strong class="nums">2,600</strong> kcal a day.</p>
       <div class="sized__you">
         <label for="sized-kcal">You eat</label>
@@ -30,9 +32,8 @@ const kcal = (t: { p: number; c: number; f: number }) => Math.round(4 * t.p + 4 
         </div>
         <span>kcal a day.</span>
       </div>
-      <p class="sized__note">Every portion scales with the two days, never below half or past double. Send by link or AirDrop.</p>
+      <p class="sized__note">Every portion scales with the two days, never below half or past double. Send by link or AirDrop. It lands as a plan, as they sent it or sized for you, your choice.</p>
     </div>
-    <h2 id="sized-title" class="sized__word sized__word--a"><span>Sized</span> <span class="sr-only">for you.</span></h2>
   </div>
 
   <div class="sized__out">
@@ -59,7 +60,7 @@ const kcal = (t: { p: number; c: number; f: number }) => Math.round(4 * t.p + 4 
       </div>
       <p class="shared__why nums" data-why>{Math.round(r0 * 100)}% of their portions, from your daily calories ({yours} vs their {theirs}).</p>
     </div>
-    <p class="sized__word sized__word--b" aria-hidden="true">for you.</p>
+  </div>
   </div>
 </section>
 
@@ -100,61 +101,47 @@ const kcal = (t: { p: number; c: number; f: number }) => Math.round(4 * t.p + 4 
 </script>
 
 <style>
-  /* Two fields meet on a vertical edge: what you hand Residual on the dark half, what it makes of it in
-     the app's light appearance on the other. The heading is split across the edge. */
-  .sized { display: grid; grid-template-columns: 1fr 1fr; margin-top: var(--section); }
-  .sized__in, .sized__out { position: relative; min-height: 90svh; padding: clamp(3rem, 8vh, 6rem) var(--margin) clamp(7rem, 16vh, 10rem); }
-  .sized__in { background: var(--surface); display: grid; align-content: start; }
-  .sized__out { background: var(--ui-paper); color: var(--ui-ink); display: grid; justify-items: center; align-content: start; }
-  .sized__ask { margin-top: 12vh; max-width: 30ch; margin-left: clamp(0rem, 6vw, 6rem); font-size: var(--step-lead); line-height: 1.35; }
+  /* What you hand Residual on one side, what it makes of it on the other: type a number, the dinner re-sizes. */
+  .sized { margin-top: var(--section); }
+  .sized__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 27rem); column-gap: clamp(2rem, 7vw, 7rem); align-items: start; }
+  .sized__ask { margin-top: 1.75rem; max-width: 30ch; font-size: var(--step-lead); line-height: 1.35; letter-spacing: -0.01em; }
   .sized__ask strong { font-weight: 600; }
   .sized__you { margin-top: 1.2rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.8rem; }
-  .sized__field { display: inline-flex; align-items: center; background: var(--bg); border-radius: var(--radius); padding: 4px; }
-  .sized__field button { width: 44px; height: 44px; border-radius: 50%; color: var(--accent); font-size: 1.4rem; transition: background-color var(--t-hover) ease, transform var(--t-press) var(--ease-out); }
+  .sized__field { display: inline-flex; align-items: center; background: var(--card); border-radius: 999px; padding: 4px; }
+  .sized__field button { width: 44px; height: 44px; border-radius: 50%; color: var(--key); font-size: 1.4rem; transition: background-color var(--t-hover) ease, transform var(--t-press) var(--ease-out); }
   .sized__field button:active { transform: scale(0.92); }
-  @media (hover: hover) and (pointer: fine) { .sized__field button:hover { background: var(--surface-2); } }
-  .sized__field input { width: 4.2em; background: none; border: 0; text-align: center; color: var(--accent); font-weight: 600; font-size: inherit; -moz-appearance: textfield; appearance: textfield; }
+  @media (hover: hover) and (pointer: fine) { .sized__field button:hover { background: var(--bg); } }
+  .sized__field input { width: 4.2em; background: none; border: 0; text-align: center; font-family: var(--font-round); font-weight: 700; font-size: inherit; font-variant-numeric: tabular-nums; -moz-appearance: textfield; appearance: textfield; }
   .sized__field input::-webkit-inner-spin-button, .sized__field input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-  .sized__note { margin-top: 1.4rem; font-size: var(--step-body); color: var(--muted); max-width: 34ch; }
+  .sized__note { margin-top: 1.4rem; font-size: var(--step-body); letter-spacing: 0; color: var(--label2); max-width: 36ch; }
 
-  .sized__word { position: absolute; bottom: 2rem; font-size: clamp(2.75rem, 5vw, 5.25rem); line-height: 1; letter-spacing: -0.035em; font-weight: 500; margin: 0; }
-  .sized__word--a { right: var(--margin); }
-  .sized__word--b { left: var(--margin); color: var(--ui-ink); max-width: none; }
-
-  [data-ui].shared { margin-top: 6vh; width: min(100%, 27rem); font-size: 15px; line-height: 1.3; color: var(--ui-ink); }
-  [data-ui] .shared__title { text-align: center; font-size: 16px; font-weight: 600; margin-bottom: 16px; }
-  [data-ui] .shared__card { display: grid; gap: 2px; background: var(--ui-card); border-radius: 18px; padding: 16px; }
-  [data-ui] .shared__kind { font-size: 12px; color: var(--ui-muted); }
-  [data-ui] .shared__card strong { font-size: 19px; font-weight: 600; }
-  [data-ui] .shared__note { font-size: 13px; color: var(--ui-muted); }
-  [data-ui] .shared__nums { font-size: 13px; color: var(--ui-accent); margin-top: 2px; }
-  [data-ui] .shared__label { margin: 18px 4px 8px; font-size: 14px; font-weight: 600; color: var(--ui-muted); }
-  [data-ui] .shared__foods { list-style: none; padding: 2px 16px; margin: 0; background: var(--ui-card); border-radius: 18px; }
+  [data-ui].shared { font-size: 15px; line-height: 1.3; }
+  [data-ui] .shared__title { text-align: center; font-size: 17px; font-weight: 600; margin-bottom: 14px; }
+  [data-ui] .shared__card { display: grid; gap: 2px; background: var(--card); border-radius: 20px; padding: 16px; }
+  [data-ui] .shared__kind { font-size: 13px; font-weight: 600; color: var(--label2); }
+  [data-ui] .shared__card strong { font-size: 20px; font-weight: 600; }
+  [data-ui] .shared__note { font-size: 13px; color: var(--label2); }
+  [data-ui] .shared__nums { font-size: 13px; font-weight: 600; margin-top: 2px; }
+  [data-ui] .shared__label { margin: 18px 4px 8px; font-size: 15px; font-weight: 600; color: var(--label2); }
+  [data-ui] .shared__foods { list-style: none; padding: 2px 16px; margin: 0; background: var(--card); border-radius: 20px; }
   [data-ui] .shared__foods li { display: flex; justify-content: space-between; gap: 12px; padding: 11px 0; }
-  [data-ui] .shared__foods li + li { border-top: 1px solid var(--ui-fill); }
+  [data-ui] .shared__foods li + li { border-top: 1px solid var(--separator); }
   [data-ui] .shared__name { display: grid; gap: 3px; }
-  [data-ui] .shared__match { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; color: var(--ui-green); }
-  [data-ui] .seal { width: 13px; height: 13px; border-radius: 50%; background: var(--ui-green); position: relative; }
-  [data-ui] .seal::after { content: ''; position: absolute; left: 4.5px; top: 2.5px; width: 3px; height: 6px; border: solid var(--ui-card); border-width: 0 1.5px 1.5px 0; transform: rotate(45deg); }
+  [data-ui] .shared__match { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; color: var(--eaten); }
+  [data-ui] .seal { width: 13px; height: 13px; border-radius: 50%; background: var(--eaten); position: relative; }
+  [data-ui] .seal::after { content: ''; position: absolute; left: 4.5px; top: 2.5px; width: 3px; height: 6px; border: solid var(--card); border-width: 0 1.5px 1.5px 0; transform: rotate(45deg); }
   [data-ui] .shared__g { display: grid; justify-items: end; align-content: start; }
   [data-ui] .shared__g strong { font-weight: 600; font-size: 16px; }
-  [data-ui] .shared__g span { font-size: 12px; color: var(--ui-muted); }
-  [data-ui] .shared__seg { margin-top: 18px; display: grid; grid-template-columns: 1fr 1fr; background: var(--ui-fill); border-radius: 12px; padding: 3px; }
+  [data-ui] .shared__g span { font-size: 12px; color: var(--label2); }
+  [data-ui] .shared__seg { margin-top: 16px; display: grid; grid-template-columns: 1fr 1fr; background: var(--track); border-radius: 12px; padding: 3px; }
   [data-ui] .shared__seg label { position: relative; }
   [data-ui] .shared__seg input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-  [data-ui] .shared__seg span { display: block; text-align: center; padding: 9px 6px; border-radius: 10px; font-size: 14px; font-weight: 500; color: var(--ui-ink); opacity: 0.8; transition: background-color var(--t-ui) var(--ease-out), color var(--t-ui) ease; }
-  [data-ui] .shared__seg input:checked + span { background: var(--ui-card); color: var(--ui-ink); }
-  [data-ui] .shared__seg input:focus-visible + span { outline: 2px solid var(--ui-accent); }
-  [data-ui] .shared__why { margin: 8px 4px 0; font-size: 12px; color: var(--ui-muted); max-width: none; }
+  [data-ui] .shared__seg span { display: block; text-align: center; padding: 8px 6px; border-radius: 9px; font-size: 14px; font-weight: 500; transition: background-color var(--t-ui) var(--ease-out); }
+  [data-ui] .shared__seg input:checked + span { background: var(--card); font-weight: 600; }
+  [data-ui] .shared__seg input:focus-visible + span { outline: 2px solid var(--key); }
+  [data-ui] .shared__why { margin: 8px 4px 0; font-size: 13px; color: var(--label2); max-width: none; }
 
   @media (max-width: 64em) {
-    .sized { grid-template-columns: 1fr; margin-top: 5rem; }
-    .sized__in { min-height: 62svh; padding-bottom: 6rem; }
-    .sized__out { min-height: 62svh; padding-top: 6rem; }
-    .sized__ask { margin: 0; }
-    .sized__word { font-size: 11vw; }
-    .sized__word--a { right: auto; left: var(--margin); bottom: 1.2rem; }
-    .sized__word--b { top: 1.4rem; bottom: auto; }
-    [data-ui].shared { margin-top: 0; }
+    .sized__grid { grid-template-columns: minmax(0, 1fr); row-gap: 2.5rem; }
   }
 </style>

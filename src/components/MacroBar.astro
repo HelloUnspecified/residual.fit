@@ -1,0 +1,53 @@
+---
+/**
+ * One macro from Today's hero, on the Eaten gauge: its name and numbers ("33 → 153 / 150") over a bar with the
+ * track, the range bracket and its two end ticks, the plan as a ghost, what's eaten solid, the target tick and
+ * the dot where the macro lands. A row outside its band turns amber or red; a floating row never does.
+ * setBar in live-day.js moves the same elements. Mirrors MacroBar in the app's DayHero.swift.
+ */
+import { barLayout, pct } from '../scripts/day-ring.js';
+
+interface Props { name: string; target: number; tol: number; planned: number; eaten: number; off?: 'warn' | 'bad'; floats?: boolean; macro?: string }
+const { name, target, tol, planned, eaten, off, floats = false, macro } = Astro.props;
+const g = barLayout({ target, tol, planned, eaten });
+---
+<div class="mbar" data-macro={macro} data-off={off} data-floats={floats ? '' : undefined}>
+  <div class="mbar__head nums">
+    <strong>{name}</strong>
+    <span class="mbar__figs"><b data-eaten>{Math.round(eaten)}</b> <span aria-hidden="true">→</span> <span class="mbar__lands" data-lands>{Math.round(planned)}</span> <small>/ {target}</small></span>
+  </div>
+  <div class="mbar__bar" aria-hidden="true">
+    <span class="mbar__track"></span>
+    <span class="mbar__range" data-range style={`left:${pct(g.lo)};width:${pct(g.hi - g.lo)}`}></span>
+    <span class="mbar__plan" data-plan style={`width:${pct(g.planned)}`}></span>
+    <span class="mbar__eaten" data-eat style={`width:${pct(g.eaten)}`}></span>
+    <span class="mbar__tick" data-tick style={`left:${pct(g.target)}`}></span>
+    <span class="mbar__dot" data-dot style={`left:${pct(g.planned)}`}></span>
+  </div>
+</div>
+
+<style is:global>
+  .mbar { --mb-plan: var(--plan); --mb-word: var(--text); --mb-dot: var(--eaten); }
+  .mbar[data-off="warn"] { --mb-plan: var(--amber-soft); --mb-word: var(--amber); --mb-dot: var(--amber); }
+  .mbar[data-off="bad"] { --mb-plan: var(--red-soft); --mb-word: var(--red); --mb-dot: var(--red); }
+  .mbar__head { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; font-size: 15px; line-height: 1.25; margin-bottom: 4px; }
+  .mbar__head strong { font-weight: 600; }
+  .mbar__figs { color: var(--label2); font-size: 15px; white-space: nowrap; }
+  .mbar__figs b { color: var(--text); font-family: var(--font-round); font-size: 17px; font-weight: 700; }
+  .mbar__lands { color: var(--mb-word); transition: color var(--t-ui) ease; }
+  .mbar__figs small { font-size: 13px; }
+  .mbar__bar { position: relative; height: 16px; }
+  .mbar__track, .mbar__plan, .mbar__eaten { position: absolute; left: 0; top: 4px; height: 8px; border-radius: 4px; }
+  .mbar__track { width: 100%; background: var(--track); }
+  .mbar__plan { background: var(--mb-plan); }
+  .mbar__eaten { background: var(--eaten); min-width: 8px; }
+  .mbar__eaten[style*="width:0.00%"] { min-width: 0; }
+  .mbar__range { position: absolute; top: 0; height: 16px; background: var(--range); border-inline: 1.5px solid var(--eaten); }
+  .mbar__tick { position: absolute; top: 1px; width: 2px; height: 14px; margin-left: -1px; border-radius: 1px; background: var(--ink); }
+  .mbar__dot { position: absolute; top: 2px; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%; background: var(--mb-dot); box-shadow: 0 0 0 2px var(--bg); }
+  .mbar[data-floats] .mbar__dot { background: var(--label2); }
+  @media (prefers-reduced-motion: no-preference) {
+    .mbar__plan, .mbar__eaten { transition: width var(--t-spring) var(--ease-out), background-color var(--t-ui) ease; }
+    .mbar__dot { transition: left var(--t-spring) var(--ease-out), background-color var(--t-ui) ease; }
+  }
+</style>

@@ -1,0 +1,24 @@
+---
+/**
+ * An iPhone drawn in flat CSS around a real capture: a near-black body, a one-pixel edge, the island. No
+ * gradient, no reflection, no shadow, no tilt: the screen is the picture, and it shows on the page's own ground.
+ * Proportions are the iPhone 18 Pro's, which is what the captures come from (402 points wide, a 62-point corner).
+ */
+import Shot from './Shot.astro';
+
+interface Props { name: string; alt: string; sizes: string; loading?: 'eager' | 'lazy'; fetchpriority?: 'high' | 'auto'; class?: string; id?: string }
+const { class: cls = '', id, ...shot } = Astro.props;
+---
+<div class={`phone ${cls}`} id={id}>
+  <div class="phone__screen">
+    <Shot {...shot} />
+    <span class="phone__island" aria-hidden="true"></span>
+  </div>
+</div>
+
+<style is:global>
+  .phone { --bezel: 2.9%; position: relative; width: 100%; padding: var(--bezel); background: var(--phone); border-radius: 15.8% / 7.3%; outline: 1px solid var(--phone-edge); outline-offset: -1px; }
+  .phone__screen { position: relative; overflow: hidden; border-radius: 13.6% / 6.25%; aspect-ratio: 1206 / 2622; background: var(--bg); }
+  .phone__screen img { width: 100%; height: 100%; object-fit: cover; }
+  .phone__island { position: absolute; left: 50%; top: 1.5%; width: 30.8%; height: 3.25%; transform: translateX(-50%); border-radius: 999px; background: #000; }
+</style>

@@ -17,7 +17,7 @@ const fullTitle = title ? `${title} · ${site.name}` : site.homeTitle;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const home = new URL('/', Astro.site).href;
 const ogImage = new URL('/og.png', Astro.site).href;
-const ogAlt = "Residual's Today screen inside its macro ring, with the line Ate off plan? The rest of the day fixes it.";
+const ogAlt = "Residual's Today screen on an iPhone, beside the line: Ate off plan? The rest of the day fixes it.";
 
 // One JSON-LD graph per page: who publishes the site, the site, this page, plus whatever the page adds.
 // Search engines read it for rich results; answer engines read it for the plain facts.
@@ -48,7 +48,8 @@ const graph = {
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <meta name="theme-color" content="#0A0B10" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F2F2F7" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000000" />
     <meta name="author" content={site.developer} />
     {site.appStoreLive && <meta name="apple-itunes-app" content={`app-id=${site.appStoreId}`} />}
     <meta property="og:type" content="website" />
@@ -66,25 +67,24 @@ const graph = {
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image:alt" content={ogAlt} />
-    <!-- Roundo, self-hosted (ITF Free Font License allows it): the two weights the first screen uses load first. -->
-    <link rel="preload" href="/fonts/roundo-500.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/roundo-400.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- The wordmark's one weight of Roundo, self-hosted; everything else is the system's own type. -->
+    <link rel="preload" href="/fonts/roundo-600.woff2" as="font" type="font/woff2" crossorigin />
     <script type="application/ld+json" set:html={JSON.stringify(graph)} />
     <script is:inline>document.documentElement.classList.add('js');addEventListener('load',()=>setTimeout(()=>document.documentElement.classList.add('settled'),4000))</script>
   </head>
   <body>
     <header class="top wrap">
       <a href="/" class="top__mark" aria-label="Residual, home">
-        <Ring size="1.6rem" width={0.16} />
+        <Ring size="1.6rem" />
         <span>Residual</span>
       </a>
       {!plain && (
         <nav class="top__nav" aria-label="Sections">
-          <a class="link" href="/#live">Try it</a>
-          <a class="link" href="/#how">How it works</a>
-          <a class="link" href="/features/">Features</a>
-          <a class="link" href="/pricing/">Pricing</a>
-          <a class="link" href="/#questions">Questions</a>
+          <a class="nav-link" href="/#live">Try it</a>
+          <a class="nav-link" href="/#how">How it works</a>
+          <a class="nav-link" href="/features/">Features</a>
+          <a class="nav-link" href="/pricing/">Pricing</a>
+          <a class="nav-link" href="/#questions">Questions</a>
         </nav>
       )}
       <a class="button top__cta" href={site.appStoreUrl}>Try free</a>
@@ -120,8 +120,8 @@ const graph = {
 
 <style>
   .top { position: absolute; inset: 0 0 auto 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; gap: var(--gutter); min-height: 4.5rem; }
-  .top__mark { display: inline-flex; align-items: center; gap: 0.55rem; text-decoration: none; font-weight: 600; font-size: 1.15rem; }
-  .top__nav { display: none; gap: 1.6rem; }
-  .top__cta { min-height: 2.6rem; padding-inline: 1.1rem; font-size: 0.95rem; }
+  .top__mark { display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; font-family: var(--font-mark); font-weight: 600; font-size: 1.2rem; letter-spacing: -0.01em; }
+  .top__nav { display: none; gap: 1.6rem; font-size: 0.9375rem; }
+  .top__cta { min-height: 2.5rem; padding-inline: 1.1rem; }
   @media (min-width: 48em) { .top__nav { display: flex; } }
 </style>

@@ -1,0 +1,26 @@
+---
+/**
+ * A real capture from the app, in the visitor's appearance: `<name>-light.png` and `<name>-dark.png` from
+ * src/assets/shots/, served by a <picture> so only the one in use is downloaded. Re-capture them with
+ * scripts/screenshots/capture.sh in the app's repo; see the README.
+ */
+import { getImage } from 'astro:assets';
+
+interface Props { name: string; alt: string; sizes: string; widths?: number[]; loading?: 'eager' | 'lazy'; fetchpriority?: 'high' | 'auto'; class?: string; format?: 'webp' | 'png' }
+const { name, alt, sizes, widths = [420, 640, 900, 1206], loading = 'lazy', fetchpriority, class: cls, format = 'webp' } = Astro.props;
+
+const files = import.meta.glob<{ default: ImageMetadata }>('../assets/shots/**/*.png');
+const load = async (mode: string) => {
+  const file = files[`../assets/shots/${name}-${mode}.png`];
+  if (!file) throw new Error(`No capture named ${name}-${mode}.png in src/assets/shots`);
+  const src = (await file()).default;
+  // Never ask for a width past the capture itself: a crop can be narrower than the list.
+  const fit = widths.filter((w) => w < src.width).concat(src.width);
+  return { src, image: await getImage({ src, widths: fit, format }) };
+};
+const [light, dark] = await Promise.all([load('light'), load('dark')]);
+---
+<picture class={cls}>
+  <source media="(prefers-color-scheme: dark)" srcset={dark.image.srcSet.attribute} sizes={sizes} type={`image/${format}`} />
+  <img src={light.image.src} srcset={light.image.srcSet.attribute} sizes={sizes} alt={alt} width={light.src.width} height={light.src.height} loading={loading} decoding="async" fetchpriority={fetchpriority} />
+</picture>
