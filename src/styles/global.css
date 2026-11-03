@@ -1,10 +1,10 @@
 /* Residual site: tokens and foundation. Every color is the app's own (DesignTokens in the app's Kit,
    DESIGN.md §3.1), a light and a dark value, and the page follows the visitor's appearance the way the app
    follows the iPhone's. Data has color: eaten is solid green, the plan a ghost of it, amber and red only when
-   the day is off. Controls have one color, the key blue. Type is the system's: SF, with SF Rounded on the big
-   numbers the way Fitness and Health set theirs. Roundo is the wordmark and the headings (2026-11-03, Clark: they match the wordmark). */
+   the day is off. Controls have one color, the key blue. Type is the system's SF, with Roundo for the wordmark,
+   the headings and the big numbers (2026-11-03, Clark). */
 
-/* The wordmark and the headings, self-hosted (ITF Free Font License allows it; the files are the official ones, unmodified). */
+/* The wordmark, the headings and the big numbers, self-hosted (ITF Free Font License allows it; the files are the official ones, unmodified). */
 @font-face { font-family: 'Roundo'; src: url('/fonts/roundo-500.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: swap; }
 @font-face { font-family: 'Roundo'; src: url('/fonts/roundo-600.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
 
@@ -38,7 +38,6 @@
   --phone-edge: #48484A;
 
   --font-text: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-round: ui-rounded, 'SF Pro Rounded', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --font-mark: 'Roundo', ui-rounded, -apple-system, BlinkMacSystemFont, sans-serif;
   --font-head: var(--font-mark);
 
