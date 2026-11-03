@@ -146,8 +146,7 @@ const m = (k: 'p' | 'c' | 'f', planned: number) => ({ target: targets[k][0], tol
       root.querySelector('[data-detail]')!.textContent = state === 'after' ? 'Two meals ahead, sized to fit.' : 'Two meals ahead can absorb it.';
       for (const r of rows) {
         const k = r.li.querySelector<HTMLElement>('[data-kcal]')!;
-        k.textContent = state === 'after' ? `${parseInt(r.kcal, 10)} → ${r.after.kcal}` : r.kcal;
-        k.classList.toggle('is-receipt', state === 'after');
+        k.textContent = state === 'after' ? `${r.after.kcal} kcal` : r.kcal;
         r.li.querySelector('[data-macros]')!.textContent = state === 'after' ? r.after.macros : r.macros;
       }
       pill.dataset.tone = state === 'after' ? 'key' : 'warn';

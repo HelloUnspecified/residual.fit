@@ -24,14 +24,13 @@
 [data-ui] .row__line > .nums { font-size: 15px; font-weight: 600; white-space: nowrap; }
 [data-ui] .row--ahead strong { font-weight: 500; color: var(--label2); }
 [data-ui] .row--ahead .row__line > .nums { color: var(--label2); }
-[data-ui] .row--ahead .row__line > .is-receipt { color: var(--eaten); }
 [data-ui] .row__sub { margin-top: 2px; font-size: 13px; color: var(--label2); align-items: center; }
 [data-ui] .chip { font-size: 11.5px; font-weight: 600; padding: 2px 8px; border-radius: 999px; color: var(--amber); background: var(--amber-wash); white-space: nowrap; }
 [data-ui] .chip[hidden] { display: none; }
 [data-ui] .row__foods { margin-top: 8px; display: grid; gap: 3px; font-size: 13px; color: var(--label2); }
 [data-ui] .row__foods[hidden] { display: none; }
 [data-ui] .row__foods li { display: flex; justify-content: space-between; gap: 10px; }
-[data-ui] .row__foods li span:last-child { color: var(--eaten); white-space: nowrap; }
+[data-ui] .row__foods li span:last-child { white-space: nowrap; }
 
 [data-ui] .today__action { position: relative; margin-top: 14px; }
 [data-ui] .pill { width: 100%; min-height: 54px; padding: 8px 20px; border-radius: 27px; display: grid; justify-items: center; align-content: center; background: var(--key); color: var(--key-text); transition: background-color var(--t-ui) ease, transform var(--t-press) var(--ease-out); }

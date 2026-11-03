@@ -163,17 +163,15 @@ const bars = rows.slice(1).map((r) => ({ macro: r.key, name: r.key === 'p' ? 'Pr
     chip.textContent = `${crossed ? 'Off plan · ' : ''}${delta > 0 ? '+' : '−'}${fmt(Math.abs(delta))} kcal`;
     lunchRow.classList.toggle('row--diverged', delta !== 0);
 
-    // The meals ahead, with the solve's receipt until the amounts change again.
+    // The meals ahead, and what the solve changed in them until the amounts change again.
     for (const name of ['Snack', 'Dinner']) {
       const row = root.querySelector<HTMLElement>(`[data-meal="${name}"]`)!;
       const idx = ahead.map((f, i) => (f.meal === name ? i : -1)).filter((i) => i >= 0);
       const foods = idx.map((i) => ahead[i]);
       const m = sum(foods, idx.map((i) => current[i]));
-      const was = sum(foods, idx.map((i) => planned[i]));
-      const receipt = closed && Math.round(m.cal) !== Math.round(was.cal);
-      const kcalEl = row.querySelector<HTMLElement>('[data-kcal]')!;
-      kcalEl.textContent = receipt ? `${fmt(was.cal)} → ${fmt(m.cal)}` : `${fmt(m.cal)} kcal`;
-      kcalEl.classList.toggle('is-receipt', receipt);
+      // The number just ticks over to the new amount, as in the app (DayComponents, 2026-11-01, Clark: a green
+      // "640 → 598" read as one more kind of divergence). The foods under it say what moved.
+      row.querySelector<HTMLElement>('[data-kcal]')!.textContent = `${fmt(m.cal)} kcal`;
       row.querySelector('[data-macros]')!.textContent = macros(m);
       const list = row.querySelector<HTMLElement>('[data-foods]')!;
       const changed = idx.filter((i) => current[i] !== planned[i]);
