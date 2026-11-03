@@ -5,7 +5,7 @@
 type Food = { name: string; per100: [number, number, number]; g: number };
 type Meal = { name: string; what: string; foods: Food[] };
 const yogurt: Food = { name: 'Greek yogurt, nonfat', per100: [10.3, 3.64, 0.37], g: 250 };
-const oil: Food = { name: 'Olive oil', per100: [0, 0, 100], g: 10 };
+const oil: Food = { name: 'Olive oil', per100: [0, 0, 100], g: 8 };
 const meals: Record<string, Meal> = {
   breakfast: { name: 'Breakfast', what: 'Berry yogurt bowl', foods: [yogurt, { name: 'Blueberries', per100: [0.74, 14.5, 0.33], g: 100 }, { name: 'Granola', per100: [13.7, 53.9, 24.3], g: 45 }, { name: 'Honey', per100: [0.3, 82.4, 0], g: 15 }] },
   oats: { name: 'Breakfast', what: 'Overnight oats', foods: [{ name: 'Rolled oats', per100: [13.2, 67.7, 6.52], g: 60 }, { ...yogurt, g: 150 }, { name: 'Strawberries', per100: [0.67, 7.68, 0.3], g: 100 }, { name: 'Almonds', per100: [21.2, 21.6, 49.9], g: 15 }] },
@@ -24,6 +24,7 @@ const days = ['W', 'T', 'F', 'S', 'S', 'M', 'T', 'W', 'T', 'F', 'S', 'S', 'M', '
 ---
 <section id="plan" class="plan wrap" aria-labelledby="plan-title">
   <div class="frame plan__grid">
+  <h2 id="plan-title" class="head plan__title" data-reveal>Plan it your way.</h2>
   <div class="plan__field">
     <div class="pp" data-ui aria-live="polite" aria-label="A proposed plan that changes with the choices beside it">
       <div class="pp__bar"><span class="pp__btn">Cancel</span><strong>Proposed plan</strong><span></span></div>
@@ -42,8 +43,6 @@ const days = ['W', 'T', 'F', 'S', 'S', 'M', 'T', 'W', 'T', 'F', 'S', 'S', 'M', '
   </div>
 
   <div class="plan__read">
-    <h2 id="plan-title" class="head" data-reveal>Plan it your way.</h2>
-
     <div class="block" data-reveal>
       <p class="block__say">Pick who drafts the day.</p>
       <p>Claude, if you allow it. Apple Intelligence on your iPhone or your own foods, if not, or if Claude can't be reached. Every plan says which.</p>
@@ -167,8 +166,9 @@ const days = ['W', 'T', 'F', 'S', 'S', 'M', 'T', 'W', 'T', 'F', 'S', 'S', 'M', '
      every choice changes it at once. */
   .plan { margin-top: var(--section); }
   .plan__grid { display: grid; grid-template-columns: minmax(0, 27rem) minmax(0, 1fr); column-gap: clamp(2rem, 7vw, 7rem); align-items: start; }
-  .plan__field { position: sticky; top: 1.5rem; }
-  .plan__read { padding-bottom: 10svh; }
+  .plan__title { grid-column: 2; grid-row: 1; }
+  .plan__field { grid-column: 1; grid-row: 1 / 3; position: sticky; top: 1.5rem; }
+  .plan__read { grid-column: 2; grid-row: 2; padding-bottom: 10svh; }
   .block { padding-top: 12svh; min-height: 44svh; }
   .plan__read > .block:first-of-type { padding-top: 6svh; }
   .block__say { font-family: var(--font-round); font-size: var(--step-title); line-height: 1.15; letter-spacing: -0.02em; font-weight: 700; max-width: 24ch; }
@@ -234,8 +234,11 @@ const days = ['W', 'T', 'F', 'S', 'S', 'M', 'T', 'W', 'T', 'F', 'S', 'S', 'M', '
 
   @media (max-width: 64em) {
     .plan__grid { grid-template-columns: minmax(0, 1fr); }
-    .plan__read { order: -1; padding-bottom: 2rem; }
-    .plan__field { position: sticky; top: 0; z-index: 1; height: 46svh; overflow: hidden; border-radius: 0 0 26px 26px; order: 0; }
+    /* On a phone the plan stays pinned at the top, cropped to what fits, and the choices scroll under it. */
+    .plan__title, .plan__field, .plan__read { grid-column: 1; grid-row: auto; }
+    .plan__title { margin-bottom: 1.5rem; }
+    .plan__field { top: 0; z-index: 1; height: 46svh; overflow: hidden; background: var(--bg); padding-top: 0.5rem; }
+    .plan__read { padding-bottom: 2rem; }
     .block { min-height: 0; padding-top: 2.5rem; }
     .plan__read > .block:first-of-type { padding-top: 1.5rem; }
   }
