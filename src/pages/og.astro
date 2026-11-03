@@ -1,29 +1,33 @@
 ---
 // The social preview card, rendered to public/og.png by `npm run og` (see README). Not linked, not in the sitemap.
+// Always in the app's dark appearance: a card has one look, whatever the reader's device is doing.
 import '../styles/global.css';
 import Ring from '../components/Ring.astro';
 import { Image } from 'astro:assets';
-import today from '../assets/shots/today-dark.png';
+import today from '../assets/shots/01-today-dark.png';
 import { site } from '../site';
 ---
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8" /><meta name="robots" content="noindex" /><title>Residual</title></head>
+<html lang="en" class="og-root"><head><meta charset="utf-8" /><meta name="robots" content="noindex" /><title>Residual</title></head>
 <body class="og">
-  <div class="og__ring"><Ring size="100%" width={0.12} tickLength={0.9} /><div class="og__screen"><Image src={today} alt="" width={420} loading="eager" /></div></div>
   <div class="og__copy">
-    <p class="og__mark"><Ring size="1.1em" width={0.16} /> Residual</p>
+    <p class="og__mark"><Ring size="1.1em" /> Residual</p>
     <h1>Ate off plan?<br>The rest of the day fixes&nbsp;it.</h1>
     <p class="og__sub">The meals still ahead re-size so you land your calories and macros by tonight. Free for {site.trialDays} days on iPhone.</p>
   </div>
+  <div class="og__phone"><div class="og__screen"><Image src={today} alt="" width={720} loading="eager" /><span class="og__island"></span></div></div>
 </body></html>
 <style is:global>
-  .og { width: 1200px; height: 630px; overflow: hidden; position: relative; background: var(--bg); }
+  .og-root { color-scheme: dark; --bg: #000; --text: #F5F5F7; --label2: #98989F; --eaten: #3DDC84; --plan: rgb(61 220 132 / 0.34); --range: rgb(61 220 132 / 0.26); }
+  .og { width: 1200px; height: 630px; overflow: hidden; position: relative; background: #000; color: #F5F5F7; }
   /* The card is screenshotted from the dev server, so keep Astro's dev toolbar out of the picture. */
   astro-dev-toolbar { display: none !important; }
-  .og__ring { position: absolute; width: 760px; height: 760px; right: -150px; top: -50px; color: var(--ink); }
-  .og__screen { position: absolute; left: 50%; top: 50%; width: 220px; aspect-ratio: 1206 / 2622; transform: translate(-50%, -30%); border-radius: 9% / 4.2%; overflow: hidden; }
-  .og__copy { position: absolute; left: 64px; top: 64px; width: 620px; }
-  .og__mark { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; font-size: 28px; margin-bottom: 28px; }
-  .og h1 { font-size: 84px; line-height: 0.98; letter-spacing: -0.03em; }
-  .og__sub { margin-top: 24px; font-size: 26px; line-height: 1.35; max-width: 28ch; color: var(--muted); }
+  .og__copy { position: absolute; left: 64px; top: 60px; width: 680px; }
+  .og__mark { display: inline-flex; align-items: center; gap: 0.4rem; font-family: var(--font-mark); font-weight: 600; font-size: 30px; margin-bottom: 40px; }
+  .og h1 { font-family: var(--font-round); font-weight: 700; font-size: 80px; line-height: 1.02; letter-spacing: -0.028em; }
+  .og__sub { margin-top: 26px; font-size: 26px; line-height: 1.35; max-width: 32ch; color: #98989F; }
+  .og__phone { position: absolute; right: 70px; top: 44px; width: 340px; padding: 10px; background: #0B0B0C; outline: 1px solid #48484A; outline-offset: -1px; border-radius: 54px; }
+  .og__screen { position: relative; overflow: hidden; border-radius: 46px; aspect-ratio: 1206 / 2622; }
+  .og__screen img { width: 100%; height: 100%; object-fit: cover; }
+  .og__island { position: absolute; left: 50%; top: 1.5%; width: 30.8%; height: 3.25%; transform: translateX(-50%); border-radius: 999px; background: #000; }
 </style>

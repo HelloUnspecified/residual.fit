@@ -1,27 +1,28 @@
 ---
 import { site } from '../site';
 ---
-<section id="start" class="start" aria-labelledby="start-title">
-  <div class="start__copy" data-reveal style="--i:0">
-    <h2 id="start-title" class="start__title">Start with <br>your numbers.</h2>
-    <p>Bring the numbers your coach gave you, or let Residual work them out from your body, activity and goal. Set them once, plan a day, and log what you ate. The first {site.trialDays} days are free.</p>
+<section id="start" class="start wrap" aria-labelledby="start-title">
+  <div class="frame start__grid">
+    <div class="start__copy" data-reveal>
+      <h2 id="start-title" class="head">Start with your numbers.</h2>
+      <p class="lead">Bring the numbers your coach gave you, or let Residual work them out from your body, activity and goal. Set them once, plan a day, and log what you ate. The first {site.trialDays} days are free.</p>
+      <div class="start__actions"><a class="button" href={site.appStoreUrl}>Try it free for {site.trialDays} days</a></div>
+    </div>
+    <form class="targets" data-ui data-reveal="scale" style="--i:1" aria-label="Daily targets, as the app's setup screen shows them" onsubmit="return false">
+      <div class="targets__seg" role="radiogroup" aria-label="How to set targets">
+        <label><input type="radio" name="mode" value="manual" checked /><span>I have my numbers</span></label>
+        <label><input type="radio" name="mode" value="guided" /><span>Suggest for me</span></label>
+      </div>
+      <p class="targets__hint" data-hint>Type the numbers your nutritionist or coach gave you.</p>
+      <div class="targets__rows">
+        <label class="trow"><span>Calories</span><input class="nums" type="number" inputmode="numeric" name="cal" value="2700" min="0" step="10" /><span class="unit">kcal</span><span class="tol">± <input class="nums" type="number" inputmode="numeric" name="tcal" value="100" min="0" aria-label="calorie range" /></span></label>
+        <label class="trow"><span>Protein</span><input class="nums" type="number" inputmode="numeric" name="p" value="210" min="0" /><span class="unit">g</span><span class="tol">± <input class="nums" type="number" inputmode="numeric" name="tp" value="10" min="0" aria-label="protein range" /></span></label>
+        <label class="trow"><span>Carbs</span><input class="nums" type="number" inputmode="numeric" name="c" value="230" min="0" /><span class="unit">g</span><span class="tol">± <input class="nums" type="number" inputmode="numeric" name="tc" value="25" min="0" aria-label="carb range" /></span></label>
+        <label class="trow"><span>Fat <em>Floats</em></span><input class="nums" type="number" inputmode="numeric" name="f" value="104" min="0" /><span class="unit">g</span><span class="tol">± <input class="nums" type="number" inputmode="numeric" name="tf" value="15" min="0" aria-label="fat range" /></span></label>
+      </div>
+      <p class="targets__sum nums">Your macros add up to <strong data-sum>2,696</strong> kcal<span data-diff>, 4 under your calorie target. Fat floats, so it gives.</span></p>
+    </form>
   </div>
-  <form class="targets" data-ui data-reveal="scale" style="--i:1" aria-label="Daily targets, as the app's setup screen shows them" onsubmit="return false">
-    <div class="targets__title">Set your targets</div>
-    <div class="targets__seg" role="radiogroup" aria-label="How to set targets">
-      <label><input type="radio" name="mode" value="manual" checked /><span>I have my numbers</span></label>
-      <label><input type="radio" name="mode" value="guided" /><span>Suggest for me</span></label>
-    </div>
-    <p class="targets__hint" data-hint>Type the numbers your nutritionist or coach gave you.</p>
-    <div class="targets__rows">
-      <label class="trow"><span>Calories</span><input class="nums" type="number" inputmode="numeric" name="cal" value="2700" min="0" step="10" /><span class="unit">kcal</span><span class="tol">± <input class="nums" type="number" inputmode="numeric" name="tcal" value="100" min="0" aria-label="calorie range" /></span></label>
-      <label class="trow"><span>Protein</span><input class="nums" type="number" inputmode="numeric" name="p" value="210" min="0" /><span class="unit">g</span><span class="tol">± <input class="nums" type="number" inputmode="numeric" name="tp" value="10" min="0" aria-label="protein range" /></span></label>
-      <label class="trow"><span>Carbs</span><input class="nums" type="number" inputmode="numeric" name="c" value="230" min="0" /><span class="unit">g</span><span class="tol">± <input class="nums" type="number" inputmode="numeric" name="tc" value="25" min="0" aria-label="carb range" /></span></label>
-      <label class="trow trow--floats"><span>Fat <em>floats</em></span><input class="nums" type="number" inputmode="numeric" name="f" value="104" min="0" /><span class="unit">g</span><span class="tol">± <input class="nums" type="number" inputmode="numeric" name="tf" value="15" min="0" aria-label="fat range" /></span></label>
-    </div>
-    <p class="targets__sum nums">Your macros add up to <strong data-sum>2,696</strong> kcal<span data-diff>, 4 under your calorie target. Fat floats, so it gives.</span></p>
-    <a class="targets__go" href={site.appStoreUrl}>Try it free for {site.trialDays} days</a>
-  </form>
 </section>
 
 <script>
@@ -42,40 +43,34 @@ import { site } from '../site';
 </script>
 
 <style>
-  .start { margin-top: var(--section); background: var(--accent); color: var(--accent-ink); min-height: 90svh; padding: clamp(3rem, 6vw, 5rem) var(--margin) 40px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); align-items: end; }
-  .start__copy { grid-column: 1 / 7; align-self: end; }
-  .start__title { font-size: clamp(3.25rem, 5.6vw, 6rem); line-height: 0.92; letter-spacing: -0.03em; }
-  .start__copy p { margin-top: 1.2rem; max-width: 36ch; }
-  .targets { grid-column: 7 / 12; align-self: center; width: min(100%, 440px); justify-self: end; }
+  .start { margin-top: var(--section); padding-bottom: var(--section); }
+  .start__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 27rem); column-gap: clamp(2rem, 7vw, 7rem); align-items: center; }
+  .start__copy h2 { max-width: 12ch; }
+  .start__copy .lead { margin-top: 1.25rem; }
+  .start__actions { margin-top: 2rem; }
 
-  [data-ui].targets { background: var(--bg); color: var(--ink); border-radius: 28px; padding: 24px; display: grid; gap: 14px; }
-  [data-ui] .targets__title { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.02em; }
-  [data-ui] .targets__seg { display: grid; grid-template-columns: 1fr 1fr; background: var(--surface-2); border-radius: 12px; padding: 3px; }
+  [data-ui].targets { display: grid; gap: 12px; font-size: 17px; line-height: 1.3; }
+  [data-ui] .targets__seg { display: grid; grid-template-columns: 1fr 1fr; background: var(--track); border-radius: 12px; padding: 3px; }
   [data-ui] .targets__seg label { position: relative; }
-  [data-ui] .targets__seg input { position: absolute; opacity: 0; inset: 0; }
-  [data-ui] .targets__seg span { display: block; text-align: center; padding: 8px 10px; border-radius: 10px; font-size: 0.95rem; font-weight: 500; color: var(--muted); cursor: pointer; }
-  [data-ui] .targets__seg input:checked + span { background: var(--surface); color: var(--ink); }
-  [data-ui] .targets__seg input:focus-visible + span { outline: 2px solid var(--accent); }
-  [data-ui] .targets__hint { color: var(--muted); font-size: 0.95rem; }
-  [data-ui] .targets__rows { display: grid; background: var(--surface); border-radius: 16px; }
-  [data-ui] .trow { display: grid; grid-template-columns: 1fr auto auto auto; align-items: center; gap: 8px; padding: 12px 14px; border-top: 1px solid var(--surface-2); }
-  [data-ui] .trow:first-child { border-top: 0; }
-  [data-ui] .trow em { font-style: normal; color: var(--accent); font-size: 0.9rem; margin-left: 6px; }
-  [data-ui] .trow input { width: 5.2em; background: var(--surface-2); border: 0; border-radius: 8px; padding: 6px 8px; text-align: right; color: var(--accent); font-weight: 600; }
-  [data-ui] .trow .tol input { width: 3.6em; color: var(--ink); font-weight: 500; }
-  [data-ui] .trow .unit { color: var(--muted); font-size: 0.9rem; width: 2.4em; }
-  [data-ui] .trow .tol { color: var(--muted); font-size: 0.95rem; display: inline-flex; align-items: center; gap: 4px; }
-  [data-ui] .targets__sum { color: var(--muted); font-size: 0.95rem; max-width: none; }
-  [data-ui] .targets__sum strong { color: var(--ink); }
-  [data-ui] .targets__go { display: block; text-align: center; background: var(--accent); color: var(--accent-ink); font-weight: 600; padding: 15px; border-radius: 999px; text-decoration: none; transition: transform var(--t-press) var(--ease-out), background-color var(--t-hover) ease; }
-  [data-ui] .targets__go:active { transform: scale(0.97); }
-  @media (hover: hover) and (pointer: fine) { [data-ui] .targets__go:hover { background: var(--accent-strong); } }
+  [data-ui] .targets__seg input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+  [data-ui] .targets__seg span { display: block; text-align: center; padding: 7px 10px; border-radius: 9px; font-size: 14px; font-weight: 500; transition: background-color var(--t-ui) var(--ease-out); }
+  [data-ui] .targets__seg input:checked + span { background: var(--card); font-weight: 600; }
+  [data-ui] .targets__seg input:focus-visible + span { outline: 2px solid var(--key); }
+  [data-ui] .targets__hint { color: var(--label2); font-size: 15px; padding-inline: 4px; }
+  [data-ui] .targets__rows { display: grid; background: var(--card); border-radius: 20px; padding-inline: 16px; }
+  [data-ui] .trow { display: grid; grid-template-columns: 1fr auto auto auto; align-items: center; gap: 6px; min-height: 56px; }
+  [data-ui] .trow + .trow { border-top: 1px solid var(--separator); }
+  [data-ui] .trow > span:first-child { font-weight: 600; }
+  [data-ui] .trow em { font-style: normal; font-weight: 500; color: var(--label2); font-size: 13px; margin-left: 6px; }
+  [data-ui] .trow input { width: 4.4em; min-height: 36px; background: var(--bg); border: 0; border-radius: 10px; padding: 0 8px; text-align: right; font-size: 16px; font-weight: 600; -moz-appearance: textfield; appearance: textfield; }
+  [data-ui] .trow input::-webkit-inner-spin-button, [data-ui] .trow input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  [data-ui] .trow .tol input { width: 3.1em; font-weight: 500; }
+  [data-ui] .trow .unit { color: var(--label2); font-size: 13px; width: 2.2em; }
+  [data-ui] .trow .tol { color: var(--label2); font-size: 15px; display: inline-flex; align-items: center; gap: 4px; }
+  [data-ui] .targets__sum { color: var(--label2); font-size: 15px; max-width: none; padding-inline: 4px; }
+  [data-ui] .targets__sum strong { color: var(--text); font-weight: 600; }
 
   @media (max-width: 64em) {
-    .start { min-height: 84svh; align-items: start; padding-top: 4rem; row-gap: 2.5rem; }
-    .start__copy, .targets { grid-column: 1 / 13; justify-self: stretch; width: auto; }
-    .start__title { font-size: 13vw; }
-    [data-ui] .targets__go { padding: 16px; }
-    [data-ui] .targets__seg span { font-size: 0.85rem; padding: 8px 4px; }
+    .start__grid { grid-template-columns: minmax(0, 1fr); row-gap: 2.5rem; }
   }
 </style>

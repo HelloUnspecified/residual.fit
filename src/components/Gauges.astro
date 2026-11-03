@@ -1,0 +1,80 @@
+---
+import Shot from './Shot.astro';
+
+// The hero of Today on each of its five gauges: real crops of the app (HeroGauge in its Kit, DESIGN.md §5.1). As in
+// the app, a tap anywhere on it moves to the next one on.
+const gauges = [
+  { id: 'eaten', name: 'Eaten', asks: 'How much have I eaten?', alt: 'The Eaten gauge: the ring filled to 465 of 2,100 calories, the plan as a ghost around the rest, and bars for protein, carbs and fat.' },
+  { id: 'landing', name: 'Landing', asks: 'Will I land in my range?', alt: 'The Landing gauge: the ring zoomed in on the range, with a dot where the day lands inside it, and the macro bars zoomed the same way.' },
+  { id: 'left', name: 'Left', asks: 'How much do I have left?', alt: 'The Left gauge: the ring emptying as you eat, the number counting down, and how many grams of each macro are left.' },
+  { id: 'plan', name: 'Plan', asks: 'What’s the plan, and what’s next?', alt: 'The Plan gauge: the ring split into the day’s meals, breakfast solid, the next meal thicker and named in the center.' },
+  { id: 'clock', name: 'Clock', asks: 'When did I eat?', alt: 'The Clock gauge: a 24-hour dial with a mark for each meal, solid when logged and a ghost when planned, and a hand at the time now.' },
+];
+---
+<section id="gauges" class="gauges wrap" aria-labelledby="gauges-title">
+  <div class="frame gauges__grid">
+    <div class="gauges__copy">
+      <h2 id="gauges-title" class="head" data-reveal>One ring.<br />Five questions.</h2>
+      <p class="lead" data-reveal style="--i:1">A glance tells you the day. Tap the ring and it answers the next question, each in the same place. Keep the ones you use.</p>
+      <div class="gauges__list" role="radiogroup" aria-label="Gauge" data-reveal style="--i:2">
+        {gauges.map((g, i) => (
+          <label>
+            <input type="radio" name="gauge" value={g.id} checked={i === 0} />
+            <span class="gauges__row"><strong>{g.name}</strong><span>{g.asks}</span></span>
+          </label>
+        ))}
+      </div>
+    </div>
+    <button type="button" class="gauges__stage" data-reveal="scale" aria-label="Show the next gauge">
+      {gauges.map((g, i) => (
+        <span class:list={['gauges__shot', { 'is-on': i === 0 }]} data-gauge={g.id}>
+          <Shot name={`gauge-${g.id}`} alt={g.alt} sizes="(min-width: 64em) 36rem, 100vw" widths={[600, 900, 1206]} format="png" />
+        </span>
+      ))}
+    </button>
+  </div>
+</section>
+
+<script>
+  const root = document.getElementById('gauges');
+  if (root) {
+    const radios = [...root.querySelectorAll<HTMLInputElement>('input[name=gauge]')];
+    const shots = [...root.querySelectorAll<HTMLElement>('[data-gauge]')];
+    const show = (id: string) => shots.forEach((s) => s.classList.toggle('is-on', s.dataset.gauge === id));
+    radios.forEach((r) => r.addEventListener('change', () => show(r.value)));
+    root.querySelector('.gauges__stage')!.addEventListener('click', () => {
+      const next = radios[(radios.findIndex((r) => r.checked) + 1) % radios.length];
+      next.checked = true;
+      show(next.value);
+    });
+  }
+</script>
+
+<style>
+  .gauges { margin-top: var(--section); }
+  .gauges__grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: clamp(2rem, 6vw, 6rem); align-items: center; }
+  .gauges__copy .lead { margin-top: 1.25rem; }
+  .gauges__list { margin-top: 2rem; background: var(--card); border-radius: var(--radius-card); padding-inline: 1rem; max-width: 30rem; }
+  .gauges__list label { position: relative; display: block; cursor: pointer; }
+  .gauges__list label + label { border-top: 1px solid var(--separator); }
+  .gauges__list input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .gauges__row { display: grid; grid-template-columns: 5rem minmax(0, 1fr); align-items: baseline; gap: 0.5rem; min-height: 3rem; padding-block: 0.7rem; color: var(--label2); font-size: 1rem; transition: color var(--t-hover) ease; }
+  .gauges__row strong { font-weight: 600; }
+  .gauges__list input:checked + .gauges__row { color: var(--text); }
+  .gauges__list input:checked + .gauges__row strong { color: var(--key); }
+  .gauges__list input:focus-visible + .gauges__row { outline: 2px solid var(--key); outline-offset: -2px; border-radius: 8px; }
+  @media (hover: hover) and (pointer: fine) { .gauges__list label:hover .gauges__row { color: var(--text); } }
+
+  /* The stage is the app's hero, big: the crop has no frame around it and sits on the page's ground, which is the
+     ground it has in the app. PNG, so the edge of the crop stays the exact color of the page; WebP shifts it a shade. */
+  .gauges__stage { display: grid; width: 100%; cursor: pointer; transition: transform var(--t-press) var(--ease-out); }
+  .gauges__stage:active { transform: scale(0.99); }
+  .gauges__shot { grid-area: 1 / 1; opacity: 0; transition: opacity 280ms ease; }
+  .gauges__shot.is-on { opacity: 1; }
+  .gauges__shot :global(img) { width: 100%; height: auto; }
+
+  @media (max-width: 64em) {
+    .gauges__grid { grid-template-columns: minmax(0, 1fr); row-gap: 2rem; }
+    .gauges__stage { order: 0; }
+  }
+</style>

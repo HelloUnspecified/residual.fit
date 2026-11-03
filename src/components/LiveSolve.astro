@@ -1,197 +1,253 @@
 ---
-import Ring from './Ring.astro';
+import DayRing from './DayRing.astro';
+import MacroBar from './MacroBar.astro';
 import { rows, breakfast, lunch, ahead } from '../scripts/demo-day.js';
-import { solve, kcal } from '../scripts/solve.js';
+import { kcal, forecast } from '../scripts/solve.js';
+import '../styles/today.css';
 
-// The page is rendered at "lunch as planned", so it reads right without script.
-const m = (foods: any[], grams: number[]) => { let p = 0, c = 0, f = 0; foods.forEach((x, i) => { const g = grams[i] / 100; p += x.per100[0] * g; c += x.per100[1] * g; f += x.per100[2] * g; }); return { p, c, f, cal: kcal(p, c, f) }; };
-const L = m(lunch, lunch.map((x) => x.ref));
+// Today, working, at the size it is on an iPhone. The page is rendered at "lunch as planned", so it reads
+// right without script; the words and the states are the app's own (TodayState in its Kit, DESIGN.md §7).
+const sum = (foods: any[], grams: number[]) => { let p = 0, c = 0, f = 0; foods.forEach((x, i) => { const g = grams[i] / 100; p += x.per100[0] * g; c += x.per100[1] * g; f += x.per100[2] * g; }); return { p, c, f, cal: kcal(p, c, f) }; };
+const L = sum(lunch, lunch.map((x) => x.ref));
+const A = sum(ahead, ahead.map((x) => x.ref));
 const logged = { p: breakfast.p + L.p, c: breakfast.c + L.c, f: breakfast.f + L.f, cal: 0 };
 logged.cal = kcal(logged.p, logged.c, logged.f);
-const r = solve(rows, logged, ahead as any);
-const target = rows[0].target, tol = rows[0].tol;
+const total = { p: logged.p + A.p, c: logged.c + A.c, f: logged.f + A.f, cal: logged.cal + A.cal };
+const status = forecast(rows, total);
 const fmt = (n: number) => Math.round(n).toLocaleString('en-US');
-const meals = ['Dinner', 'Snack'];
+const macros = (m: { p: number; c: number; f: number }) => `${Math.round(m.p)}P · ${Math.round(m.c)}C · ${Math.round(m.f)}F`;
+const cal = rows[0];
+const mealsAhead = ['Snack', 'Dinner'].map((name) => {
+  const foods = ahead.filter((f) => f.meal === name);
+  const m = sum(foods, foods.map((f) => f.ref));
+  return { name, cal: m.cal, line: macros(m) };
+});
+const bars = rows.slice(1).map((r) => ({ macro: r.key, name: r.key === 'p' ? 'Protein' : r.key === 'c' ? 'Carbs' : 'Fat', target: r.target, tol: r.tol, floats: r.floats, planned: (total as any)[r.key], eaten: (logged as any)[r.key] }));
 ---
-<section id="live" class="live" data-state={r.status.severity} aria-labelledby="live-title">
-  <div class="live__head wrap" data-reveal style="--i:0">
-    <h2 id="live-title" class="head"><span data-word>Lunch as planned.</span> <span data-word2>Nothing moves.</span></h2>
-    <p>Lunch was planned at 200 g of chicken. Drag it to what you really ate and watch dinner and the snack re-size so the day still lands. This is the app's own solver, running in your browser.</p>
-    <p class="small live__rules">How it decides: calories first, then protein, then carbs; fat floats; nothing shrinks below half its plan or grows past double; portions on a 5 g grid.</p>
-  </div>
+<section id="live" class="live wrap" aria-labelledby="live-title">
+  <div class="frame">
+    <h2 id="live-title" class="head live__title" data-reveal><span data-word>Lunch as planned.</span> <span data-word2>Nothing moves.</span></h2>
 
-  <div class="live__control" data-ui data-reveal="scale" style="--i:1">
-    <div class="stepper">
-      <div class="stepper__name">Chicken breast, cooked <span class="stepper__plan">plan 200 g</span></div>
-      <div class="stepper__row">
-        <button type="button" class="stepper__btn" data-step="-5" aria-label="5 grams less">−</button>
-        <output class="stepper__value nums" for="live-grams"><span data-grams>200</span> <span class="stepper__unit">g</span></output>
-        <button type="button" class="stepper__btn" data-step="5" aria-label="5 grams more">+</button>
-      </div>
-      <label class="stepper__slider">
-        <span class="sr-only">Chicken eaten at lunch, grams</span>
-        <input id="live-grams" type="range" min="100" max="400" step="5" value="200" />
-      </label>
-      <div class="stepper__foot nums">with white rice, cooked 250 g and olive oil 10 g</div>
-    </div>
-  </div>
+    <div class="live__grid">
+      <div class="live__copy" data-reveal style="--i:1">
+        <p class="lead">Drag the chicken to what you really ate. Stay inside your range and nothing needs to move. Leave it, and one button re-sizes what's left.</p>
 
-  <div class="live__result" data-reveal style="--i:2">
-    <div class="live__ring" data-ui>
-      <Ring id="live-ring" class="ring--reveal" size="100%" width={0.11} eaten={logged.cal / target} lands={r.totals.cal / target} zoneStart={1 - tol / target} zoneEnd={1 + tol / target} label="Where the day lands" />
-      <div class="live__readout nums">
-        <div class="live__big" data-lands>{fmt(r.totals.cal)}</div>
-        <div class="live__of">/ {fmt(target)} kcal</div>
-      </div>
-    </div>
-    <div class="live__status">
-      <p class="live__title"><span class="live__dot" aria-hidden="true"></span> <strong data-status-title>On track</strong></p>
-      <p data-status-sub>Every target inside its range · 2 meals ahead</p>
-      <ul class="live__macros nums" aria-label="Where each macro lands">
-        {rows.slice(1).map((row) => (
-          <li data-macro={row.key}><span>{row.key === 'p' ? 'Protein' : row.key === 'c' ? 'Carbs' : 'Fat'}</span> <strong data-val>{fmt((r.totals as any)[row.key])}</strong> <span class="muted">/ {row.target}{row.floats ? ' floats' : ` ±${row.tol}`}</span></li>
-        ))}
-      </ul>
-    </div>
-    <div class="live__meals" data-ui>
-      {meals.map((meal) => (
-        <div class="meal">
-          <div class="meal__name">{meal}</div>
-          <ul class="meal__foods">
-            {ahead.map((f, i) => f.meal === meal && (
-              <li data-food={i}><span>{f.name}</span> <span class="nums"><em data-was hidden>was {f.ref} g</em> <strong data-g>{r.grams[i]}</strong> g</span></li>
-            ))}
-          </ul>
+        <div class="amount" data-ui>
+          <div class="amount__head"><strong>Chicken breast, cooked</strong><span class="nums">Plan 200 g</span></div>
+          <div class="amount__row">
+            <button type="button" class="amount__btn" data-step="-5" aria-label="5 grams less"><span aria-hidden="true">−</span></button>
+            <output class="amount__value nums" for="live-grams"><span data-grams>200</span> g</output>
+            <button type="button" class="amount__btn" data-step="5" aria-label="5 grams more"><span aria-hidden="true">+</span></button>
+          </div>
+          <label class="amount__slider">
+            <span class="sr-only">Chicken eaten at lunch, grams</span>
+            <input id="live-grams" type="range" min="100" max="400" step="5" value="200" />
+          </label>
+          <p class="amount__foot">With white rice 250 g and olive oil 10 g.</p>
         </div>
-      ))}
+
+        <p class="small muted live__rules">A port of the app's solver, running in your browser. How it decides: calories first, then protein, then carbs; fat floats; nothing shrinks below half its plan or grows past double; portions on a 5 g grid. Nothing changes until you press the button.</p>
+      </div>
+
+      <div class="today" data-ui data-reveal="scale" style="--i:2" aria-live="polite">
+        <div class="today__hero">
+          <div class="today__ring">
+            <DayRing id="live-ring" target={cal.target} tol={cal.tol} planned={total.cal} eaten={logged.cal} label="The day's calories: eaten, planned, and the range around the target." />
+            <div class="today__center nums"><strong data-number>{fmt(logged.cal)}</strong><span>of {fmt(cal.target)} kcal</span></div>
+          </div>
+          <div class="today__bars">
+            {bars.map((b) => <MacroBar {...b} />)}
+          </div>
+        </div>
+
+        <p class="verdict" data-tone={status.worst ? 'warn' : 'good'}><strong data-lead>Lands in range.</strong> <span data-detail>Two meals ahead, sized to fit.</span></p>
+
+        <h3 class="today__kicker">Your day</h3>
+        <ul class="today__rows">
+          <li class="row">
+            <span class="row__mark"></span>
+            <div class="row__line"><strong>Breakfast</strong><span class="nums">{fmt(breakfast.cal)} kcal</span></div>
+            <div class="row__line row__sub nums"><span>{macros(breakfast)}</span></div>
+          </li>
+          <li class="row" data-lunch>
+            <span class="row__mark"></span>
+            <div class="row__line"><strong>Lunch</strong><span class="nums" data-lunch-kcal>{fmt(L.cal)} kcal</span></div>
+            <div class="row__line row__sub nums"><span data-lunch-macros>{macros(L)}</span><span class="chip" data-chip hidden></span></div>
+          </li>
+          {mealsAhead.map((m) => (
+            <li class="row row--ahead" data-meal={m.name}>
+              <span class="row__mark"></span>
+              <div class="row__line"><strong>{m.name}</strong><span class="nums" data-kcal>{fmt(m.cal)} kcal</span></div>
+              <div class="row__line row__sub nums"><span data-macros>{m.line}</span></div>
+              <ul class="row__foods nums" data-foods hidden></ul>
+            </li>
+          ))}
+        </ul>
+
+        <div class="today__action">
+          <button type="button" class="pill" data-pill data-tone="key" disabled>
+            <span class="pill__title" data-pill-title>Log snack</span>
+            <span class="pill__detail" data-pill-detail hidden></span>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
 <script>
-  import { solve, kcal, LABEL, UNIT } from '../scripts/solve.js';
+  import { solve, kcal, forecast, LABEL } from '../scripts/solve.js';
   import { rows, breakfast, lunch, ahead } from '../scripts/demo-day.js';
+  import { setRing, setBar } from '../scripts/live-day.js';
 
   const root = document.getElementById('live')!;
   const input = root.querySelector<HTMLInputElement>('#live-grams')!;
-  const target = rows[0].target, tol = rows[0].tol;
+  const ring = root.querySelector<SVGSVGElement>('#live-ring')!;
+  const fragment = root.querySelector<HTMLElement>('.today')!;
+  const pill = root.querySelector<HTMLButtonElement>('[data-pill]')!;
   const fmt = (n: number) => Math.round(n).toLocaleString('en-US');
+  const macros = (m: { p: number; c: number; f: number }) => `${Math.round(m.p)}P · ${Math.round(m.c)}C · ${Math.round(m.f)}F`;
+  const sum = (foods: any[], grams: number[]) => { let p = 0, c = 0, f = 0; foods.forEach((x, i) => { const g = grams[i] / 100; p += x.per100[0] * g; c += x.per100[1] * g; f += x.per100[2] * g; }); return { p, c, f, cal: kcal(p, c, f) }; };
 
-  // the ring, redrawn with the same geometry as Ring.astro
-  const c = 50, r = 29;
-  const pt = (f: number) => { const a = f * 2 * Math.PI - Math.PI / 2; return [c + r * Math.cos(a), c + r * Math.sin(a)]; };
-  const arc = (from: number, to: number) => { const [x1, y1] = pt(from), [x2, y2] = pt(Math.min(to, from + 0.9999)); const large = to - from > 0.5 ? 1 : 0; return `M ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2}`; };
-  const ring = root.querySelector('#live-ring')!;
-  const paths = { eaten: ring.querySelector('.ring__eaten'), plan: ring.querySelector('.ring__plan'), dot: ring.querySelector('.ring__dot') };
-
-  const macrosOf = (foods: any[], grams: number[]) => { let p = 0, cc = 0, f = 0; foods.forEach((x, i) => { const g = grams[i] / 100; p += x.per100[0] * g; cc += x.per100[1] * g; f += x.per100[2] * g; }); return { p, c: cc, f }; };
+  const planLunch = sum(lunch, lunch.map((x) => x.ref));
+  const planned = ahead.map((f) => f.ref);
+  // What the meals ahead are sized to right now: the plan until the button is pressed. Like plannedGrams in the
+  // app, it's the solver's output; the solver itself always starts from the plan's amounts, its stable anchor.
+  let current = planned.slice();
+  let closed = false;
 
   const render = () => {
     const grams = Number(input.value);
-    const L = macrosOf(lunch, [grams, 250, 10]);
+    const L = sum(lunch, [grams, 250, 10]);
     const logged = { p: breakfast.p + L.p, c: breakfast.c + L.c, f: breakfast.f + L.f };
     const loggedCal = kcal(logged.p, logged.c, logged.f);
-    const res = solve(rows, logged, ahead);
+    const open = sum(ahead, current);
+    const total = { p: logged.p + open.p, c: logged.c + open.c, f: logged.f + open.f, cal: loggedCal + open.cal };
+    const status = forecast(rows, total);
+    const off = status.severity !== 'onTrack';
+    const tone = off ? 'warn' : 'good';
+    const fix = off ? solve(rows, logged, ahead) : null;
+    const canClose = fix !== null && fix.grams.some((g: number, i: number) => g !== current[i]);
 
+    // The hero.
     root.querySelector('[data-grams]')!.textContent = String(grams);
     input.setAttribute('aria-valuetext', `${grams} grams`);
-    ahead.forEach((f, i) => {
-      const li = root.querySelector(`[data-food="${i}"]`)!;
-      li.querySelector('[data-g]')!.textContent = String(res.grams[i]);
-      const was = li.querySelector<HTMLElement>('[data-was]')!;
-      was.hidden = res.grams[i] === f.ref;
-      li.classList.toggle('is-changed', res.grams[i] !== f.ref);
-    });
-    root.querySelector('[data-lands]')!.textContent = fmt(res.totals.cal);
-    for (const row of rows.slice(1)) root.querySelector(`[data-macro="${row.key}"] [data-val]`)!.textContent = fmt((res.totals as any)[row.key]);
+    const cal = rows[0];
+    setRing(ring as any, { target: cal.target, tol: cal.tol, planned: total.cal, eaten: loggedCal, tone });
+    const number = root.querySelector<HTMLElement>('[data-number]')!;
+    number.textContent = fmt(loggedCal);
+    number.dataset.off = status.worst?.key === 'cal' ? 'true' : 'false';
+    for (const row of rows.slice(1)) {
+      const el = root.querySelector<HTMLElement>(`[data-macro="${row.key}"]`)!;
+      const value = (total as any)[row.key];
+      const outside = !row.floats && Math.abs(row.target - value) > row.tol;
+      setBar(el, { target: row.target, tol: row.tol, planned: value, eaten: (logged as any)[row.key], off: outside ? 'warn' : undefined });
+    }
 
-    const eaten = loggedCal / target, lands = res.totals.cal / target;
-    paths.eaten?.setAttribute('d', arc(0, eaten));
-    paths.plan?.setAttribute('d', arc(eaten, Math.max(lands, eaten + 0.001)));
-    ring.querySelector('.ring__planmask')?.setAttribute('d', arc(eaten, Math.max(lands, eaten + 0.001)));
-    (paths.dot as SVGGElement | null)?.style.setProperty('--to', `${lands * 360}deg`);
+    // The verdict: the first broken target leads, as in the app.
+    const verdict = root.querySelector<HTMLElement>('.verdict')!;
+    verdict.dataset.tone = tone;
+    const worst = status.worst;
+    const line = worst ? `${LABEL[worst.key as keyof typeof LABEL]} ${worst.gap >= 0 ? 'short' : 'over'} ${fmt(Math.abs(worst.gap))}${worst.key === 'cal' ? '' : ' g'}.` : 'Lands in range.';
+    root.querySelector('[data-lead]')!.textContent = line;
+    root.querySelector('[data-detail]')!.textContent = !off ? 'Two meals ahead, sized to fit.' : canClose ? 'Two meals ahead can absorb it.' : 'As close as it gets · two meals ahead.';
 
-    const s = res.status;
-    root.dataset.state = s.severity;
-    root.querySelector('[data-status-title]')!.textContent = s.severity === 'onTrack' ? 'On track' : 'Drifting';
-    let sub = 'Every target inside its range · 2 meals ahead';
-    if (s.worst) sub = `${LABEL[s.worst.key as keyof typeof LABEL]} ${s.worst.gap >= 0 ? 'short' : 'over'} ${Math.round(Math.abs(s.worst.gap))}${UNIT[s.worst.key as keyof typeof UNIT]}`;
-    else if (s.note) sub = `Targets in range · ${LABEL[s.note.key as keyof typeof LABEL]} lands ${Math.round(s.note.lands)}${UNIT[s.note.key as keyof typeof UNIT]}`;
-    root.querySelector('[data-status-sub]')!.textContent = sub;
+    // Lunch: the real number stays as it is, the chip says how far it is from the plan.
+    root.querySelector('[data-lunch-kcal]')!.textContent = `${fmt(L.cal)} kcal`;
+    root.querySelector('[data-lunch-macros]')!.textContent = macros(L);
+    const lunchRow = root.querySelector<HTMLElement>('[data-lunch]')!;
+    const chip = root.querySelector<HTMLElement>('[data-chip]')!;
+    const delta = Math.round(L.cal - planLunch.cal);
+    const crossed = Math.abs(L.cal - planLunch.cal) > rows[0].tol || Math.abs(L.p - planLunch.p) > rows[1].tol;
+    chip.hidden = delta === 0;
+    chip.textContent = `${crossed ? 'Off plan · ' : ''}${delta > 0 ? '+' : '−'}${fmt(Math.abs(delta))} kcal`;
+    lunchRow.classList.toggle('row--diverged', delta !== 0);
 
+    // The meals ahead, with the solve's receipt until the amounts change again.
+    for (const name of ['Snack', 'Dinner']) {
+      const row = root.querySelector<HTMLElement>(`[data-meal="${name}"]`)!;
+      const idx = ahead.map((f, i) => (f.meal === name ? i : -1)).filter((i) => i >= 0);
+      const foods = idx.map((i) => ahead[i]);
+      const m = sum(foods, idx.map((i) => current[i]));
+      const was = sum(foods, idx.map((i) => planned[i]));
+      const receipt = closed && Math.round(m.cal) !== Math.round(was.cal);
+      const kcalEl = row.querySelector<HTMLElement>('[data-kcal]')!;
+      kcalEl.textContent = receipt ? `${fmt(was.cal)} → ${fmt(m.cal)}` : `${fmt(m.cal)} kcal`;
+      kcalEl.classList.toggle('is-receipt', receipt);
+      row.querySelector('[data-macros]')!.textContent = macros(m);
+      const list = row.querySelector<HTMLElement>('[data-foods]')!;
+      const changed = idx.filter((i) => current[i] !== planned[i]);
+      list.hidden = !closed || changed.length === 0;
+      list.replaceChildren(...changed.map((i) => {
+        const li = document.createElement('li');
+        const food = document.createElement('span');
+        food.textContent = ahead[i].name;
+        const amount = document.createElement('span');
+        amount.textContent = `${planned[i]} → ${current[i]} g`;
+        li.append(food, amount);
+        return li;
+      }));
+    }
+
+    // The one button.
+    pill.dataset.tone = canClose ? 'warn' : 'key';
+    pill.disabled = !canClose;
+    root.querySelector('[data-pill-title]')!.textContent = canClose ? 'Close the residual' : 'Log snack';
+    const detail = root.querySelector<HTMLElement>('[data-pill-detail]')!;
+    detail.hidden = !canClose;
+    detail.textContent = 'Re-size the 2 meals ahead';
+
+    // The heading says what just happened, in plain words.
     const word = root.querySelector('[data-word]')!, word2 = root.querySelector('[data-word2]')!;
-    if (grams > 200) { word.textContent = 'Lunch ran over.'; word2.textContent = s.severity === 'onTrack' ? 'Dinner shrinks.' : 'Dinner can’t absorb it.'; }
-    else if (grams < 200) { word.textContent = 'Lunch ran short.'; word2.textContent = s.severity === 'onTrack' ? 'Dinner grows.' : 'Dinner can’t cover it.'; }
-    else { word.textContent = 'Lunch as planned.'; word2.textContent = 'Nothing moves.'; }
+    if (grams === 200 && !closed) { word.textContent = 'Lunch as planned.'; word2.textContent = 'Nothing moves.'; return; }
+    const over = grams > 200;
+    word.textContent = grams === 200 ? 'Lunch as planned.' : over ? 'Lunch ran over.' : 'Lunch ran short.';
+    if (off) word2.textContent = canClose ? 'One button fixes it.' : 'That’s as close as it gets.';
+    else if (closed && current.some((g, i) => g !== planned[i])) word2.textContent = over ? 'The rest of the day made room.' : 'The rest of the day filled in.';
+    else word2.textContent = 'Still in range.';
+    fragment.dataset.closed = String(closed);
   };
-  input.addEventListener('input', render);
+
+  input.addEventListener('input', () => { closed = closed && current.some((g, i) => g !== planned[i]); render(); });
   root.querySelectorAll<HTMLButtonElement>('[data-step]').forEach((b) => b.addEventListener('click', () => {
     input.value = String(Math.min(400, Math.max(100, Number(input.value) + Number(b.dataset.step))));
-    render();
+    input.dispatchEvent(new Event('input'));
   }));
+
+  pill.addEventListener('click', () => {
+    const L = sum(lunch, [Number(input.value), 250, 10]);
+    const logged = { p: breakfast.p + L.p, c: breakfast.c + L.c, f: breakfast.f + L.f };
+    const res = solve(rows, logged, ahead);
+    current = res.grams;
+    closed = true;
+    render();
+  });
   render();
 </script>
 
 <style>
-  .live { --field: var(--green); --field-ink: var(--accent-ink); --field-muted: rgba(14, 15, 20, 0.62); --field-surface: rgba(14, 15, 20, 0.08);
-    background: var(--field); color: var(--field-ink); min-height: 92svh; padding-block: clamp(3rem, 7vw, 6rem); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); row-gap: 2.5rem; align-content: start; overflow: hidden; transition: background-color 500ms var(--ease-in-out); margin-top: var(--section); }
-  .live[data-state="drifting"] { --field: var(--amber); }
-  .live__head { grid-column: 1 / 8; }
-  .live__head p { margin-top: 1rem; max-width: 52ch; }
-  .live__head .live__rules { margin-top: 0.75rem; color: var(--field-muted); }
-  .live__head .muted, .live .muted { color: var(--field-muted); }
-  .live__control { grid-column: 8 / 13; align-self: start; justify-self: end; width: min(100%, 34rem); padding-inline: var(--margin); }
-  .live__result { grid-column: 1 / 13; display: grid; grid-template-columns: minmax(14rem, 22rem) 1fr 1.2fr; gap: 2rem var(--gutter); align-items: center; padding-inline: var(--margin); }
-  .live__ring { position: relative; }
-  .live__ring :global(.ring__track) { stroke: var(--field-ink); stroke-opacity: 0.14; }
-  .live__ring :global(.ring__tick) { fill: var(--field-ink); }
-  .live__ring :global(.ring__eaten), .live__ring :global(.ring__plan), .live__ring :global(.ring__zone), .live__ring :global(.ring__planmask) { transition: d 400ms var(--ease-out); }
-  .live__ring :global(.ring__dot) { transition: transform 400ms var(--ease-snap); }
-  .live__ring :global(.ring__eaten) { stroke: var(--field-ink); }
-  .live__ring :global(.ring__zone) { stroke: var(--field-ink); stroke-opacity: 0.18; }
-  .live__ring :global(.ring__plan) { stroke: var(--field-ink); stroke-opacity: 0.55; }
-  .live__ring :global(.ring__dot circle:first-child) { fill: var(--field); }
-  .live__ring :global(.ring__dot circle:last-child) { fill: var(--field-ink); }
-  .live__readout { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
-  .live__big { font-size: clamp(2.4rem, 4vw, 3.6rem); font-weight: 600; line-height: 1; letter-spacing: -0.03em; }
-  .live__of { color: var(--field-muted); }
-  .live__title { display: flex; align-items: center; gap: 0.6rem; font-size: var(--step-lead); font-weight: 600; }
-  .live__dot { width: 0.8em; height: 0.8em; border-radius: 50%; background: var(--field-ink); }
-  .live__macros { margin-top: 1.2rem; display: grid; gap: 0.3rem; }
-  .live__macros li { display: flex; gap: 0.5rem; align-items: baseline; }
-  .live__macros li span:first-child { width: 4.5em; }
+  .live { margin-top: var(--section); }
+  .live__title { max-width: 22ch; }
+  .live__title span { display: block; }
+  .live__grid { margin-top: clamp(2rem, 4vw, 3.5rem); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 27rem); column-gap: clamp(2rem, 7vw, 7rem); align-items: start; }
+  .live__copy { position: sticky; top: 3rem; }
+  .live__rules { margin-top: 1.5rem; max-width: 52ch; }
 
-  /* the app's gram stepper and meal rows, at poster size */
-  [data-ui] .stepper { background: var(--field-surface); border-radius: 28px; padding: 1.4rem 1.6rem; }
-  [data-ui] .stepper__name { font-weight: 600; font-size: 1.15rem; display: flex; justify-content: space-between; gap: 1rem; }
-  [data-ui] .stepper__plan { color: var(--field-muted); font-weight: 500; white-space: nowrap; }
-  [data-ui] .stepper__row { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 1rem; margin-top: 0.8rem; }
-  [data-ui] .stepper__btn { width: 3.4rem; height: 3.4rem; border-radius: 50%; background: var(--field-ink); color: var(--field); font-size: 2rem; line-height: 1; display: grid; place-items: center; transition: transform var(--t-press) var(--ease-out); }
-  [data-ui] .stepper__btn:active { transform: scale(0.92); }
-  [data-ui] .stepper__value { text-align: center; font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 600; line-height: 1; letter-spacing: -0.03em; }
-  [data-ui] .stepper__unit { font-size: 0.4em; font-weight: 500; color: var(--field-muted); }
-  [data-ui] .stepper__slider { display: block; margin-top: 1rem; }
-  [data-ui] .stepper__slider input { -webkit-appearance: none; appearance: none; width: 100%; height: 10px; border-radius: 999px; background: rgba(14, 15, 20, 0.22); }
-  [data-ui] .stepper__slider input::-webkit-slider-thumb { -webkit-appearance: none; width: 40px; height: 40px; border-radius: 50%; background: var(--field-ink); border: 4px solid var(--field); cursor: grab; }
-  [data-ui] .stepper__slider input::-moz-range-thumb { width: 32px; height: 32px; border-radius: 50%; background: var(--field-ink); border: 4px solid var(--field); cursor: grab; }
-  [data-ui] .stepper__foot { margin-top: 0.8rem; color: var(--field-muted); font-size: var(--step-small); }
-  [data-ui].live__meals { display: grid; gap: 1rem; }
-  [data-ui] .meal { background: var(--field-surface); border-radius: 22px; padding: 1rem 1.2rem; }
-  [data-ui] .meal__name { font-weight: 600; margin-bottom: 0.3rem; }
-  [data-ui] .meal__foods li { display: flex; justify-content: space-between; gap: 1rem; padding: 0.35rem 0; }
-  [data-ui] .meal__foods em { font-style: normal; color: var(--field-muted); margin-right: 0.6rem; text-decoration: line-through; }
-  [data-ui] .meal__foods li.is-changed strong { font-weight: 700; }
+  /* The amount: the app's stepper, with a slider so a whole lunch can be dragged at once. */
+  [data-ui].amount { margin-top: 2rem; max-width: 30rem; background: var(--card); border-radius: var(--radius-card); padding: 1.25rem 1.4rem 1.1rem; }
+  [data-ui] .amount__head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; font-size: 1.0625rem; }
+  [data-ui] .amount__head strong { font-weight: 600; }
+  [data-ui] .amount__head span { color: var(--label2); font-size: 0.9375rem; white-space: nowrap; }
+  [data-ui] .amount__row { display: grid; grid-template-columns: auto 1fr auto; align-items: center; margin-top: 0.75rem; }
+  [data-ui] .amount__btn { width: 44px; height: 44px; border-radius: 50%; background: var(--note); color: var(--key); font-size: 1.5rem; line-height: 1; display: grid; place-items: center; transition: transform var(--t-press) var(--ease-out); }
+  [data-ui] .amount__btn:active { transform: scale(0.92); }
+  [data-ui] .amount__value { text-align: center; font-family: var(--font-round); font-size: 2.75rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
+  [data-ui] .amount__slider { display: block; margin-top: 1rem; }
+  [data-ui] .amount__slider input { width: 100%; height: 44px; margin: 0; accent-color: var(--key); cursor: grab; }
+  [data-ui] .amount__foot { margin-top: 0.1rem; color: var(--label2); font-size: 0.875rem; }
 
   @media (max-width: 64em) {
-    .live { min-height: 0; }
-    .live__head { grid-column: 1 / 13; }
-    .live__control { grid-column: 1 / 13; justify-self: stretch; width: auto; }
-    .live__result { grid-template-columns: 1fr 1fr; }
-    .live__ring { grid-column: 1 / 3; max-width: 20rem; margin-inline: auto; width: 100%; }
-    .live__meals { grid-column: 1 / 3; }
-  }
-  @media (max-width: 40em) {
-    .live__result { grid-template-columns: 1fr; }
-    .live__ring, .live__meals { grid-column: auto; }
+    .live__grid { grid-template-columns: minmax(0, 1fr); row-gap: 2.5rem; }
+    .live__copy { position: static; }
   }
 </style>

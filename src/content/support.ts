@@ -22,16 +22,16 @@ export const help: Help[] = [
     'Planning with Claude and USDA food search need a connection, and the app shows when you\'re offline. iCloud sync catches up when you\'re back online.',
   ] },
   { q: 'How does planning with Claude work?', a: [
-    'Before your first plan, the app asks once: "Who writes your plans?" Nothing goes to Anthropic unless you choose Claude. Turn it on or off any time in More → AI planning. If it\'s off, or Claude can\'t be reached, Apple Intelligence plans on your iPhone (or, without it, your own foods do), and every plan says who wrote it. The <a href="/privacy/">privacy policy</a> lists what each request sends.',
-    'Claude can also suggest a food to add when Close the residual can\'t bring the day into range with the foods you have. If you haven\'t allowed Claude yet, the app asks first ("Ask Claude?"). Claude picks the food; the solver sizes it.',
-    'A plan says which planner made it. "Planned on-device" or "Built from your pantry and library" means Claude didn\'t plan that day: it\'s turned off, you\'re offline, or Claude couldn\'t be reached, and the plan says which. The solver still sizes every portion.',
+    'Before your first plan, the app asks once: "Plan with Claude?" Nothing goes to Anthropic unless you choose Use Claude. Turn it on or off any time in More → AI planning. If it\'s off, or Claude can\'t be reached, Apple Intelligence plans on your iPhone (or, without it, your own foods do), and every plan says who wrote it. The <a href="/privacy/">privacy policy</a> lists what each request sends.',
+    'Claude can also suggest a food to add when Close the residual can\'t bring the day into range with the foods you have. If you haven\'t allowed Claude yet, the app asks first. Claude picks the food; the solver sizes it.',
+    'A plan says which planner made it. "Planned by Apple Intelligence on this iPhone" or "Built from your pantry and library" means Claude didn\'t plan that day: it\'s turned off, you\'re offline, or Claude couldn\'t be reached, and the plan says which. The solver still sizes every portion.',
   ] },
   { q: 'Where is my data, and how do I export or delete it?', a: [
     'Your days, foods and targets are stored on your iPhone and, with iCloud on, in your private iCloud database, which keeps your devices in sync. More → iCloud sync shows whether it\'s on.',
     'More → Export to a spreadsheet saves the days you pick as a CSV file, one row per food, to open in Numbers, Excel or Google Sheets.',
     'Delete single items in the app. Deleting the app removes its data from the phone. To remove the iCloud copy, open Settings → your name → iCloud → Manage Storage → Residual. To delete anything we hold, such as a support email or your newsletter address, write to us.',
   ] },
-  { problem: true, q: 'Why do plans say "Planned by Apple Intelligence" while I\'m online?', a: [
+  { problem: true, q: 'Why do plans say "Planned by Apple Intelligence on this iPhone" while I\'m online?', a: [
     'Check that Plan with Claude is on in More → AI planning and that you have a connection. If Claude couldn\'t be reached, the plan says why; try again in a minute.',
   ] },
   { problem: true, q: 'Why does food search say the database is busy?', a: [
@@ -40,10 +40,10 @@ export const help: Help[] = [
   { problem: true, q: 'Why doesn\'t sync show on my other device?', a: [
     'Both devices must be signed in to the same Apple Account, with iCloud on for Residual (Settings → your name → iCloud). More → iCloud sync shows whether it\'s on.',
   ] },
-  { q: 'What does "No room left" mean?', a: [
-    'The meals ahead cannot absorb what has been eaten without shrinking a food below half its plan or growing one past double. Use Plan the rest of my day, or Suggest a fix, which finds the best few changes from what you already have.',
+  { q: 'What does "can\'t fully recover" mean?', a: [
+    'The meals ahead cannot absorb what has been eaten without shrinking a food below half its plan or growing one past double. Close the residual still gets as close as it can. Tap the + on Today for Suggest a fix, which finds the best few changes from what you already have.',
   ] },
   { q: 'What does "to match" on a planned food mean?', a: [
-    'It is still an AI estimate. Tap Match on the Today screen or the food itself and pick its real USDA entry; the plan then uses real numbers, and the match carries into the log.',
+    'It is still an AI estimate. Tap Match under the verdict on Today, or the food itself, and pick its real USDA entry; the plan then uses real numbers, and the match carries into the log.',
   ] },
 ];

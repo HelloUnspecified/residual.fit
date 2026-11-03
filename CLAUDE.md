@@ -20,9 +20,9 @@ repo; references to `Residual/Info.plist`, `Residual/Theme.swift` and `MacroSolv
 
 - `src/site.ts`: the facts the site repeats (name, tagline, App Store URL, support email, minimum iOS). Change copy facts here, never inline. The App Store URL and support address are pre-launch placeholders.
 - `src/pages/`: `index.astro` (stacks the section components in order), `privacy.md` (Markdown, uses `layouts/Doc.astro`), `support.astro`, and `og.astro`, the unlisted social card, excluded from the sitemap in `astro.config.mjs`.
-- `src/components/`: one file per homepage section (`Hero`, `HowItWorks`, `LiveSolve`, `Band`, `Promises`, `Questions`, `Start`, `Footer`) plus `Ring`, the site's one shape.
+- `src/components/`: one file per homepage section (`Hero`, `LiveSolve`, `Gauges`, `HowItWorks`, `Widgets`, `Promises`, `Founder`, `Questions`, `Start`, `Footer`), the features page's under `features/`, and the pieces of the app they draw: `DayRing`, `MacroBar`, `Phone` and `Shot` (real captures, light and dark), plus `Ring`, the small mark.
 - `src/scripts/solve.js` + `demo-day.js`: a port of the app's `MacroSolver` (Mode B) re-balance that drives the `LiveSolve` demo. The copy in `LiveSolve` states the solver's rules (calories → protein → carbs, fat floats, ½×–2× bounds, 5 g grid), so a change to the solver must keep that copy true, and the reverse.
-- `src/styles/global.css`: tokens mirror the app's `Theme.swift` dark palette. One typeface (Roundo, from Fontshare).
+- `src/styles/global.css`: tokens are the app's `DesignTokens` (its `DESIGN.md` §3.1), a light and a dark value; the page follows the visitor's appearance. Data has color, controls are the one key blue, no indigo anywhere. Type is the system's: SF, SF Rounded on titles and numbers, Roundo for the wordmark alone. `src/styles/today.css` holds the working Today fragments' styles.
 - `public/`: served as is. See `.claude/rules/public.md` before touching the share page, `_headers`, or `.well-known/`.
 - `functions/api/subscribe.ts`: Loops newsletter sign-up for the app. See `.claude/rules/functions.md`.
 

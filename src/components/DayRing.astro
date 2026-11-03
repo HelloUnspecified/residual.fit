@@ -1,0 +1,55 @@
+---
+/**
+ * The calorie ring from Today: the track, the range band with its two end ticks, the plan as a ghost, what's
+ * eaten solid, the target tick at 12 o'clock, and the dot where the day lands. Past the target an arc keeps going
+ * round from the top. The tone colors the ghost and the overshoot, never the eaten arc: what you ate is a fact.
+ * Drawn with pathLength 1 so setRing (below) only has to change dash lengths, and CSS carries them on the
+ * app's spring. Mirrors DayRing in the app's DayHero.swift.
+ */
+import { ringLayout } from '../scripts/day-ring.js';
+
+interface Props { target: number; tol: number; planned: number; eaten: number; tone?: 'good' | 'warn' | 'bad'; id?: string; class?: string; label?: string }
+const { target, tol, planned, eaten, tone = 'good', id, class: cls = '', label } = Astro.props;
+const g = ringLayout({ target, tol, planned, eaten });
+const c = 84, r = 73;
+const dash = (f: number) => `${f.toFixed(4)} 1`;
+---
+<svg class={`dayring ${cls}`} id={id} data-tone={tone} viewBox="0 0 168 168" role={label ? 'img' : undefined} aria-label={label} aria-hidden={label ? undefined : 'true'}>
+  <g transform={`rotate(-90 ${c} ${c})`} fill="none">
+    <circle class="dr-track" cx={c} cy={c} r={r} />
+    <circle class="dr-band" data-part="bandBefore" cx={c} cy={c} r={r} pathLength="1" stroke-dasharray={`${(g.bandBefore[1] - g.bandBefore[0]).toFixed(4)} 1`} stroke-dashoffset={(-g.bandBefore[0]).toFixed(4)} />
+    <circle class="dr-band" data-part="bandAfter" cx={c} cy={c} r={r} pathLength="1" stroke-dasharray={dash(g.bandAfter)} />
+    <circle class="dr-plan" data-part="plan" cx={c} cy={c} r={r} pathLength="1" stroke-dasharray={dash(g.plan)} />
+    <circle class="dr-over" data-part="planOver" cx={c} cy={c} r={r} pathLength="1" stroke-dasharray={dash(g.planOver)} style={g.planOver ? undefined : 'opacity:0'} />
+    <circle class="dr-eaten" data-part="eaten" cx={c} cy={c} r={r} pathLength="1" stroke-dasharray={dash(g.eaten)} style={g.eaten ? undefined : 'opacity:0'} />
+    <circle class="dr-over" data-part="eatenOver" cx={c} cy={c} r={r} pathLength="1" stroke-dasharray={dash(g.eatenOver)} style={g.eatenOver ? undefined : 'opacity:0'} />
+  </g>
+  <rect class="dr-rangetick" data-part="tickLo" x={c - 0.75} y={c - r - 8.5} width="1.5" height="17" rx="0.75" style={`transform:rotate(${g.tickLo.toFixed(2)}deg)`} />
+  <rect class="dr-rangetick" data-part="tickHi" x={c - 0.75} y={c - r - 8.5} width="1.5" height="17" rx="0.75" style={`transform:rotate(${g.tickHi.toFixed(2)}deg)`} />
+  <rect class="dr-tick" x={c - 1.25} y={c - r - 6} width="2.5" height="12" rx="1.25" />
+  <g class="dr-dot" data-part="dot" style={`transform:rotate(${(g.lands * 360).toFixed(2)}deg)`}>
+    <circle class="dr-dot-edge" cx={c} cy={c - r} r="7" />
+    <circle class="dr-dot-fill" cx={c} cy={c - r} r="4.75" />
+  </g>
+</svg>
+
+<style is:global>
+  .dayring { width: 100%; height: auto; overflow: visible; --dr-plan: var(--plan); --dr-over: var(--eaten); --dr-dot: var(--eaten); }
+  .dayring[data-tone="warn"] { --dr-plan: var(--amber-soft); --dr-over: var(--amber); --dr-dot: var(--amber); }
+  .dayring[data-tone="bad"] { --dr-plan: var(--red-soft); --dr-over: var(--red); --dr-dot: var(--red); }
+  .dr-track { stroke: var(--track); stroke-width: 12; }
+  .dr-band { stroke: var(--range); stroke-width: 20; }
+  .dr-plan { stroke: var(--dr-plan); stroke-width: 12; }
+  .dr-eaten { stroke: var(--eaten); stroke-width: 12; stroke-linecap: round; }
+  .dr-over { stroke: var(--dr-over); stroke-width: 12; stroke-linecap: round; }
+  .dr-tick { fill: var(--ink); }
+  .dr-rangetick { fill: var(--eaten); transform-box: view-box; transform-origin: 50% 50%; }
+  .dr-dot { transform-box: view-box; transform-origin: 50% 50%; }
+  .dr-dot-edge { fill: var(--bg); }
+  .dr-dot-fill { fill: var(--dr-dot); }
+  @media (prefers-reduced-motion: no-preference) {
+    .dr-plan, .dr-over, .dr-eaten, .dr-band { transition: stroke-dasharray var(--t-spring) var(--ease-out), stroke-dashoffset var(--t-spring) var(--ease-out), stroke var(--t-ui) ease, opacity var(--t-ui) ease; }
+    .dr-rangetick, .dr-dot { transition: transform var(--t-spring) var(--ease-out); }
+    .dr-dot-fill { transition: fill var(--t-ui) ease; }
+  }
+</style>

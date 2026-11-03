@@ -1,0 +1,49 @@
+/* Today, working: the fragments the home page and the features page both draw. Sizes are the app's (DESIGN.md §3.2, §5). */
+/* Today, at the width of an iPhone: on the page's own ground, with nothing around it. Sizes are the app's. */
+[data-ui].today { font-size: 17px; line-height: 1.3; }
+[data-ui] .today__hero { display: grid; grid-template-columns: 148px minmax(0, 1fr); gap: 18px; align-items: center; }
+[data-ui] .today__ring { position: relative; }
+[data-ui] .today__center { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+[data-ui] .today__center strong { font-family: var(--font-round); font-size: 32px; line-height: 1; font-weight: 700; letter-spacing: -0.03em; transition: color var(--t-ui) ease; }
+[data-ui] .today__center strong[data-off="true"] { color: var(--amber); }
+[data-ui] .today__center span { margin-top: 3px; font-size: 12px; font-weight: 500; color: var(--label2); }
+[data-ui] .today__bars { display: grid; gap: 10px; }
+
+[data-ui] .verdict { margin-top: 18px; max-width: none; color: var(--label2); min-height: 2.6em; }
+[data-ui] .verdict strong { font-weight: 600; color: var(--eaten); transition: color var(--t-ui) ease; }
+[data-ui] .verdict[data-tone="warn"] strong { color: var(--amber); }
+
+[data-ui] .today__kicker { margin: 14px 4px 8px; font-family: var(--font-text); font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--label2); }
+[data-ui] .today__rows { display: grid; gap: 8px; }
+[data-ui] .row { --mark: var(--eaten); position: relative; background: var(--card); border-radius: var(--radius-row); padding: 12px 14px 12px 28px; }
+[data-ui] .row__mark { position: absolute; left: 12px; top: 13px; bottom: 13px; width: 4px; border-radius: 2px; background: var(--mark); transition: background-color var(--t-ui) ease; }
+[data-ui] .row--diverged { --mark: var(--amber); }
+[data-ui] .row--ahead .row__mark { width: 3px; background: repeating-linear-gradient(to bottom, var(--label3) 0 5px, transparent 5px 9px); }
+[data-ui] .row__line { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+[data-ui] .row__line strong { font-weight: 600; }
+[data-ui] .row__line > .nums { font-size: 15px; font-weight: 600; white-space: nowrap; }
+[data-ui] .row--ahead strong { font-weight: 500; color: var(--label2); }
+[data-ui] .row--ahead .row__line > .nums { color: var(--label2); }
+[data-ui] .row--ahead .row__line > .is-receipt { color: var(--eaten); }
+[data-ui] .row__sub { margin-top: 2px; font-size: 13px; color: var(--label2); align-items: center; }
+[data-ui] .chip { font-size: 11.5px; font-weight: 600; padding: 2px 8px; border-radius: 999px; color: var(--amber); background: var(--amber-wash); white-space: nowrap; }
+[data-ui] .chip[hidden] { display: none; }
+[data-ui] .row__foods { margin-top: 8px; display: grid; gap: 3px; font-size: 13px; color: var(--label2); }
+[data-ui] .row__foods[hidden] { display: none; }
+[data-ui] .row__foods li { display: flex; justify-content: space-between; gap: 10px; }
+[data-ui] .row__foods li span:last-child { color: var(--eaten); white-space: nowrap; }
+
+[data-ui] .today__action { position: relative; margin-top: 14px; }
+[data-ui] .pill { width: 100%; min-height: 54px; padding: 8px 20px; border-radius: 27px; display: grid; justify-items: center; align-content: center; background: var(--key); color: var(--key-text); transition: background-color var(--t-ui) ease, transform var(--t-press) var(--ease-out); }
+[data-ui] .pill[data-tone="warn"] { background: var(--amber); color: var(--amber-ink); }
+[data-ui] .pill:disabled { cursor: default; }
+[data-ui] .pill:not(:disabled):active { transform: scale(0.97); }
+[data-ui] .pill__title { font-size: 17px; font-weight: 600; }
+[data-ui] .pill__detail { font-size: 12px; font-weight: 500; opacity: 0.85; }
+[data-ui] .pill__detail[hidden] { display: none; }
+@media (prefers-reduced-motion: no-preference) {
+  [data-ui] .pill[data-tone="warn"]:not(:disabled) { animation: nudge 2.6s var(--ease-soft) 0.4s 1; }
+}
+@keyframes nudge { 0%, 100% { transform: none; } 12% { transform: scale(1.025); } 24% { transform: none; } }
+
+[data-ui].today { position: relative; width: 100%; max-width: 27rem; }

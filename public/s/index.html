@@ -18,13 +18,13 @@
 -->
 <style>
   :root {
-    --bg: #F4F5FA; --card: #FFFFFF; --ink: #1C1D26; --ink2: #6B6E80; --rule: #E6E8F0;
-    --accent: #4F5BD5; --green: #1F9D55; --amber: #B7791F;
+    --bg: #F2F2F7; --card: #FFFFFF; --ink: #1C1C1E; --ink2: #5C5F6B; --rule: #E5E5EA;
+    --accent: #2063B0; --green: #057836; --amber: #885703;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #0B0C11; --card: #181922; --ink: #F3F4FA; --ink2: #9A9DB0; --rule: #2A2C38;
-      --accent: #8B93FF; --green: #3DDC84; --amber: #F2B54B;
+      --bg: #000000; --card: #1C1C1E; --ink: #F5F5F7; --ink2: #98989F; --rule: #2C2C2E;
+      --accent: #0A84FF; --green: #3DDC84; --amber: #F2B04A;
     }
   }
   * { box-sizing: border-box; }
@@ -44,12 +44,12 @@
   .brand { color: var(--ink2); font-size: 14px; }
   .grams { font-variant-numeric: tabular-nums; color: var(--ink2); white-space: nowrap; }
   .open {
-    display: block; margin: 22px 0 12px; padding: 16px; border-radius: 16px; text-align: center;
-    background: var(--accent); color: #fff; font-weight: 700; text-decoration: none;
+    display: block; margin: 22px 0 12px; padding: 15px; border-radius: 999px; text-align: center;
+    background: var(--accent); color: #fff; font-weight: 600; text-decoration: none;
   }
   .open:active { transform: scale(0.98); }
   .hint { color: var(--ink2); font-size: 15px; text-align: center; margin: 0; }
-  .get { display: block; margin-top: 18px; padding: 14px; border-radius: 16px; text-align: center; border: 1px solid var(--rule); color: var(--accent); font-weight: 600; text-decoration: none; }
+  .get { display: block; margin-top: 18px; padding: 14px; border-radius: 999px; text-align: center; color: var(--accent); font-weight: 600; text-decoration: none; }
   .error { color: var(--amber); }
 </style>
 </head>
