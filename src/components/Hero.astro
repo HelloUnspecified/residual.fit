@@ -5,18 +5,24 @@ import { site } from '../site';
 <section class="hero wrap" aria-labelledby="hero-title">
   <div class="frame hero__inner">
     <div class="hero__copy">
-      <!-- The headline names the moment every macro counter knows (the day went off plan, and what's left is a
-           puzzle) before it names the product. -->
+      <!-- The position (2026-11-03, Clark): tracking is useless without a plan, and Residual is both sides of it. The
+           two rows wear the ring's own legend, the plan's ghost and the eaten green, so the phone beside them reads
+           the same way. No claim about what other apps lack: some sell a meal planner. -->
       <h1 id="hero-title" class="display lines">
-        <span class="line"><span data-line style="--i:0">Ate off plan?</span></span>
-        <span class="line"><span data-line style="--i:1">The rest of the day fixes it.</span></span>
+        <span class="line"><span data-line style="--i:0">Tracking without</span></span>
+        <span class="line"><span data-line style="--i:1">a plan is just</span></span>
+        <span class="line"><span data-line style="--i:2">keeping score.</span></span>
       </h1>
-      <p class="lead" data-rise style="--i:2">Most trackers count what you ate and leave the food puzzle to you. Residual plans your day, and when you go off plan it re-sizes the meals still ahead so you land your calories and macros by tonight.</p>
-      <div class="hero__actions" data-rise style="--i:3">
+      <p class="lead" data-rise style="--i:3">Residual is the meal planner and the tracker, in one app.</p>
+      <dl class="sides" data-rise style="--i:3">
+        <div class="side side--plan"><dt>Plan</dt><dd>Build a day of meals that hits your calories and macros.</dd></div>
+        <div class="side side--track"><dt>Track</dt><dd>Log what you really ate, and the meals ahead re-size to keep you on target.</dd></div>
+      </dl>
+      <div class="hero__actions" data-rise style="--i:4">
         <a class="button" href={site.appStoreUrl}>Try it free for {site.trialDays} days</a>
         <a class="link" href="#live">Or try the solver right here</a>
       </div>
-      <p class="small muted hero__note" data-rise style="--i:4">On the App Store · iPhone · {site.minimumOS} · No account · Your data stays on your phone and in your iCloud.</p>
+      <p class="small muted hero__note" data-rise style="--i:5">On the App Store · iPhone · {site.minimumOS} · No account · Your data stays on your phone and in your iCloud.</p>
     </div>
     <div class="hero__stage" data-rise style="--i:2">
       <Phone name="01-today" alt="Residual's Today screen. A ring shows 465 of 2,100 calories eaten and the day planned all the way round, with bars for protein, carbs and fat. Under it: Lands in range. Three meals ahead, sized to fit. Breakfast is logged, lunch, snack and dinner are planned, and one button says Log lunch." sizes="(min-width: 64em) 26rem, 80vw" loading="eager" fetchpriority="high" />
@@ -29,8 +35,15 @@ import { site } from '../site';
      so the ring, the verdict and the one button are all seen at once, the way they are in the hand. */
   .hero { min-height: 100svh; display: grid; align-items: center; padding-block: 5.5rem 2.5rem; }
   .hero__inner { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: clamp(2rem, 6vw, 6rem); align-items: center; }
-  .hero__copy h1 { max-width: 13ch; }
-  .lead { margin-top: 1.5rem; max-width: 34ch; }
+  /* Keeps the three lines three on the smallest phones. */
+  .hero__copy h1 { font-size: min(var(--step-display), 11.6vw); }
+  .lead { margin-top: 1.5rem; max-width: 36rem; text-wrap: balance; }
+  .sides { margin-top: 1.25rem; display: grid; gap: 0.75rem; max-width: 36rem; }
+  .side { display: grid; grid-template-columns: 0.3rem 3.5rem minmax(0, 1fr); column-gap: 0.75rem; align-items: baseline; }
+  .side::before { content: ''; align-self: stretch; border-radius: 999px; background: var(--eaten); }
+  .side--plan::before { background: var(--plan); }
+  .side dt { font-weight: 600; }
+  .side dd { margin: 0; color: var(--label2); text-wrap: pretty; }
   .hero__actions { margin-top: 2rem; display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; }
   .hero__note { margin-top: 1.4rem; max-width: 40ch; }
   .hero__stage { width: min(calc((100svh - 8rem) * 0.468), 26rem); }

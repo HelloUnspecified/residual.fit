@@ -11,13 +11,13 @@ export const site = {
   name: 'Residual',
   tagline: 'A day of eating, solved.',
   // The home page's <title>: the brand line plus the words people search for. Keep it near 60 characters.
-  homeTitle: 'Residual: A day of eating, solved. Macro meal planner for iPhone',
+  homeTitle: 'Residual: the macro meal planner and tracker for iPhone',
   // The default meta description. Keep it under about 160 characters so search results show it whole.
   description:
-    'An iPhone meal planner for your calorie and macro targets. Plan the day with Claude, log what you ate, and the meals ahead re-size so the day lands in range.',
+    'An iPhone meal planner and macro tracker in one app. Build a plan that hits your targets, log against it, and the meals ahead re-size to keep you on target.',
   // One plain sentence that says what Residual is: the definition answer engines and link previews quote.
   definition:
-    'Residual is an iPhone meal planner for people who eat to calorie and macro targets: it plans the day, and as you log what you actually ate, a deterministic solver re-sizes the meals still ahead so the day lands inside your ranges.',
+    'Residual is an iPhone meal planner and tracker for people who eat to calorie and macro targets: it builds a plan that hits them, and as you log what you actually ate, a deterministic solver re-sizes the meals still ahead so the day lands inside your ranges.',
   appStoreId,
   appStoreLive: appStoreId !== '',
   appStoreUrl: appStoreId ? `https://apps.apple.com/app/id${appStoreId}` : 'https://apps.apple.com/app/residual/id0000000000',
@@ -58,6 +58,6 @@ export const site = {
     "Share a meal by link or AirDrop, sized to the other person's targets",
     'Portions stored in grams, shown in grams, ounces, cups, tablespoons, teaspoons, millilitres or fluid ounces',
     'Private iCloud sync, no account, no tracking',
-    'CSV export of eaten and planned grams for your tracker or nutritionist',
+    'CSV export of eaten and planned grams for a spreadsheet or your nutritionist',
   ],
 };
