@@ -28,9 +28,9 @@ export const site = {
   // Residual Plus, in US dollars on the App Store's price grid. Every plan has everything and the same trial.
   // The pricing page works out each plan's monthly and daily cost from these, so change them only here.
   plans: [
-    { name: 'Monthly', price: 12.99, months: 1, per: 'a month' },
+    { name: 'Monthly', price: 14.99, months: 1, per: 'a month' },
     { name: 'Quarterly', price: 34.99, months: 3, per: 'every 3 months' },
-    { name: 'Yearly', price: 99.99, months: 12, per: 'a year' },
+    { name: 'Yearly', price: 124.99, months: 12, per: 'a year' },
   ],
   developer: 'Clark Sell',
   // The company that publishes Residual: the footer's copyright and maker line. The Terms and the privacy policy

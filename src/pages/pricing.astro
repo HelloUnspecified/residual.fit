@@ -16,7 +16,7 @@ const plans = site.plans.map((p) => {
     ...p,
     perMonth: money(perMonth),
     perDay: cents(p.price / (p.months * 30.4375)),
-    saves: Math.round((1 - perMonth / monthly.price) * 100),
+    saves: Math.floor((1 - perMonth / monthly.price) * 100), // rounded down, as the paywall does
   };
 });
 const yearly = plans[plans.length - 1];
@@ -96,7 +96,7 @@ const groups = [
     </li>
     <li data-reveal>
       <h2>Compare it to the right things.</h2>
-      <p>Not to other apps. A year of Residual is {money(yearly.price)}: less than most single visits with a registered dietitian, and you get the plan every day instead of once. A month is {money(monthly.price)}: less than most gym memberships, and less than two takeout lunches. Paid yearly, it’s about {yearly.perDay} a day, or {perMeal} a meal.</p>
+      <p>Not to other apps. A year of Residual is {money(yearly.price)}: about what one visit with a registered dietitian can cost without insurance, and you get the plan every day instead of once. A month is {money(monthly.price)}: less than most gym memberships, and less than two takeout lunches. Paid yearly, it’s about {yearly.perDay} a day, or {perMeal} a meal.</p>
       <p>Then count the food you don’t throw out. Plan the week, and the grocery list buys what the plan uses, by the gram, and nothing more.</p>
     </li>
     <li data-reveal>
