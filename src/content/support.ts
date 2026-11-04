@@ -18,8 +18,8 @@ export const help: Help[] = [
     'When your subscription or trial ends, the app locks until you subscribe again. Your data stays: from the lock screen you can still export it (More → Export to a spreadsheet) and Restore Purchases.',
   ] },
   { q: 'Does Residual work offline?', a: [
-    'Residual works without a connection. Targets, logging, the solver and the forecast run on your iPhone. Planning uses Apple Intelligence on iPhones that have it turned on; otherwise plans are built from your pantry, saved meals and built-in foods. Food search shows the foods you\'ve already saved, used or put in your pantry.',
-    'Planning with Claude and USDA food search need a connection, and the app shows when you\'re offline. iCloud sync catches up when you\'re back online.',
+    'Residual works without a connection. Targets, logging, the solver and the forecast run on your iPhone. Planning uses Apple Intelligence on iPhones that have it turned on; otherwise plans are built from your pantry, saved meals and built-in foods. Food search shows the foods you\'ve already saved, used or put in your pantry, plus USDA\'s generic foods, which come with the app.',
+    'Planning with Claude and packaged foods from USDA need a connection, and the app shows when you\'re offline. iCloud sync catches up when you\'re back online.',
   ] },
   { q: 'How does planning with Claude work?', a: [
     'Before your first plan, the app asks once: "Plan with Claude?" Nothing goes to Anthropic unless you choose Use Claude. Turn it on or off any time in More → AI planning. If it\'s off, or Claude can\'t be reached, Apple Intelligence plans on your iPhone (or, without it, your own foods do), and every plan says who wrote it. The <a href="/privacy/">privacy policy</a> lists what each request sends.',
