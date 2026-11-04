@@ -24,7 +24,7 @@ export const help: Help[] = [
   { q: 'How does planning with Claude work?', a: [
     'Before your first plan, the app asks once: "Plan with Claude?" Nothing goes to Anthropic unless you choose Use Claude. Turn it on or off any time in More → AI planning. If it\'s off, or Claude can\'t be reached, Apple Intelligence plans on your iPhone (or, without it, your own foods do), and every plan says who wrote it. The <a href="/privacy/">privacy policy</a> lists what each request sends.',
     'Claude can also suggest a food to add when Close the residual can\'t bring the day into range with the foods you have. If you haven\'t allowed Claude yet, the app asks first. Claude picks the food; the solver sizes it.',
-    'A plan says which planner made it. "Planned by Apple Intelligence on this iPhone" or "Built from your pantry and library" means Claude didn\'t plan that day: it\'s turned off, you\'re offline, or Claude couldn\'t be reached, and the plan says which. The solver still sizes every portion.',
+    'A plan says which planner made it. "Planned by Apple Intelligence on this iPhone" or "Built from your pantry and library" means Claude didn\'t plan that day: it\'s turned off, you\'ve reached today\'s Claude limit, you\'re offline, or Claude couldn\'t be reached, and the plan says which. The solver still sizes every portion.',
   ] },
   { q: 'Where is my data, and how do I export or delete it?', a: [
     'Your days, foods and targets are stored on your iPhone and, with iCloud on, in your private iCloud database, which keeps your devices in sync. More → iCloud sync shows whether it\'s on.',
@@ -32,7 +32,7 @@ export const help: Help[] = [
     'Delete single items in the app. Deleting the app removes its data from the phone. To remove the iCloud copy, open Settings → your name → iCloud → Manage Storage → Residual. To delete anything we hold, such as a support email or your newsletter address, write to us.',
   ] },
   { problem: true, q: 'Why do plans say "Planned by Apple Intelligence on this iPhone" while I\'m online?', a: [
-    'Check that Plan with Claude is on in More → AI planning and that you have a connection. If Claude couldn\'t be reached, the plan says why; try again in a minute.',
+    'Check that Plan with Claude is on in More → AI planning and that you have a connection. If you\'ve reached today\'s Claude limit, the plan says so, and Claude is back tomorrow. If Claude couldn\'t be reached, the plan says why; try again in a minute.',
   ] },
   { problem: true, q: 'Why does food search say the database is busy?', a: [
     'USDA limits how often it answers. Try again in a minute; your saved foods and pantry still work.',
