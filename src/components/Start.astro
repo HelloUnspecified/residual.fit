@@ -5,7 +5,7 @@ import { site } from '../site';
   <div class="frame start__grid">
     <div class="start__copy" data-reveal>
       <h2 id="start-title" class="head">Start with your numbers.</h2>
-      <p class="lead">Bring the numbers your coach gave you, or let Residual work them out from your body, activity and goal. Set them once, plan a day, and log what you ate. The first {site.trialDays} days are free.</p>
+      <p class="lead">Bring your own numbers, or let Residual work them out from your body, activity and goal. Set them once, plan a day, and log what you ate. The first {site.trialDays} days are free.</p>
       <div class="start__actions"><a class="button" href={site.appStoreUrl}>Try it free for {site.trialDays} days</a></div>
     </div>
     <form class="targets" data-ui data-reveal="scale" style="--i:1" aria-label="Daily targets, as the app's setup screen shows them" onsubmit="return false">
@@ -13,7 +13,7 @@ import { site } from '../site';
         <label><input type="radio" name="mode" value="manual" checked /><span>I have my numbers</span></label>
         <label><input type="radio" name="mode" value="guided" /><span>Suggest for me</span></label>
       </div>
-      <p class="targets__hint" data-hint>Type the numbers your nutritionist or coach gave you. Landing anywhere inside a range counts.</p>
+      <p class="targets__hint" data-hint>Type your own numbers. Landing anywhere inside a range counts.</p>
       <div class="targets__rows">
         <label class="trow"><span>Calories</span><input class="nums" type="number" inputmode="numeric" name="cal" value="2700" min="0" step="10" /><span class="unit">kcal</span><span class="tol">± <input class="nums" type="number" inputmode="numeric" name="tcal" value="100" min="0" aria-label="calorie range" /></span></label>
         <label class="trow"><span>Protein</span><input class="nums" type="number" inputmode="numeric" name="p" value="210" min="0" /><span class="unit">g</span><span class="tol">± <input class="nums" type="number" inputmode="numeric" name="tp" value="10" min="0" aria-label="protein range" /></span></label>
@@ -35,7 +35,7 @@ import { site } from '../site';
       sum.textContent = Math.round(kcal).toLocaleString('en-US');
       const d = Math.round(kcal - n('cal'));
       diff.textContent = Math.abs(d) <= n('tcal') ? (d === 0 ? ', exactly your calorie target.' : `, ${Math.abs(d)} ${d < 0 ? 'under' : 'over'} your calorie target and inside its range. Fat floats, so it gives.`) : `, ${Math.abs(d)} ${d < 0 ? 'under' : 'over'} your calorie target. Calories land first; fat floats and gives.`;
-      hint.textContent = (form.elements.namedItem('mode') as RadioNodeList).value === 'guided' ? 'Work them out from your body, activity, and goal; everything stays editable.' : 'Type the numbers your nutritionist or coach gave you. Landing anywhere inside a range counts.';
+      hint.textContent = (form.elements.namedItem('mode') as RadioNodeList).value === 'guided' ? 'Work them out from your body, activity, and goal; everything stays editable.' : 'Type your own numbers. Landing anywhere inside a range counts.';
     };
     form.addEventListener('input', update);
     update();

@@ -41,7 +41,7 @@ export const site = {
   // What the app does, as short claims, for structured data and llms.txt. Keep them true to the app.
   features: [
     'Daily targets for calories, protein, carbs and fat, each with its own plus-or-minus range and a landing order you set; any of them may float',
-    'A TDEE calculator that works out targets from your body, activity and goal, or enter the numbers a coach gave you',
+    'A TDEE calculator that works out targets from your body, activity and goal, or enter your own',
     'Day plans drafted by Claude from your pantry, saved meals and instructions, only if you allow it',
     "Planning with Apple Intelligence on your iPhone, or from your pantry and saved foods, when Claude is off or can't be reached",
     'Only plan from my pantry: a switch that keeps every food in the plan to what you have',
@@ -53,11 +53,11 @@ export const site = {
     'Six widgets for the Home Screen and the Lock Screen: Landing, Clock, Next Up, Eaten, Left and Plan',
     'Foods matched to USDA FoodData Central, with barcode scanning and on-device Nutrition Facts label reading',
     'Recipes: a dish from weighed ingredients becomes one food you can plan, log and share',
-    'Foods to avoid, allergies included, left out of every plan',
+    'Foods to avoid, allergies included, kept out of plans by name',
     'A grocery list from every planned day, by aisle',
     "Share a meal by link or AirDrop, sized to the other person's targets",
     'Portions stored in grams, shown in grams, ounces, cups, tablespoons, teaspoons, millilitres or fluid ounces',
     'Private iCloud sync, no account, no tracking',
-    'CSV export of eaten and planned grams for a spreadsheet or your nutritionist',
+    'CSV export of eaten and planned grams for a spreadsheet, a coach or a dietitian',
   ],
 };

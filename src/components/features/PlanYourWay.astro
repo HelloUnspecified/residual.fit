@@ -45,7 +45,7 @@ const days = ['W', 'T', 'F', 'S', 'S', 'M', 'T', 'W', 'T', 'F', 'S', 'S', 'M', '
   <div class="plan__read">
     <div class="block" data-reveal>
       <p class="block__say">Pick who drafts the day.</p>
-      <p>Claude, if you allow it. Apple Intelligence on your iPhone or your own foods, if not, or if Claude can't be reached. Every plan says which.</p>
+      <p>Claude, if you allow it. If you don't, or Claude can't be reached, Apple Intelligence plans on your iPhone, or Residual builds the day from your own foods. Every plan says which one wrote it.</p>
       <div class="seg" role="radiogroup" aria-label="Who plans">
         {planners.map((p, i) => <label><input type="radio" name="planner" value={p.id} data-says={p.says} checked={i === 0} /><span>{p.label}</span></label>)}
       </div>
@@ -68,12 +68,12 @@ const days = ['W', 'T', 'F', 'S', 'S', 'M', 'T', 'W', 'T', 'F', 'S', 'S', 'M', '
 
     <div class="block" data-reveal>
       <p class="block__say">Leave out what you can't eat.</p>
-      <p>Foods to avoid, allergies included, stay out of every plan, fix and suggestion.</p>
+      <p>Foods you avoid, allergies included, are kept out of plans, fixes and suggestions by name. Always check the label: Residual can't see every ingredient.</p>
       <label class="toggle"><span>Peanuts <em>Allergy</em></span><input type="checkbox" role="switch" data-avoid /><span class="toggle__track" aria-hidden="true"></span></label>
     </div>
 
     <div class="block" data-reveal>
-      <p class="block__say">Weigh it your way.</p>
+      <p class="block__say">Use the units you measure in.</p>
       <p>Grams, ounces, cups or spoons, food by food. Always stored as grams.</p>
       <div class="seg seg--two" role="radiogroup" aria-label="Units">
         <label><input type="radio" name="unit" value="g" checked /><span>Grams</span></label>

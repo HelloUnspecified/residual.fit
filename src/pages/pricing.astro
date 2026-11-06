@@ -30,9 +30,9 @@ const groups = [
     ['Apple', 'Its share of every subscription'],
     ['The app', 'Built, fixed and improved'],
   ] },
-  { name: 'What doesn’t', rows: [
+  { name: 'What doesn’t pay for it', rows: [
     ['Ads', 'None'],
-    ['Selling your data', 'None. We never collected it'],
+    ['Selling your data', 'None. I never collected it'],
     ['Sponsored foods', 'None'],
     ['Your account', 'There isn’t one'],
     ['Tracking and analytics', 'None'],
@@ -63,7 +63,7 @@ const groups = [
 
   <section class="money wrap" aria-labelledby="money-title">
     <h2 id="money-title" class="money__title" data-reveal>Where the money goes</h2>
-    <p class="money__lead" data-reveal>Residual has two bills that grow with every person and every meal, and none of the usual ways of paying for them quietly.</p>
+    <p class="money__lead" data-reveal>Claude bills me for every plan it makes, and the food databases I’m adding next will bill for every lookup. Here’s what pays for that, and what never will.</p>
     <div class="money__groups">
       {groups.map((g) => (
         <div class="money__group" data-reveal>
@@ -79,43 +79,43 @@ const groups = [
   <ol class="why">
     <li data-reveal>
       <h2>It isn’t a two-dollar app.</h2>
-      <p>You open Residual at breakfast, at lunch, at the store and before dinner. Something you use that often, for something that matters that much, shouldn’t be priced like a flashlight, and it can’t be built like one. Apps that cost almost nothing are paid for somewhere else: by ads, by selling what they learn about you, or by being abandoned once the downloads level off. We won’t be any of those.</p>
+      <p>You open Residual at breakfast, at lunch, at the store and before dinner. An app you use four times a day to change how you eat shouldn’t be priced like a flashlight, and it can’t be built like one. Apps that cost almost nothing get paid for somewhere else: by ads, by selling what they learn about you, or by being abandoned once the downloads level off. I won’t do any of those.</p>
     </li>
     <li data-reveal>
       <h2>You’re the customer, not the product.</h2>
-      <p>Residual makes money one way: you pay for it. No ads, no data sold or shared, no sponsored foods slipped into your plan, no affiliate link to a meal kit. That keeps our interest and yours pointed the same way. We do well when your days land, the weight comes off, and you keep the app because it’s working, not because it’s hard to leave.</p>
+      <p>Residual makes money one way: you pay for it. I don’t sell or share your data to cover the costs, the way a lot of free apps do, and there are no ads, sponsored foods or meal-kit links in your plan. That keeps my interest and yours pointed the same way. I do well when your days land and you keep the app because it works.</p>
     </li>
     <li data-reveal>
-      <h2>Every plan costs us something.</h2>
-      <p>When Claude plans your day, we pay Anthropic for that request.</p>
-      <p>Those bills grow with every person and every meal, and they arrive every month. Your subscription is how they get paid, so nothing else has to be. Turn Claude off and the price is the same: planning on your iPhone, the solver, logging and everything else are all part of it.</p>
+      <h2>Every plan costs me something.</h2>
+      <p>When Claude plans your day, I pay Anthropic for that request. Residual launched on USDA’s food data, which is free; the larger food databases coming in a later release charge for every lookup.</p>
+      <p>Those bills grow with every person and every plan, and they arrive every month. Your subscription is how they get paid, so nothing else has to be. Turn Claude off and the price is the same: planning on your iPhone, the solver, logging and everything else are part of it.</p>
     </li>
     <li data-reveal>
-      <h2>We can’t sell what we never collected.</h2>
-      <p>There is no Residual account. Your targets, your days and what you eat live on your iPhone and in your own private iCloud. We never spent the money to build a way to collect them, so there is nothing to sell, leak or hand over, and that money went into the app instead. The <a class="link" href="/privacy/">privacy policy</a> lists every request that leaves your phone.</p>
+      <h2>I can’t sell what I never collected.</h2>
+      <p>There is no Residual account. Your targets, your days and what you eat live on your iPhone and in your own private iCloud. I never built a way to collect them, so there’s nothing to sell or leak, and the money that would have cost went into the app. The <a class="link" href="/privacy/">privacy policy</a> lists every request that leaves your phone.</p>
     </li>
     <li data-reveal>
       <h2>Compare it to the right things.</h2>
-      <p>Not to other apps. A year of Residual is {money(yearly.price)}: about what one visit with a registered dietitian can cost without insurance, and you get the plan every day instead of once. A month is {money(monthly.price)}: less than most gym memberships, and less than two takeout lunches. Paid yearly, it’s about {yearly.perDay} a day, or {perMeal} a meal.</p>
-      <p>Then count the food you don’t throw out. Plan the week, and the grocery list buys what the plan uses, by the gram, and nothing more.</p>
+      <p>Not to other apps. A year of Residual is {money(yearly.price)}. An hour with a registered dietitian runs about $100 to $250 without insurance, and you get the plan once; here you get it every day. A month is {money(monthly.price)}, less than two takeout lunches. My CrossFit box is $165 a month, and that’s cheap for coached training. Paid yearly, Residual is about {yearly.perDay} a day, or {perMeal} a meal.</p>
+      <p>Then there’s the shopping. Plan the week and you walk into the store with a list of what the plan uses, added up by the gram, instead of buying whatever looks good at six o’clock.</p>
     </li>
     <li data-reveal>
-      <h2>The price is a bar we hold ourselves to.</h2>
-      <p>Charging real money means you’ll expect real things: plans that land, numbers you can trust, fixes that come quickly. Good. That expectation is what keeps the app getting better. It’s also priced to last: enough to pay the bills and keep building for years, not a number picked to grow fast and sell the company, or your data, later.</p>
+      <h2>The price is a bar I hold myself to.</h2>
+      <p>Charging real money means you’ll expect real things: plans that land and fixes that come quickly. Good. That expectation is what keeps me building. It’s also priced to last, enough to pay the bills and keep working on Residual for years. I didn’t pick a number to grow fast and sell the company, or your data, later.</p>
     </li>
     <li data-reveal>
       <h2>Less for committing. Nothing else off.</h2>
-      <p>Quarterly costs {plans[1].saves}% less than paying monthly, and yearly {yearly.saves}% less. That isn’t a sale. It’s a thank-you for committing to a real stretch, because changing how you eat takes months, not weeks, and we’d rather plan for that with you.</p>
-      <p>There are no tiers, no Pro on top of Plus, and no feature held back to sell you later. And no lifetime deal: Claude and the food lookups are bills that come every month, so a one-time price would be a promise we couldn’t keep.</p>
+      <p>Quarterly costs {plans[1].saves}% less than paying monthly, and yearly {yearly.saves}% less. That’s the only discount there is, and it’s there because changing how you eat takes months. I’d rather plan for that with you.</p>
+      <p>There are no tiers, no Pro on top of Plus, and no feature held back to sell you later. And no lifetime deal: Claude bills me every month, and so will the food databases coming next, so a one-time price would be a promise I couldn’t keep.</p>
     </li>
     <li data-reveal>
       <h2>No sales, no tricks.</h2>
-      <p>No Black Friday, no New Year’s deal, no countdown, no “sale ends Sunday”, no discount for pretending to cancel. Residual is worth the same in January as in July, so you’re never punished for joining on the wrong day. The price is the one your friends pay. If it ever changes, this page will say why before anyone is charged more.</p>
+      <p>No Black Friday, no New Year’s deal, no countdown, no “sale ends Sunday”, no discount for pretending to cancel. Residual costs the same in January as in July, so you’re never punished for joining on the wrong day, and the price is the one your friends pay. If it ever changes, this page will say why before anyone is charged more.</p>
     </li>
     <li data-reveal>
       <h2>No free tier. A free trial.</h2>
-      <p>There is no free version and no ad-supported one. A free app that calls Claude is still paid for, and the person paying is you, with your attention or your data. The free part is the trial: the whole app, for {site.trialDays} days of real meals. Long enough to plan a week, shop it, eat it and watch the residual close.</p>
-      <p>Apple runs the trial; cancel at least 24 hours before it ends and you pay nothing. There are no reminder emails engineered to make you feel behind. Without an account, we couldn’t send one.</p>
+      <p>There is no free version and no ad-supported one. A free app that calls Claude is still paid for, with your attention or your data. The free part is the trial: the whole app, for {site.trialDays} days of real meals. That’s long enough to plan a week, shop it, eat it and watch the residual close.</p>
+      <p>Apple runs the trial; cancel at least 24 hours before it ends and you pay nothing. I won’t send you reminder emails built to make you feel behind. With no account, I couldn’t if I wanted to.</p>
     </li>
     <li data-reveal>
       <h2>Leaving is a setting.</h2>
@@ -123,7 +123,7 @@ const groups = [
     </li>
   </ol>
 
-  <div class="wrap"><p class="sign" data-reveal>— Clark</p></div>
+  <div class="wrap"><p class="sign" data-reveal>Clark</p></div>
 
   <section class="end wrap" aria-labelledby="end-title">
     <h2 id="end-title" data-reveal>{site.trialDays} days, then decide.</h2>

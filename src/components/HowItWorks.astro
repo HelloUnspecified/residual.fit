@@ -2,10 +2,10 @@
 import Phone from './Phone.astro';
 
 const stages = [
-  { id: 'targets', clause: 'Set targets with a range.', body: 'Bring the numbers your coach gave you, or work them out in the app from your body, activity and goal. Each gets its own ± band, and landing anywhere inside it counts.', shot: '05-targets', alt: 'The Daily targets screen: calories 2,100, protein 150, carbs 220 and fat 70, each with its own range, fat floating, and a line that says what the macros add up to.' },
+  { id: 'targets', clause: 'Set targets with a range.', body: 'Bring your own numbers, or work them out in the app from your body, activity and goal. Each gets its own ± band, and landing anywhere inside it counts.', shot: '05-targets', alt: 'The Daily targets screen: calories 2,100, protein 150, carbs 220 and fat 70, each with its own range, fat floating, and a line that says what the macros add up to.' },
   { id: 'plan', clause: 'Plan the day first.', body: 'Claude drafts it from your pantry and what you tell it, if you allow it; otherwise your iPhone does. Every plan says who wrote it. You pick each food\'s real match, and an estimate shows as one until you do.', shot: '02b-proposal', alt: 'A proposed plan by Claude: breakfast, lunch, snack and dinner with their foods, grams and totals, ready to accept.' },
   { id: 'log', clause: 'Log what you really ate.', body: 'Amounts start from the plan. Swipe a meal to log it as planned, or open it and change what differed. The plan stays exactly as it was.', shot: '04-log', alt: 'Lunch open to log: each food with its amount and a stepper, the chicken a little over the plan, and a button that logs the meal.' },
-  { id: 'solve', clause: 'The rest re-sizes to land.', body: 'A deterministic solver re-sizes the meals ahead by the smallest plausible change. Nothing moves until you press the button, and the screen says where the day lands before you eat it.', shot: '03a-drift', alt: 'Today after lunch ran over: the ring turns amber past its range, the verdict names what is over, and one button says Close the residual.' },
+  { id: 'solve', clause: 'The rest re-sizes to land.', body: 'A deterministic solver re-sizes the meals ahead by the smallest plausible change, and the screen says where the day lands before you eat it.', shot: '03a-drift', alt: 'Today after lunch ran over: the ring turns amber past its range, the verdict names what is over, and one button says Close the residual.' },
 ];
 ---
 <section id="how" class="how wrap" aria-labelledby="how-title">
