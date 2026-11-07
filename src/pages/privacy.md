@@ -4,7 +4,7 @@ title: Privacy
 metaTitle: Privacy policy
 description: What Residual stores, what leaves your phone, who receives it and why, and how to delete it.
 lead: Residual keeps your food and your targets on your iPhone and in your own iCloud. There is no account, no sign-in and no tracking. This page lists everything that leaves your phone, who receives it, and how to delete it.
-updated: 28 October 2026
+updated: 6 November 2026
 ---
 
 Using Residual is also governed by our [Terms of Use](/terms/).
@@ -101,6 +101,10 @@ When you share a food or meal with someone, the shared copy travels inside the f
 
 Residual Plus, the subscription that includes everything in the app, is bought, managed and cancelled through Apple. Apple handles the payment. We only see whether your subscription is active; we never see your payment details. When a subscription or free trial ends, the app locks until you subscribe again, but the lock screen still lets you export your data (More → Export to a spreadsheet) and restore purchases.
 
+## Checking for updates
+
+When you open Residual, and when you come back to it an hour or more later, it reads one small file from this website, residual.fit/app/ios.json, which says the newest version in the App Store and the oldest version that still works. Nothing is sent with the request; Cloudflare sees your IP address and the standard header every app's web requests carry, as any website does. The app compares the file with its own version on your iPhone, and shows a note when there's an update, or asks you to update when your version no longer works.
+
 ## This website
 
 This website is hosted on Cloudflare, which sees visitors' IP addresses like any web host and may keep ordinary server logs. Every page, including its typeface, is served from this domain; nothing is loaded from other sites, and there are no analytics or tracking scripts.
@@ -111,7 +115,7 @@ This website is hosted on Cloudflare, which sees visitors' IP addresses like any
 - **Anthropic**: plan requests and food suggestions, only when you've allowed Claude (More → AI planning).
 - **USDA FoodData Central**: food search text, barcode numbers, the names of foods being matched, and USDA food numbers.
 - **Loops**: your email address, where you signed up and which emails you chose, only if you sign up for the newsletter or product updates.
-- **Cloudflare**: hosts this website and the newsletter sign-up.
+- **Cloudflare**: hosts this website, the newsletter sign-up and the file the app reads to check for updates.
 
 We choose providers whose terms limit their use of your data to providing their service to us. Each one receives only what its job requires.
 

@@ -14,3 +14,8 @@
   Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'unsafe-inline'; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
   Referrer-Policy: no-referrer
   X-Content-Type-Options: nosniff
+
+# The app's update check (public/app/ios.json, read by the iPhone app at launch): five minutes at Cloudflare's edge
+# and in between, so a change is live within minutes and every phone's request is a cached static file.
+/app/*
+  Cache-Control: public, max-age=300
