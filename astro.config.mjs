@@ -37,4 +37,7 @@ export default defineConfig({
   // request, in the site's Cloudflare Worker. Images are optimised at build time ("compile"), as before.
   output: 'static',
   adapter: cloudflare({ imageService: 'compile' }),
+  // Nothing here uses Astro sessions. Left on, the adapter adds a SESSION KV binding with no id, and
+  // `wrangler preview`, the deploy step for a branch, refuses a binding without one.
+  session: false,
 });
