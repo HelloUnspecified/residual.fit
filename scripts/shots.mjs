@@ -26,8 +26,10 @@ const cards = [
   { name: 'card-pantry', frame: '07a-pantry', x: 600, y: 1150 },
   { name: 'card-log', frame: '04-log', x: 600, y: 1200 },
 ];
-// The hero on a gauge: the ring and the bars, its name and dots; full width, on the app's own ground.
-const hero = { left: 0, top: 425, width: 1206, height: 600 };
+// The hero on a gauge: the ring and the bars, and its name; full width, on the app's own ground. Since 1.1.0 the
+// hero has no page dots under the name and the verdict sits higher, its first line from row 1024, so the cut is
+// centered on the hero (rows 428 to 964) with 32 rows clear above and below, and stays 600 rows tall.
+const hero = { left: 0, top: 396, width: 1206, height: 600 };
 const modes = ['light', 'dark'];
 
 const pixels = async (file) => {
