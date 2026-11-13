@@ -1,7 +1,7 @@
 ---
-title: A plan isn't by Claude, or planning didn't work
+title: A plan isn’t by Claude, or planning didn’t work
 description: Why a plan says Planned by Apple Intelligence or Built from your pantry, what each planning message in Residual means, and what to do about it.
-lead: Every plan says who wrote it. When Claude didn't, the plan says why, and the next planner in line took over. Whoever writes it, Residual's solver sizes every portion to land your targets.
+lead: Every plan says who wrote it. When Claude didn’t, the plan says why, and the next planner in line took over. Whoever writes it, Residual’s solver sizes every portion to land your targets.
 order: 2
 updated: 13 November 2026
 since: "1.0"

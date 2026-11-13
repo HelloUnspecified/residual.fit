@@ -18,7 +18,7 @@ Residual needs an iPhone with iOS 27 or later. It's iPhone only, and there is no
 2. Confirm your age. The screen is titled "For adults 18 and older". Tap **Confirm my age** and Apple answers with an age range, never your birthday. If Apple doesn't share one, tap **I'm 18 or older**.
 3. Read the **Terms of Use** and tap **Agree**.
 4. Read the health disclaimer, "Not medical advice", and tap **I understand and agree**.
-5. Start your Residual Plus free trial, unless you already subscribe. Every plan starts with a 14-day free trial, and you can restore a subscription you already have from the same screen. [Residual Plus](/help/data-and-settings/residual-plus/) explains the plans, and [pricing](/pricing/) shows what they cost.
+5. Start your Residual Plus free trial, unless you already subscribe. Every plan starts with a free trial, and you can restore a subscription you already have from the same screen. [Residual Plus](/help/data-and-settings/residual-plus/) explains the plans, and [pricing](/pricing/) shows what they cost.
 6. Set your targets. Choose **I have my numbers** to type the ones a coach or dietitian gave you, or **Suggest for me** to work them out from your body, activity and goal. Every number stays editable.
 7. Tap **Try a practice day**, or **Skip the practice** to go straight to Today.
 8. After the practice day, Residual asks "What do you keep?". Tap **Choose my foods** to pick a few foods you usually have, so your first plan starts from them, or **Skip for now**. You only see this step if your pantry is empty.

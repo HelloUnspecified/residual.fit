@@ -29,10 +29,10 @@ export async function loadHelp() {
   const ordered = groups.flatMap((g) => g.articles);
 
   const byId = new Map(ordered.map((a) => [a.id, a]));
-  const common = commonHelp.map((id) => {
+  const common = commonHelp.map(({ id, label }) => {
     const article = byId.get(id);
     if (!article) throw new Error(`commonHelp in src/content/help-sections.ts names "${id}", which has no article.`);
-    return article;
+    return { label, url: article.url };
   });
 
   return { groups, ordered, common };

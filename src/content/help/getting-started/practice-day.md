@@ -1,7 +1,7 @@
 ---
 title: Take the practice day
 description: The practice day walks you through a whole day in Residual, from planning a meal to closing the residual, on a day where nothing is saved.
-lead: The practice day is the real Today screen on a day that doesn't count. A card at the bottom tells you what to do next, and in a few minutes you plan a day, log a meal, go off plan and land it anyway.
+lead: The practice day is the real Today screen on a day that doesn’t count. A card at the bottom tells you what to do next, and in a few minutes you plan a day, log a meal, go off plan and land it anyway.
 summary: Plan, log and land a whole day. Nothing is saved.
 order: 3
 updated: 13 November 2026

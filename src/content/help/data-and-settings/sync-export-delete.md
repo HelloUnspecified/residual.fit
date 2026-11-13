@@ -1,7 +1,7 @@
 ---
 title: Sync, export and delete your data
-description: Where Residual keeps your days and foods, how iCloud sync works and what to check when it doesn't, how to export a CSV for a spreadsheet, and how to delete your data.
-lead: Your days, foods and targets live on your iPhone and, with iCloud on, in your own private iCloud database. There's no Residual account. You can take any of it out as a spreadsheet, whenever you want.
+description: Where Residual keeps your days and foods, how iCloud sync works and what to check when it doesn’t, how to export a CSV for a spreadsheet, and how to delete your data.
+lead: Your days, foods and targets live on your iPhone and, with iCloud on, in your own private iCloud database. There’s no Residual account. You can take any of it out as a spreadsheet, whenever you want.
 order: 2
 updated: 13 November 2026
 since: "1.0"

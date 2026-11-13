@@ -1,7 +1,7 @@
 ---
 title: Using Residual offline
-description: What works in Residual without a connection, what waits until you're back online, and the messages you'll see while you're offline.
-lead: Residual works without a connection. Your targets, logging, Close the residual and where the day will land all run on your iPhone. A few things need the internet, and the app says when you've hit one.
+description: What works in Residual without a connection, what waits until you’re back online, and the messages you’ll see while you’re offline.
+lead: Residual works without a connection. Your targets, logging, Close the residual and where the day will land all run on your iPhone. A few things need the internet, and the app says when you’ve hit one.
 order: 3
 updated: 13 November 2026
 since: "1.0"

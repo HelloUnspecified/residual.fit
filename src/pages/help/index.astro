@@ -21,7 +21,7 @@ const modified = ordered.map((a) => isoDay(a.data.updated)).sort().at(-1);
   {common.length > 0 && (
     <p class="common">
       <span class="kicker">Common</span>
-      {common.map((a) => <a class="link" href={a.url}>{a.data.title}</a>)}
+      {common.map((c) => <a class="link" href={c.url}>{c.label}</a>)}
     </p>
   )}
 
@@ -31,7 +31,7 @@ const modified = ordered.map((a) => isoDay(a.data.updated)).sort().at(-1);
 
 <style>
   .intro .lead { margin-top: 1.25rem; }
-  .common { max-width: 40rem; margin-top: 1rem; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.4rem 1.25rem; font-size: var(--step-small); }
+  .common { max-width: none; margin-top: 1rem; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.4rem 1.25rem; font-size: var(--step-small); }
   .common .kicker { margin-right: 0.25rem; }
   /* Without JavaScript there is no search field above it, so the row keeps the intro's distance on its own. */
   :global(html:not(.js)) .common { margin-top: 2rem; }

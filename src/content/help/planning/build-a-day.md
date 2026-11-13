@@ -1,7 +1,7 @@
 ---
 title: Add meals, foods and notes yourself
-description: Build or change a day in Residual by hand. Add a meal and its foods, set a time, change an amount or unit, add a note, reorder the day, and remove what you don't need.
-lead: You don't need a planner to plan. Any day can be built by hand, one meal at a time, and a plan someone else wrote can be changed the same way. Residual shows where the day lands as you go.
+description: Build or change a day in Residual by hand. Add a meal and its foods, set a time, change an amount or unit, add a note, reorder the day, and remove what you don’t need.
+lead: You don’t need a planner to plan. Any day can be built by hand, one meal at a time, and a plan someone else wrote can be changed the same way. Residual shows where the day lands as you go.
 order: 3
 updated: 13 November 2026
 since: "1.0"

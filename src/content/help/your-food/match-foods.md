@@ -1,6 +1,6 @@
 ---
 title: Match AI estimates to real foods
-description: What "to match" means on a planned food, how to match one food or a whole meal to USDA, and what each source label in Residual says about a food's numbers.
+description: What "to match" means on a planned food, how to match one food or a whole meal to USDA, and what each source label in Residual says about a food’s numbers.
 lead: A food a planner named is an AI estimate until you match it to a real food. Matching swaps the guess for real numbers, so the day is sized on what the food actually holds. You match a food once, and Residual keeps it.
 order: 2
 updated: 13 November 2026

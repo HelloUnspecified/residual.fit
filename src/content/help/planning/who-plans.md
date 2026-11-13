@@ -1,6 +1,6 @@
 ---
 title: "Choose who plans: Claude, Apple Intelligence or your own foods"
-description: Turn planning with Claude on or off, see what each request sends, what each plan's label means, and the plan requests Residual keeps on your iPhone.
+description: Turn planning with Claude on or off, see what each request sends, what each plan’s label means, and the plan requests Residual keeps on your iPhone.
 lead: Three planners can write a day in Residual. Claude, from Anthropic, writes it if you allow it. Otherwise Apple Intelligence plans on your iPhone, or Residual builds the day from your own foods. Every plan says which one wrote it, and the solver sizes the portions either way.
 order: 2
 updated: 13 November 2026

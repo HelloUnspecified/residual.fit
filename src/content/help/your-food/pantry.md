@@ -1,7 +1,7 @@
 ---
 title: Keep a pantry, and size foods by the serving
-description: Add the foods you keep to Residual's pantry, mark them in or out of stock so plans use what you have, and size foods that come in pieces by the whole serving.
-lead: Your pantry is the food you usually have on hand. Plans start from it, using each food's real numbers, so you can cook from what you buy. Switch a food off when you run out, and plans skip it until it's back.
+description: Add the foods you keep to Residual’s pantry, mark them in or out of stock so plans use what you have, and size foods that come in pieces by the whole serving.
+lead: Your pantry is the food you usually have on hand. Plans start from it, using each food’s real numbers, so you can cook from what you buy. Switch a food off when you run out, and plans skip it until it’s back.
 order: 3
 updated: 13 November 2026
 since: "1.0"

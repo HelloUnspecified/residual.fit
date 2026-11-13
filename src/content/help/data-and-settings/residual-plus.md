@@ -1,7 +1,7 @@
 ---
 title: Start your free trial and manage Residual Plus
-description: Everything in Residual is part of Residual Plus. How the 14-day free trial works, the three plans, restoring on a new iPhone, and how to cancel.
-lead: Residual Plus is the one subscription, and everything in the app is part of it. There is no free tier. Every plan starts with a 14-day free trial, and Apple handles the payment.
+description: Everything in Residual is part of Residual Plus. How the free trial works, the three plans, restoring on a new iPhone, and how to cancel.
+lead: Residual Plus is the one subscription, and everything in the app is part of it. There is no free tier. Every plan starts with a free trial, and Apple handles the payment.
 order: 1
 updated: 13 November 2026
 since: "1.0"
@@ -16,7 +16,7 @@ The Residual Plus screen shows the plans as cards you swipe through: **Annual** 
 You see Residual Plus during setup, right after the health disclaimer. Later, it's at `More → Residual Plus`, where the row reads **Subscribe** until you have it.
 
 1. Swipe to the plan you want.
-2. Tap **Start my 14-day free trial** on its card.
+2. Tap the button on its card that starts the free trial. It names the trial's length.
 3. Confirm with the App Store.
 
 Everything unlocks at once. Under the cards, How your free trial works lays out the dates:

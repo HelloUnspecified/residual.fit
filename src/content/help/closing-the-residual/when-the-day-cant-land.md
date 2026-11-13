@@ -1,7 +1,7 @@
 ---
-title: "When the day can't land: \"can't fully recover\", \"As close as it gets\", and Suggest a fix"
-description: What Today means by "can't fully recover" and "As close as it gets", why re-sizing alone can't fix some days, and the ways to land the day anyway.
-lead: "Close the residual re-sizes the meals ahead, but only so far. When that isn't enough, Today says so plainly and shows how far off the day will land. Then it's your call: add a food, change a meal, plan more, or accept a day that lands close."
+title: When the day can’t land, and Suggest a fix
+description: What Today means by "can’t fully recover" and "As close as it gets", why re-sizing alone can’t fix some days, and the ways to land the day anyway.
+lead: "Close the residual re-sizes the meals ahead, but only so far. When that isn’t enough, Today says so plainly and shows how far off the day will land. Then it’s your call: add a food, change a meal, plan more, or accept a day that lands close."
 order: 2
 updated: 13 November 2026
 since: "1.0"
@@ -9,7 +9,7 @@ since: "1.0"
 
 ## Why re-sizing has a limit
 
-Close the residual keeps your foods and changes their amounts. Each portion stays between about half and double what was planned, so you never get a token portion or a meal you wouldn't eat. When one meal is left and the gap is bigger than that meal can take within those limits, re-sizing can't close it. [Close the residual](/help/closing-the-residual/close-the-residual/) covers the review itself.
+Close the residual keeps your foods and changes their amounts. Each portion stays between about half and double what was planned, so you never get a token portion or a meal you wouldn't eat. When one meal is left and the gap is bigger than that meal can take within those limits, re-sizing can't close it.
 
 ## "Dinner alone can't fully recover."
 
@@ -35,13 +35,13 @@ A planned meal can show "Getting thin — under half the planned 640 kcal" (with
 
 ### Add a food in the review
 
-Under each meal in the review, **Add a food** tries one more food there and shows where the day lands with it. **Choose a food** opens food search. **Suggest from my pantry** lists up to three foods from your pantry that land the day closest, closest first. Only pantry items in stock are tried, and none on your [Foods to avoid](/help/your-food/foods-to-avoid/). If none helps, it says "Nothing in your pantry lands the day closer than it lands now."
+Under each meal in the review, **Add a food** tries one more food there, from food search or from your pantry, and shows where the day lands with it. [Close the residual](/help/closing-the-residual/close-the-residual/#add-a-food-in-the-review) shows how.
 
-When the amounts alone can't close the day, the review also looks through your foods on its own ("Looking through your foods for something to add…") and adds one to a meal if it lands the day closer. You can change its amount or skip it.
+When the amounts alone can't close the day, the review also looks through your foods on its own (“Looking through your foods for something to add…”) and adds one to a meal if it lands the day closer. You can change its amount or skip it.
 
 ### Ask Claude
 
-If your own foods still can't close it and the day is short, the review offers **Ask Claude for something to add**. Claude picks a food for a meal ahead; Residual sizes it, and you can skip it. It needs a connection, and the first time it asks before anything is sent. Claude has a daily limit; once you've reached it, the review says "You've used today's Claude requests. Add a food yourself, or ask again tomorrow." [Who plans](/help/planning/who-plans/) covers Claude and your privacy.
+If your own foods still can't close it, and the day isn't over on calories, the review offers **Ask Claude for something to add**. Claude picks a food for a meal ahead; Residual sizes it, and you can skip it. It needs a connection, and the first time it asks before anything is sent. Claude has a daily limit; once you've reached it, the review says "You've used today's Claude requests. Add a food yourself, or ask again tomorrow." [Who plans](/help/planning/who-plans/) covers Claude and your privacy.
 
 ### Apply and look for more
 

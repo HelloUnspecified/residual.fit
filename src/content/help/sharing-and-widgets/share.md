@@ -1,6 +1,6 @@
 ---
 title: Share your day, a meal or a recipe
-description: Share an image of your day from the ring, or send a meal, recipe or food by link or AirDrop. A shared meal can be sized to the other person's calorie target.
+description: Share an image of your day from the ring, or send a meal, recipe or food by link or AirDrop. A shared meal can be sized to the other person’s calorie target.
 lead: There are two kinds of share. Your day goes out as an image, for a story or a chat. A meal, a recipe or a food goes out as a link that opens in Residual, where the other person can keep it.
 order: 1
 updated: 13 November 2026
@@ -28,7 +28,7 @@ Anything you can keep in Residual can be sent to someone else. Each share opens 
 
 | To share | Do this |
 | --- | --- |
-| A meal on Today | Swipe it right and tap **Share**, or press and hold it. In the open meal, it's the share button at the top. |
+| A meal on Today | Press and hold it, then tap **Share**. In the open meal, it's the share button at the top. |
 | A saved meal | On the Meals tab, swipe it right or press and hold it. |
 | A recipe | On the Recipes tab, swipe it right or press and hold it, or use the share button in the open recipe. |
 | A pantry food | On the Pantry tab, swipe it right or press and hold it. |

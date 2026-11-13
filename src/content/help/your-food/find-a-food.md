@@ -1,7 +1,7 @@
 ---
 title: "Find a food: search, barcode, label, and your food library"
 description: Where Residual looks when you add a food, how to scan a barcode or read a Nutrition Facts label, and what your food library keeps.
-lead: Every place you add a food opens the same search. It shows your own foods first, then USDA FoodData Central. When a food isn't there, photograph its label and it's yours from then on.
+lead: Every place you add a food opens the same search. It shows your own foods first, then USDA FoodData Central. When a food isn’t there, photograph its label and it’s yours from then on.
 order: 1
 updated: 13 November 2026
 since: "1.0"

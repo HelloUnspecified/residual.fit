@@ -1,6 +1,6 @@
 ---
 title: How calories, portions and re-sizing are worked out
-description: The arithmetic behind Residual's numbers, why they can differ from a label or another app, how amounts and units work, and the rules the solver follows when it re-sizes a day.
+description: The arithmetic behind Residual’s numbers, why they can differ from a label or another app, how amounts and units work, and the rules the solver follows when it re-sizes a day.
 lead: Every number in Residual comes from the grams of protein, carbs and fat in what you plan and eat. This page is the arithmetic, the units, and the rules the solver keeps to.
 order: 1
 updated: 13 November 2026
@@ -48,7 +48,7 @@ Fiber is shown, not balanced. It isn't a target, so it has no ring and no range.
 
 Every amount is kept as a weight, the way USDA does it. A cup of 2% milk is 244 g, because milk is a little heavier than water. Residual shows each food in the unit you choose, and the numbers never change when the unit does.
 
-So you don't need a food scale. A scale is the most accurate, but measuring cups and spoons work too, and every target has a range, so close is good enough.
+So you don't need a food scale. A scale is the most accurate, but measuring cups and spoons work too: change a food's unit in the meal and measure. Every target has a range, so close is good enough.
 
 ## Units
 
@@ -65,14 +65,7 @@ To measure one food differently, tap the unit beside its amount in a meal. Cups,
 
 ## Where a food's numbers come from
 
-| Source | What it means |
-| --- | --- |
-| Matched · USDA | From USDA FoodData Central, the US government's food database. |
-| Manually verified | Read from the package's own label by your iPhone, and checked by you. |
-| Matched USDA · User override | A USDA food you corrected from your package. Your numbers win; the USDA match is kept. |
-| AI estimate | A planner's guess. Match it to a real food so the day is sized on real numbers. |
-
-Nothing is matched behind your back: you pick each match, and it's kept for next time. See [Match AI estimates to real foods](/help/your-food/match-foods/).
+Every food says where its numbers come from: USDA, a label you read, your own correction, or an AI estimate you haven't matched yet. [Match AI estimates to real foods](/help/your-food/match-foods/#where-a-foods-numbers-come-from) lists each label and what it means.
 
 ## How the day is balanced
 
@@ -94,4 +87,4 @@ The plan is what you mean to eat; the log is what you ate. Logging fills in the 
 
 ## What AI does, and doesn't
 
-AI drafts a day's meals. Claude, when you allow it, picks the foods and amounts; otherwise Apple's model picks the foods and the math sizes them. Meal names and reading a package label run on your iPhone with Apple's on-device model. Re-balancing is always the solver. See [Choose who plans](/help/planning/who-plans/).
+AI drafts a day's meals, and Apple's on-device model names meals and reads package labels. Re-balancing is always the solver. [Choose who plans](/help/planning/who-plans/) says what each planner does.

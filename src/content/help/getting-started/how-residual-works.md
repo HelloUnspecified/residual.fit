@@ -1,7 +1,7 @@
 ---
 title: How Residual works
-description: Residual plans a day of eating that lands your calorie and macro targets, then re-sizes the meals still ahead when what you eat doesn't match the plan.
-lead: Residual is an iPhone meal planner and tracker for people who eat to calorie and macro targets. You plan the day first, log what you actually eat, and when the two don't match, the meals still ahead change size so the day still lands.
+description: Residual plans a day of eating that lands your calorie and macro targets, then re-sizes the meals still ahead when what you eat doesn’t match the plan.
+lead: Residual is an iPhone meal planner and tracker for people who eat to calorie and macro targets. You plan the day first, log what you actually eat, and when the two don’t match, the meals still ahead change size so the day still lands.
 summary: Targets with ranges, a plan, a log, and the residual that closes the gap.
 order: 1
 updated: 13 November 2026
@@ -26,7 +26,7 @@ Then real life happens. Lunch ran over, or you skipped the rice. The gap between
 
 ![Residual's Today screen. Breakfast is logged at 465 kcal and the ring reads 465 of 2,100 kcal. The bars show protein, carbs and fat heading for their targets. The sentence under them reads Lands in range. Three meals ahead, sized to fit. The button at the bottom reads Log lunch.](shot:01-today "Today: what you've eaten, where the day will land, and the next thing to do.")
 
-## What the AI does, and what it doesn't
+## Where AI fits
 
 AI drafts the meals: which foods, and roughly how much. Re-sizing a day is plain arithmetic, the same answer every time, with no AI in it. A portion never goes below about half or above about double what was planned, so dinner stays dinner. When the meals ahead can't absorb what happened, Today says so plainly rather than shrinking a food to a token portion. [When the day can't land](/help/closing-the-residual/when-the-day-cant-land/) covers what to do then.
 
