@@ -1,0 +1,38 @@
+---
+// The help home: search, the most asked, then every section as a card. Articles are src/content/help/.
+import HelpLayout from '../../layouts/Help.astro';
+import Search from '../../components/help/Search.astro';
+import Sections from '../../components/help/Sections.astro';
+import Stuck from '../../components/help/Stuck.astro';
+import { loadHelp, isoDay } from '../../lib/help';
+
+const { groups, ordered, common } = await loadHelp();
+// The home changes whenever an article does: its lists are the articles.
+const modified = ordered.map((a) => isoDay(a.data.updated)).sort().at(-1);
+---
+<HelpLayout title="Help" description="How to use Residual, one task to a page: targets, planning, logging, closing the residual, your food, widgets, your data, and fixes for common problems." modified={modified}>
+  <div class="intro">
+    <h1 class="head">Help</h1>
+    <p class="lead">How Residual works, one task to a page.</p>
+  </div>
+
+  <Search />
+
+  {common.length > 0 && (
+    <p class="common">
+      <span class="kicker">Common</span>
+      {common.map((a) => <a class="link" href={a.url}>{a.data.title}</a>)}
+    </p>
+  )}
+
+  <Sections groups={groups} />
+  <Stuck />
+</HelpLayout>
+
+<style>
+  .intro .lead { margin-top: 1.25rem; }
+  .common { max-width: 40rem; margin-top: 1rem; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.4rem 1.25rem; font-size: var(--step-small); }
+  .common .kicker { margin-right: 0.25rem; }
+  /* Without JavaScript there is no search field above it, so the row keeps the intro's distance on its own. */
+  :global(html:not(.js)) .common { margin-top: 2rem; }
+</style>
