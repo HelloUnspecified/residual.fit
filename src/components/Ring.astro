@@ -1,36 +1,33 @@
 ---
 /**
- * The app icon's ring, small: the site's mark. Solid green is what's eaten, clockwise from the target tick at
- * 12 o'clock; the dots a ghost of that green are what's still planned; the soft zone before the tick is the
- * range; the dot is where the day lands. Geometry and opacities follow the icon renderer in the app's repo
- * (scratchpad/icon/render_icon.swift). Fractions are of the full circle. The day itself is DayRing.astro.
+ * The app icon's ring, small: the site's mark, in three parts. Solid green is what's eaten, clockwise from
+ * 12 o'clock; three dots, a ghost of that green, are what's still planned; the dot is where the day lands.
+ * The open stretch after it is the residual. No track, tick or range zone (2026-11-13, with the app icon).
+ * Fractions of the full circle follow the icon renderer in the app's repo (scratchpad/icon/render_icon.swift);
+ * the stroke is a little heavier than the icon's because the mark is drawn at text size. The day itself is
+ * DayRing.astro.
  */
 interface Props {
   size?: number | string;
   eaten?: number;
   lands?: number;
-  zoneStart?: number;
   width?: number;
   class?: string;
 }
-const { size = '1em', eaten = 0.62, lands = 0.93, zoneStart = 0.84, width = 0.16, class: cls = '' } = Astro.props;
-const c = 50, r = 29, w = width * 100;
-const C = 2 * Math.PI * r;
+const { size = '1em', eaten = 0.6, lands = 0.875, width = 0.16, class: cls = '' } = Astro.props;
+const c = 50, r = 30, w = width * 100;
+const planFrom = 0.655, planTo = 0.835, planDots = 3;
 const pt = (f: number) => { const a = f * 2 * Math.PI - Math.PI / 2; return [c + r * Math.cos(a), c + r * Math.sin(a)]; };
 const arc = (from: number, to: number) => {
   const [x1, y1] = pt(from), [x2, y2] = pt(Math.min(to, from + 0.9999));
   return `M ${x1.toFixed(3)} ${y1.toFixed(3)} A ${r} ${r} 0 ${to - from > 0.5 ? 1 : 0} 1 ${x2.toFixed(3)} ${y2.toFixed(3)}`;
 };
+const plan = Array.from({ length: planDots }, (_, i) => pt(planFrom + ((planTo - planFrom) * (i + 0.5)) / planDots));
+const [lx, ly] = pt(lands);
 const css = typeof size === 'number' ? `${size}px` : size;
 ---
 <svg class={`mark ${cls}`} viewBox="0 0 100 100" style={`width:${css};height:${css}`} aria-hidden="true">
-  <circle cx={c} cy={c} r={r} fill="none" stroke="currentColor" stroke-opacity="0.14" stroke-width={w} />
-  <path d={arc(zoneStart, 1)} fill="none" stroke="var(--range)" stroke-width={w} />
-  <path d={arc(eaten, lands)} fill="none" stroke="var(--plan)" stroke-width={w * 0.5} stroke-linecap="round" stroke-dasharray={`0.01 ${(0.0455 * C).toFixed(2)}`} />
   <path d={arc(0, eaten)} fill="none" stroke="var(--eaten)" stroke-width={w} stroke-linecap="round" />
-  <rect x={c - 1.6} y={c - r - w * 0.75} width="3.2" height={w * 1.5} fill="currentColor" />
-  <g transform={`rotate(${(lands * 360).toFixed(2)} ${c} ${c})`}>
-    <circle cx={c} cy={c - r} r={w * 0.62} fill="var(--bg)" />
-    <circle cx={c} cy={c - r} r={w * 0.44} fill="var(--eaten)" />
-  </g>
+  {plan.map(([x, y]) => <circle cx={x.toFixed(3)} cy={y.toFixed(3)} r={w * 0.2} fill="var(--plan)" />)}
+  <circle cx={lx.toFixed(3)} cy={ly.toFixed(3)} r={w / 2} fill="var(--eaten)" />
 </svg>
