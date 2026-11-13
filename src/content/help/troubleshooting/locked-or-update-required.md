@@ -1,6 +1,6 @@
 ---
-title: Locked out, can't subscribe, restore didn't work, or asked to update
-description: What to do when Residual locks behind Residual Plus, the App Store isn't answering, Restore purchases finds nothing, or the app asks you to update. Your data stays yours.
+title: Locked out, can’t subscribe, restore didn’t work, or asked to update
+description: What to do when Residual locks behind Residual Plus, the App Store isn’t answering, Restore purchases finds nothing, or the app asks you to update. Your data stays yours.
 lead: When Residual Plus ends, or the app needs an update, Residual shows one screen and nothing behind it. Your days and foods are still there, and you can always export them from that screen.
 order: 4
 updated: 13 November 2026

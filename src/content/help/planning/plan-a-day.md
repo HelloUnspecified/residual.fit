@@ -1,7 +1,7 @@
 ---
 title: Plan a day with AI
 description: Draft a whole day or the rest of today in Residual, look over the proposed plan, swap or refine any meal, and accept it.
-lead: Tell Residual how many meals you want and anything to include or avoid. A planner drafts the day from your pantry, your saved meals and what you've eaten lately, and Residual sizes every portion so the plan lands in range. Nothing goes onto your day until you accept it.
+lead: Tell Residual how many meals you want and anything to include or avoid. A planner drafts the day from your pantry, your saved meals and what you’ve eaten lately, and Residual sizes every portion so the plan lands in range. Nothing goes onto your day until you accept it.
 order: 1
 updated: 13 November 2026
 since: "1.0"

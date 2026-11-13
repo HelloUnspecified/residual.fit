@@ -1,7 +1,7 @@
 ---
 title: Keep a food out of your plans
-description: Add allergies and foods you don't eat to Foods to avoid, and Residual leaves them out of every plan, suggestion and fix. Matching is by name.
-lead: Foods to avoid is a list of what you never want planned, an allergy or something you don't eat. Plans, suggestions and fixes all leave out anything on it.
+description: Add allergies and foods you don’t eat to Foods to avoid, and Residual leaves them out of every plan, suggestion and fix. Matching is by name.
+lead: Foods to avoid is a list of what you never want planned, an allergy or something you don’t eat. Plans, suggestions and fixes all leave out anything on it.
 order: 6
 updated: 13 November 2026
 since: "1.0"

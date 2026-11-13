@@ -1,7 +1,7 @@
 ---
 title: Add Residual widgets
 description: Residual has six widgets for the Home Screen and the Lock Screen. What each one shows, the sizes it comes in, and what tapping it does.
-lead: Residual's widgets show today without opening the app. They show where the day will land, what you've eaten, what's left, and the next meal. There are six, and most come in more than one size.
+lead: Residual’s widgets show today without opening the app. They show where the day will land, what you’ve eaten, what’s left, and the next meal. There are six, and most come in more than one size.
 order: 2
 updated: 13 November 2026
 since: "1.0"

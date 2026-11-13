@@ -1,7 +1,7 @@
 ---
 title: Plan days ahead, copy meals and shop the list
-description: Move between days in Residual, copy a meal or a whole day across the next two weeks, and shop from a grocery list built from everything you've planned.
-lead: Today isn't only today. Any day can be planned ahead the same way, a meal you eat often can go onto the next two weeks in one step, and the grocery list adds up everything planned from today on.
+description: Move between days in Residual, copy a meal or a whole day across the next two weeks, and shop from a grocery list built from everything you’ve planned.
+lead: Today isn’t only today. Any day can be planned ahead the same way, a meal you eat often can go onto the next two weeks in one step, and the grocery list adds up everything planned from today on.
 order: 2
 updated: 13 November 2026
 since: "1.0"

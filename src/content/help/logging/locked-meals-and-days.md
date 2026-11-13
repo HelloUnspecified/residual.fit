@@ -1,7 +1,7 @@
 ---
 title: Why a meal or day is locked, and how to unlock it
 description: Logging a meal locks it, and a finished day locks too. How to unlock a meal or a day to change it, lock it again, or move a meal back to planned.
-lead: Logging locks a meal, so what you ate stays what you ate and nothing re-sizes it by accident. When every meal on a day is logged and there's nothing left to do, the day locks too. Both unlock in a tap.
+lead: Logging locks a meal, so what you ate stays what you ate and nothing re-sizes it by accident. When every meal on a day is logged and there’s nothing left to do, the day locks too. Both unlock in a tap.
 order: 3
 updated: 13 November 2026
 since: "1.0"

@@ -1,6 +1,6 @@
 ---
-title: Log what you actually ate, or something you didn't plan
-description: Change only the foods that differed from the plan, log a meal you didn't plan, and read the Plan, Ate and Drift summary. The plan is never overwritten.
+title: Log what you actually ate, or something you didn’t plan
+description: Change only the foods that differed from the plan, log a meal you didn’t plan, and read the Plan, Ate and Drift summary. The plan is never overwritten.
 lead: Real meals rarely match the plan to the gram. Open the meal, change what differed, and log it. The plan stays beside what you ate, so you can see the difference.
 order: 2
 updated: 13 November 2026
@@ -60,4 +60,4 @@ While you log, **Edit the plan instead ›** under the meal's name switches to t
 
 ## Do I need a food scale?
 
-A scale is the most accurate, because every portion is stored as a weight. You don't need one. Change the unit to ounces, cups, tablespoons or milliliters and use measuring cups and spoons. Every target has a range, so close is good enough. [How the numbers work](/help/reference/how-the-numbers-work/) has more on units.
+No. A scale is the most accurate, but cups, spoons and ounces work, and close is good enough inside a range. [Amounts are weights](/help/reference/how-the-numbers-work/#amounts-are-weights) explains why.
