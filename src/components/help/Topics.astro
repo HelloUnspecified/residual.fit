@@ -1,0 +1,48 @@
+---
+// Every help topic, grouped by section: the article page draws it twice from here, as the sticky sidebar from
+// 64em and inside the "All help topics" disclosure below that. Only one is displayed at a time, so a reader meets
+// the list once. `columns` sets the groups in two columns, for the disclosure on a wider phone or tablet.
+import type { HelpGroup } from '../../lib/help';
+
+interface Props { groups: HelpGroup[]; current?: string; columns?: boolean }
+const { groups, current, columns = false } = Astro.props;
+---
+<div class:list={['topics', { 'topics--cols': columns }]}>
+  {!columns && <a class="link topics__home" href="/help/">All help</a>}
+  <div class="topics__groups">
+    {groups.map((g) => (
+      <div class="topics__group">
+        <span class="kicker">{g.name}</span>
+        {g.articles.map((a) => (
+          <a href={a.url} aria-current={a.id === current ? 'page' : undefined}>{a.data.title}</a>
+        ))}
+      </div>
+    ))}
+  </div>
+  {columns && <a class="link topics__home topics__home--end" href="/help/">All help</a>}
+</div>
+
+<style>
+  .topics__group + .topics__group { margin-top: 1.4rem; }
+  .topics__group .kicker { display: block; padding-inline: 0.75rem; margin-bottom: 0.35rem; }
+  .topics__group a { display: block; padding: 0.4rem 0.75rem; border-radius: 10px; color: var(--label2); text-decoration: none; font-size: 0.9375rem; line-height: 1.3; }
+  .topics__group a[aria-current="page"] { background: var(--card); color: var(--text); font-weight: 600; }
+  .topics__home { display: block; margin-bottom: 1.4rem; padding-inline: 0.75rem; font-weight: 600; }
+  .topics__home--end { margin: 1.25rem 0 0; }
+
+  /* In the disclosure, which is itself a card: the current row sits on the page's ground instead. */
+  .topics--cols .topics__group a { padding-block: 0.5rem; }
+  .topics--cols .topics__group a[aria-current="page"] { background: var(--bg); }
+  @media (min-width: 36em) {
+    .topics--cols .topics__groups { columns: 2; column-gap: 1.5rem; }
+    .topics--cols .topics__group { break-inside: avoid; margin-top: 0; padding-top: 1.1rem; }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .topics__group a:hover { color: var(--key); }
+    .topics__group a[aria-current="page"]:hover { color: var(--text); }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .topics__group a { transition: color var(--t-hover) ease; }
+  }
+</style>
