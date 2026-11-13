@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "astro dev",
     "prebuild": "node scripts/check-app-version.mjs",
-    "build": "astro build",
+    "build": "astro build && pagefind --site dist/client",
     "preview": "astro preview",
     "astro": "astro",
     "test": "node --test \"tests/*.test.ts\"",
@@ -14,7 +14,9 @@
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.4.1",
+    "@astrojs/markdown-satteri": "^0.4.4",
     "@astrojs/sitemap": "^3.7.4",
-    "astro": "^7.4.0"
+    "astro": "^7.4.0",
+    "pagefind": "^1.6.0"
   }
 }
