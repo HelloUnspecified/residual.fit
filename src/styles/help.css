@@ -10,6 +10,8 @@
    the closing lines it's the bold path alone, since a chip on a card's own ground would be a box in a box. */
 .path { font-weight: 600; color: var(--text); }
 .path > span { white-space: nowrap; }
+/* On a phone a long step, such as "How are the numbers worked out?", is wider than the column, so steps may wrap too. */
+@media (max-width: 30em) { .path > span { white-space: normal; } }
 .path > span + span::before { content: '→'; margin-inline: 0.3em; color: var(--label3); font-weight: 400; }
 .prose :is(p, li, td) > .path { padding: 0.1em 0.5em; border-radius: 8px; background: var(--note); box-decoration-break: clone; -webkit-box-decoration-break: clone; }
 .prose .callout .path { padding: 0; background: none; }

@@ -1,43 +1,59 @@
 ---
+// The contact page: how to reach support, then the help articles that answer what people used to ask here.
+// The answers themselves live in the help (src/content/help/), so nothing on this page repeats one. The links are
+// drawn from the articles' own titles, and a missing article fails the build.
 import Layout from '../layouts/Layout.astro';
 import Footer from '../components/Footer.astro';
+import { getEntry } from 'astro:content';
 import { site } from '../site';
-import { help } from '../content/support';
 
-// The problems are drawn as one list where the first of them falls, under its own heading.
-const problems = help.filter((h) => h.problem);
-const sections = help.filter((h) => !h.problem || h === problems[0]);
-const url = new URL(Astro.url.pathname, Astro.site).href;
-const faqPage = {
-  '@type': 'FAQPage',
-  '@id': `${url}#faq`,
-  isPartOf: { '@id': `${url}#webpage` },
-  mainEntity: help.map((h) => ({
-    '@type': 'Question', name: h.q,
-    acceptedAnswer: { '@type': 'Answer', text: h.a.map((p) => p.replace(/<[^>]+>/g, '')).join('\n\n') },
+const groups: { heading: string; ids: string[] }[] = [
+  { heading: 'The subscription', ids: ['data-and-settings/residual-plus', 'troubleshooting/locked-or-update-required'] },
+  { heading: 'Planning with Claude', ids: ['planning/who-plans', 'troubleshooting/planning-problems'] },
+  { heading: 'Offline, sync and your data', ids: ['troubleshooting/offline', 'data-and-settings/sync-export-delete'] },
+  { heading: 'Something isn’t working', ids: ['troubleshooting/food-search-problems', 'closing-the-residual/when-the-day-cant-land', 'your-food/match-foods'] },
+];
+const links = await Promise.all(groups.map(async (g) => ({
+  heading: g.heading,
+  articles: await Promise.all(g.ids.map(async (id) => {
+    const entry = await getEntry('help', id);
+    if (!entry) throw new Error(`support.astro links to the help article "${id}", which doesn't exist.`);
+    return { url: `/help/${id}/`, title: entry.data.title };
   })),
+})));
+
+// A support address, as structured data: who answers, and how.
+const url = new URL(Astro.url.pathname, Astro.site).href;
+const contact = {
+  '@type': 'ContactPoint',
+  '@id': `${url}#contact`,
+  contactType: 'customer support',
+  email: site.supportEmail,
+  availableLanguage: 'en',
+  url,
 };
 ---
-<Layout title="Help: subscription, offline use, sync and data" description="Help with Residual: contact, the subscription, using it offline, planning with Claude, your data, and fixes for common problems." schema={[faqPage]} plain>
+<Layout title="Contact support" description={`How to reach Residual's support at ${site.supportEmail}, and where the help answers the subscription, offline use, planning with Claude, your data and common problems.`} schema={[contact]} plain>
   <article class="doc wrap">
     <h1 class="head">Support</h1>
     <p class="lead">Write to <a class="link" href={`mailto:${site.supportEmail}?subject=Residual`}>{site.supportEmail}</a>. In the app, More → Support &amp; feedback opens the email with your app version, iOS version and iPhone model filled in.</p>
     <p>Writing from somewhere else? Say which iPhone and iOS version you have, and what you expected to happen.</p>
-    <p>How to use each part of the app, one task to a page, is in <a href="/help/">Help</a>.</p>
 
-    {sections.map((h) => h.problem ? (
+    <h2>Answers in the help</h2>
+    <p>Most questions have an article. <a href="/help/">All help topics</a> lists every one.</p>
+    {links.map((g) => (
       <>
-        <h2>Something isn't working</h2>
+        <h3>{g.heading}</h3>
         <ul>
-          {problems.map((p) => <li><strong>{p.q}</strong> <Fragment set:html={p.a.join(' ')} /></li>)}
+          {g.articles.map((a) => <li><a href={a.url}>{a.title}</a></li>)}
         </ul>
-      </>
-    ) : (
-      <>
-        <h2>{h.q}</h2>
-        {h.a.map((p) => <p set:html={p} />)}
       </>
     ))}
   </article>
   <Footer />
 </Layout>
+
+<style>
+  .doc h3 { font-size: 1.0625rem; font-weight: 600; margin-top: 1.75rem; margin-bottom: 0.5rem; }
+  .doc ul { gap: 0.5rem; }
+</style>

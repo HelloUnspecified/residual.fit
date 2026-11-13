@@ -13,7 +13,7 @@ The gap between where the day was planned to land and where it will land now is 
 
 The math is deterministic. The same day gives the same answer every time, and there is no AI in this step. Claude or Apple Intelligence may have written your plan, but the re-size is the solver alone.
 
-![Residual's Today screen. Lunch is marked Off plan, 237 kcal over. The sentence under the ring reads Calories over 193. Two meals ahead can absorb it. The button at the bottom reads Close the residual, Re-size the 2 meals ahead.](shot:03a-drift "Lunch ran 237 kcal over. The sentence under the ring says by how much, and the button at the bottom becomes Close the residual.")
+![Residual's Today screen. The number in the ring, 1,264 of 2,100 kcal, is amber. The sentence under the ring reads Calories over 175. Two meals ahead can absorb it. Lunch is logged at 799 kcal with a chip reading Off plan, plus 237 kcal. The button at the bottom reads Close the residual, Re-size the 2 meals ahead.](shot:03a-drift "Lunch ran 237 kcal over. The sentence under the ring says what that does to the day, and the button at the bottom becomes Close the residual.")
 
 ## Close the residual, step by step
 
@@ -27,31 +27,20 @@ The math is deterministic. The same day gives the same answer every time, and th
 >
 > If every target already sits inside its range, Residual doesn't re-size anything behind you. When you keep or set an amount in the review and the day lands with it, what you applied is the plan from then on.
 
-## The order targets land in
+## How far it goes
 
-The meals ahead can't always land every target at once. Residual works through your targets in the order you set on `More → Daily targets`, top to bottom, and won't give up an earlier one to land a later one. The usual order is calories, protein, carbs, then fat.
+Targets land in the order on `More → Daily targets`, and a target set to **Floats** comes last. Each portion stays between about half and double its plan, and new amounts snap to your portion rounding; a food sized by the serving moves a whole serving at a time. [How calories, portions and re-sizing are worked out](/help/reference/how-the-numbers-work/) has every rule the solver keeps to.
 
-A target set to **Floats** comes after the others. Residual gets it as close as it can, and missing it never marks your day off. How to set the order and which targets float is in [Set your daily targets](/help/targets/daily-targets/).
-
-## The limits on every portion
-
-A portion stays between about half and double what was planned. Going further would leave you a token portion or a meal you wouldn't eat, so the solver stops at the limit and says where the day will land instead.
-
-New amounts snap to the grid set under **Round portions to** on Daily targets, 5 g unless you change it. A food sized by the serving moves a whole serving at a time.
+When the meals ahead can't land the day inside those limits, Today says so: “Dinner alone can't fully recover.” Close the residual still gets as close as it can. [When the day can't land](/help/closing-the-residual/when-the-day-cant-land/) covers the ways out.
 
 ## Add a food in the review
 
-New in Residual 1.1.0. Under each meal in the review, **Add a food** tries a food in that meal to see where the day lands with it. **Choose a food** lets you pick one. **Suggest from my pantry** lists the pantry foods that land the day closest, closest first. An added food is sized with the rest, and you can skip it before you apply.
+Under each meal in the review, **Add a food** tries a food in that meal to see where the day lands with it.
 
-When the amounts alone can't close the day, the review may suggest a food from your own for a meal ahead. If that still isn't enough and you allow Claude, **Ask Claude for something to add** asks Claude for one. Claude picks the food; Residual sizes it.
+- **Choose a food** opens food search.
+- **Suggest from my pantry** lists up to three in-stock pantry foods that land the day closest, closest first, leaving out anything on your [Foods to avoid](/help/your-food/foods-to-avoid/). If none helps, it says “Nothing in your pantry lands the day closer than it lands now.”
 
-## When the day can't land
-
-> [!OFF] “Dinner alone can’t fully recover”
->
-> The meals ahead can't absorb what's been eaten without going past half or double their plan. Close the residual still gets as close as it can, and the sentence under the ring says where the day will end up.
->
-> To do better, tap the `+` at the bottom of Today, then **Suggest a fix**. It finds the best few changes from the foods you already have.
+An added food is sized with the rest. Tap it to change its amount or skip it before you apply.
 
 ## Recalibrate
 
