@@ -1,7 +1,7 @@
 # Residual site
 
 The launch site for Residual, and the domain its share links point to. Built with [Astro](https://astro.build)
-(static output, no server code, no data). Three pages (`/`, `/privacy/`, `/support/`) plus the static share
+(static output, no server code, no data). The home, features and pricing pages, the help (`/help/`), `/support/` and the legal pages, plus the static share
 page and the universal-link association file in `public/`.
 
 ```
