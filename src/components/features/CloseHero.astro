@@ -10,16 +10,16 @@ import '../../styles/today.css';
 // 03c-after), so this fragment shows what the app really does on that day. The home page's LiveSolve is the one
 // that computes in the browser.
 const target = 2100, tol = 100;
-const eaten = 1264, landsBefore = 2293, landsAfter = 2200;
-const before = { p: 157, c: 238, f: 79 }, after = { p: 155, c: 236, f: 71 }, logged = { p: 91, c: 144, f: 36 };
+const eaten = 1264, landsBefore = 2275, landsAfter = 2200;
+const before = { p: 157, c: 238, f: 77 }, after = { p: 155, c: 236, f: 71 }, logged = { p: 91, c: 144, f: 36 };
 const targets = { p: [150, 10], c: [220, 25], f: [70, 15] };
 const meals = [
   { name: 'Snack', macros: '20P · 38C · 11F', kcal: 333, time: '3:30 PM', after: { macros: '19P · 35C · 9F', kcal: 295 } },
-  { name: 'Dinner', macros: '46P · 56C · 32F', kcal: 696, time: '6:30 PM', after: { macros: '44P · 56C · 26F', kcal: 641 } },
+  { name: 'Dinner', macros: '46P · 56C · 30F', kcal: 678, time: '6:30 PM', after: { macros: '44P · 56C · 26F', kcal: 641 } },
 ];
 const changes = [
   { meal: 'Snack', foods: [{ name: 'Apple, Fuji', from: 180, to: 170 }, { name: 'Peanut butter', from: 20, to: 15 }] },
-  { meal: 'Dinner', foods: [{ name: 'Salmon, baked', from: 170, to: 165 }, { name: 'Olive oil', from: 10, to: 5 }] },
+  { meal: 'Dinner', foods: [{ name: 'Salmon, baked', from: 170, to: 165 }, { name: 'Olive oil', from: 8, to: 5 }] },
 ];
 const lands = [
   { label: 'Calories', value: '2,200 / 2,100' },
@@ -55,7 +55,7 @@ const m = (k: 'p' | 'c' | 'f', planned: number) => ({ target: targets[k][0], tol
           </div>
         </div>
 
-        <p class="verdict" data-tone="warn"><strong data-lead>Calories over 193.</strong> <span data-detail>Two meals ahead can absorb it.</span></p>
+        <p class="verdict" data-tone="warn"><strong data-lead>Calories over 175.</strong> <span data-detail>Two meals ahead can absorb it.</span></p>
 
         <h2 class="today__kicker">Your day</h2>
         <ul class="today__rows">
@@ -96,7 +96,7 @@ const m = (k: 'p' | 'c' | 'f', planned: number) => ({ target: targets[k][0], tol
               {lands.map((l) => <li class:list={{ 'is-float': l.floats }}><span>{l.label}</span><span>{l.value}</span></li>)}
             </ul>
           </div>
-          <p class="sheet__note">Tap a food to keep it or set its amount. The rest re-sizes around it.</p>
+          <p class="sheet__note">Tap a food to keep it or set its amount, or add one to a meal to see where the day lands with it. The rest re-sizes around it. Nothing changes until you apply.</p>
           {changes.map((c) => (
             <div class="sheet__group">
               <h3>{c.meal}</h3>
@@ -125,7 +125,7 @@ const m = (k: 'p' | 'c' | 'f', planned: number) => ({ target: targets[k][0], tol
     const target = 2100, tol = 100, eaten = 1264;
     const targets = { p: [150, 10], c: [220, 25], f: [70, 15] } as const;
     const logged = { p: 91, c: 144, f: 36 };
-    const days = { before: { lands: 2293, p: 157, c: 238, f: 79 }, after: { lands: 2200, p: 155, c: 236, f: 71 } };
+    const days = { before: { lands: 2275, p: 157, c: 238, f: 77 }, after: { lands: 2200, p: 155, c: 236, f: 71 } };
     const sheet = root.querySelector<HTMLElement>('[data-sheet]')!;
     const again = stage.querySelector<HTMLElement>('[data-again]')!;
     const pill = root.querySelector<HTMLButtonElement>('[data-pill]')!;
@@ -142,7 +142,7 @@ const m = (k: 'p' | 'c' | 'f', planned: number) => ({ target: targets[k][0], tol
         setBar(el, { target: targets[k][0], tol: targets[k][1], planned: d[k], eaten: logged[k], off: outside ? 'warn' : undefined });
       }
       root.querySelector<HTMLElement>('.verdict')!.dataset.tone = state === 'after' ? 'good' : 'warn';
-      root.querySelector('[data-lead]')!.textContent = state === 'after' ? 'Lands in range.' : 'Calories over 193.';
+      root.querySelector('[data-lead]')!.textContent = state === 'after' ? 'Lands in range.' : 'Calories over 175.';
       root.querySelector('[data-detail]')!.textContent = state === 'after' ? 'Two meals ahead, sized to fit.' : 'Two meals ahead can absorb it.';
       for (const r of rows) {
         const k = r.li.querySelector<HTMLElement>('[data-kcal]')!;
