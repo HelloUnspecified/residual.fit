@@ -47,7 +47,7 @@ A screenshot names a capture in `src/assets/shots/` without `-light.png` or `-da
 
 ## The facts
 
-Every label, button, menu path, message and number in an article is checked against the app's source at the version the article describes (`/Users/csell/source/Apple/Residual`, read-only), and quoted exactly as it appears there: "Calculate from your body", not "Calculate from my body". If it can't be confirmed, leave it out. When the app changes a label, the article changes with it and its `updated` moves.
+Every label, button, menu path, message and number in an article is checked against the app's source at the version the article describes (the app's own repo, read-only, at the tag for that version), and quoted exactly as it appears there: "Calculate from your body", not "Calculate from my body". If it can't be confirmed, leave it out. When the app changes a label, the article changes with it and its `updated` moves.
 
 ## The voice
 
