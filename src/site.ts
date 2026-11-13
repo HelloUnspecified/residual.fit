@@ -30,7 +30,7 @@ export const site = {
   plans: [
     { name: 'Monthly', price: 14.99, months: 1, per: 'a month' },
     { name: 'Quarterly', price: 39.99, months: 3, per: 'every 3 months' },
-    { name: 'Yearly', price: 124.99, months: 12, per: 'a year' },
+    { name: 'Annual', price: 124.99, months: 12, per: 'a year' },
   ],
   developer: 'Clark Sell',
   // The company that publishes Residual: the footer's copyright and maker line. The Terms and the privacy policy
@@ -56,7 +56,7 @@ export const site = {
     'Foods to avoid, allergies included, kept out of plans by name',
     'A grocery list from every planned day, by aisle',
     "Share a meal by link or AirDrop, sized to the other person's targets",
-    'Portions stored in grams, shown in grams, ounces, cups, tablespoons, teaspoons, millilitres or fluid ounces',
+    'Portions stored in grams, shown in grams, ounces, cups, tablespoons, teaspoons, millilitres, fluid ounces or servings',
     'Private iCloud sync, no account, no tracking',
     'CSV export of eaten and planned grams for a spreadsheet, a coach or a dietitian',
   ],

@@ -7,7 +7,7 @@ type Meal = { name: string; what: string; foods: Food[] };
 const yogurt: Food = { name: 'Greek yogurt, nonfat', per100: [10.3, 3.64, 0.37], g: 250 };
 const oil: Food = { name: 'Olive oil', per100: [0, 0, 100], g: 8 };
 const meals: Record<string, Meal> = {
-  breakfast: { name: 'Breakfast', what: 'Berry yogurt bowl', foods: [yogurt, { name: 'Blueberries', per100: [0.74, 14.5, 0.33], g: 100 }, { name: 'Granola', per100: [13.7, 53.9, 24.3], g: 45 }, { name: 'Honey', per100: [0.3, 82.4, 0], g: 15 }] },
+  breakfast: { name: 'Breakfast', what: 'Berry yogurt bowl', foods: [yogurt, { name: 'Blueberries', per100: [0.74, 14.5, 0.33], g: 100 }, { name: 'Granola', per100: [13.7, 53.9, 24.3], g: 45 }, { name: 'Honey', per100: [0.3, 82.4, 0], g: 10 }] },
   oats: { name: 'Breakfast', what: 'Overnight oats', foods: [{ name: 'Rolled oats', per100: [13.2, 67.7, 6.52], g: 60 }, { ...yogurt, g: 150 }, { name: 'Strawberries', per100: [0.67, 7.68, 0.3], g: 100 }, { name: 'Almonds', per100: [21.2, 21.6, 49.9], g: 15 }] },
   lunch: { name: 'Lunch', what: 'Chicken and brown rice bowl', foods: [{ name: 'Chicken breast, roasted', per100: [31, 0, 3.57], g: 150 }, { name: 'Brown rice, cooked', per100: [2.74, 25.6, 0.97], g: 180 }, { name: 'Avocado', per100: [1.96, 8.64, 15.4], g: 50 }, { name: 'Spinach', per100: [2.86, 3.63, 0.39], g: 60 }] },
   snack: { name: 'Snack', what: 'Apple, peanut butter and yogurt', foods: [{ name: 'Apple, Fuji', per100: [0.148, 15.7, 0.162], g: 180 }, { name: 'Peanut butter', per100: [22.2, 22.3, 51.4], g: 20 }, { ...yogurt, g: 150 }] },
@@ -62,7 +62,7 @@ const days = ['W', 'T', 'F', 'S', 'S', 'M', 'T', 'W', 'T', 'F', 'S', 'S', 'M', '
 
     <div class="block" data-reveal>
       <p class="block__say">Plan only from what you have.</p>
-      <p data-pantry-says>Off, the plan leans on your pantry and can add other foods.</p>
+      <p data-pantry-says>Off, the plan leans on what's in stock in your pantry and can add other foods.</p>
       <label class="toggle"><span>Only plan from my pantry</span><input type="checkbox" role="switch" data-pantry /><span class="toggle__track" aria-hidden="true"></span></label>
     </div>
 
@@ -148,8 +148,8 @@ const days = ['W', 'T', 'F', 'S', 'S', 'M', 'T', 'W', 'T', 'F', 'S', 'S', 'M', '
     // The app's own two sentences under its switch (PlanDaySheet). Every food in this day is already in the pantry, so the plan itself doesn't change.
     root.querySelector('[data-pantry]').addEventListener('change', (e) => {
       root.querySelector('[data-pantry-says]').textContent = e.target.checked
-        ? 'Every food in the plan comes from your pantry: no other foods, recipes or saved meals.'
-        : 'Off, the plan leans on your pantry and can add other foods.';
+        ? "Every food in the plan comes from what's in stock in your pantry: no other foods, recipes or saved meals."
+        : "Off, the plan leans on what's in stock in your pantry and can add other foods.";
     });
     root.querySelectorAll('input[name=unit]').forEach((r) => r.addEventListener('change', () => { state.unit = r.value; render(); }));
     root.querySelectorAll('[data-days]').forEach((b) => b.addEventListener('click', () => {

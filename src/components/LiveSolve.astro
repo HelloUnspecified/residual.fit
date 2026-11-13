@@ -152,16 +152,18 @@ const bars = rows.slice(1).map((r) => ({ macro: r.key, name: r.key === 'p' ? 'Pr
     root.querySelector('[data-lead]')!.textContent = line;
     root.querySelector('[data-detail]')!.textContent = !off ? 'Two meals ahead, sized to fit.' : canClose ? 'Two meals ahead can absorb it.' : 'As close as it gets · two meals ahead.';
 
-    // Lunch: the real number stays as it is, the chip says how far it is from the plan.
+    // Lunch: the real number stays as it is. As in the app since 1.0.2 (OffPlanWords, DayComponents), the chip
+    // says "Off plan" and by how much at any drift, and the line turns amber only once the meal's own drift is
+    // past a band of the day (Meal.departs: calories or any macro, fat included).
     root.querySelector('[data-lunch-kcal]')!.textContent = `${fmt(L.cal)} kcal`;
     root.querySelector('[data-lunch-macros]')!.textContent = macros(L);
     const lunchRow = root.querySelector<HTMLElement>('[data-lunch]')!;
     const chip = root.querySelector<HTMLElement>('[data-chip]')!;
     const delta = Math.round(L.cal - planLunch.cal);
-    const crossed = Math.abs(L.cal - planLunch.cal) > rows[0].tol || Math.abs(L.p - planLunch.p) > rows[1].tol;
+    const departs = Math.abs(L.cal - planLunch.cal) > rows[0].tol || Math.abs(L.p - planLunch.p) > rows[1].tol || Math.abs(L.c - planLunch.c) > rows[2].tol || Math.abs(L.f - planLunch.f) > rows[3].tol;
     chip.hidden = delta === 0;
-    chip.textContent = `${crossed ? 'Off plan · ' : ''}${delta > 0 ? '+' : '−'}${fmt(Math.abs(delta))} kcal`;
-    lunchRow.classList.toggle('row--diverged', delta !== 0);
+    chip.textContent = `Off plan · ${delta > 0 ? '+' : '−'}${fmt(Math.abs(delta))} kcal`;
+    lunchRow.classList.toggle('row--diverged', delta !== 0 && departs);
 
     // The meals ahead, and what the solve changed in them until the amounts change again.
     for (const name of ['Snack', 'Dinner']) {

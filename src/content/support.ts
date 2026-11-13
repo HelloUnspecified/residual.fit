@@ -14,8 +14,8 @@ export const help: Help[] = [
   { q: 'How does the Residual Plus subscription work?', a: [
     `Everything in Residual is part of Residual Plus, an auto-renewing subscription. There is no free tier. It costs ${priceList}, and every plan starts with a ${site.trialDays}-day free trial. The App Store shows the price in your currency. <a href="/pricing/">Pricing</a> explains what it pays for.`,
     'Apple handles the payment; we only see whether your subscription is active. To change or cancel, open Settings → your name → Subscriptions. Cancel at least 24 hours before the trial ends and you won\'t be charged.',
-    'On a new iPhone, sign in with the same Apple Account and install Residual. If it asks you to subscribe, tap Restore Purchases.',
-    'When your subscription or trial ends, the app locks until you subscribe again. Your data stays: from the lock screen you can still export it (More → Export to a spreadsheet) and Restore Purchases.',
+    'On a new iPhone, sign in with the same Apple Account and install Residual. If it asks you to subscribe, tap … at the top, then Restore purchases.',
+    'When your subscription or trial ends, the app locks until you subscribe again. Your data stays: from the lock screen\'s … menu you can still Export my data and Restore purchases.',
   ] },
   { q: 'Does Residual work offline?', a: [
     'Residual works without a connection. Targets, logging, the solver and the forecast run on your iPhone. Planning uses Apple Intelligence on iPhones that have it turned on; otherwise plans are built from your pantry, saved meals and built-in foods. Food search shows the foods you\'ve already saved, used or put in your pantry, plus USDA\'s generic foods, which come with the app.',
