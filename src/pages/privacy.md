@@ -4,7 +4,7 @@ title: Privacy
 metaTitle: Privacy policy
 description: What Residual stores, what leaves your phone, who receives it and why, and how to delete it.
 lead: Residual keeps your food and your targets on your iPhone and in your own iCloud. There is no account, no sign-in and no tracking. This page lists everything that leaves your phone, who receives it, and how to delete it.
-updated: 6 November 2026
+updated: 13 November 2026
 ---
 
 Using Residual is also governed by our [Terms of Use](/terms/).
@@ -81,6 +81,8 @@ When you search for a food or scan a barcode, the search text or barcode number 
 
 Nothing else is sent with these requests.
 
+Residual keeps the last 12 plan requests and their answers on your iPhone, whichever planner wrote them. They never leave it unless you choose More → AI planning → Share recent plan requests and send the file yourself, to us or anyone else. If you send it to us, we keep it like a support email.
+
 ## The newsletter and product updates, only if you sign up
 
 We send two kinds of email: the Residual newsletter, and product updates about what's new in the app. Signing up in the app (More → Newsletter & updates) adds you to both. Signing up at the bottom of this website adds you to the newsletter.
@@ -99,7 +101,7 @@ When you share a food or meal with someone, the shared copy travels inside the f
 
 ## Subscriptions
 
-Residual Plus, the subscription that includes everything in the app, is bought, managed and cancelled through Apple. Apple handles the payment. We only see whether your subscription is active; we never see your payment details. When a subscription or free trial ends, the app locks until you subscribe again, but the lock screen still lets you export your data (More → Export to a spreadsheet) and restore purchases.
+Residual Plus, the subscription that includes everything in the app, is bought, managed and cancelled through Apple. Apple handles the payment. We only see whether your subscription is active; we never see your payment details. When a subscription or free trial ends, the app locks until you subscribe again, but the lock screen's … menu still lets you export your data (Export my data) and restore purchases.
 
 ## Checking for updates
 
@@ -124,7 +126,7 @@ We choose providers whose terms limit their use of your data to providing their 
 - **App data** stays on your iPhone and in your iCloud until you delete it. Delete individual items in the app. Delete the app to remove its data from the phone. To remove the iCloud copy, open Settings → your name → iCloud → Manage Storage (or Apps Using iCloud) → Residual.
 - **Your email address for the newsletter and product updates** is kept until you unsubscribe or ask us to delete it.
 - **Support emails** are kept for up to 2 years so we can follow up, then deleted. Ask and we'll delete yours sooner.
-- **Plan requests and food suggestions** are kept by Anthropic as its privacy policy describes. We don't keep a copy.
+- **Plan requests and food suggestions** are kept by Anthropic as its privacy policy describes. We don't keep a copy unless you send us one. Your iPhone keeps the last 12 plan requests and the answers that came back, so you can share them if a plan went wrong. They stay out of your backups, and More → AI planning → Delete recent plan requests removes them.
 
 ## Withdrawing consent and asking us to delete
 
