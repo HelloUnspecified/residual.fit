@@ -9,6 +9,8 @@ page and the universal-link association file in `public/`.
   src/components/       Hero, LiveSolve, Gauges, HowItWorks, Widgets, Promises, Founder, Questions, Start, Footer;
                         DayRing, MacroBar, Phone, Shot (the app's pieces); Ring (the mark)
   src/content/faq.ts    the home page's questions: feeds both the visible cards and the FAQPage structured data
+  src/content/help/     the help articles, Markdown by section (/help/); help-sections.ts lists the sections
+                        and .claude/rules/help.md is the authoring guide. Search is Pagefind, built by `npm run build`
   src/scripts/solve.js  a small port of MacroSolver's re-balance for the page's live demo
   src/scripts/demo-day.js  the demo's targets, logged breakfast, lunch, and meals ahead
   src/assets/shots/     real simulator captures, each in light and dark: scripts/screenshots/capture.sh in the app's repo
@@ -45,7 +47,7 @@ Needs Node 22.22 or newer (`.node-version` pins one; `fnm use` picks it up).
 ```
 npm install
 npm run dev       # http://localhost:4321
-npm run build     # pages in dist/client, the Worker in dist/server
+npm run build     # pages in dist/client, the Worker in dist/server, then the help's search index
 npm run preview   # the built site in the local Workers runtime, /api/subscribe included
 npm run og        # with the dev server running: renders public/og.png (needs Google Chrome)
 npm test          # the route's list choice (tests/)

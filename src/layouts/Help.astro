@@ -1,0 +1,28 @@
+---
+// The help pages' frame: the site's chrome in its plain variant (no section nav, the way Support and Privacy
+// read), one column under the absolute header, the footer. The help home and every article use it.
+import '../styles/help.css';
+import Layout from './Layout.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  modified?: string;
+  schema?: Record<string, unknown>[];
+}
+const { title, description, modified, schema } = Astro.props;
+---
+<Layout title={title} description={description} modified={modified} schema={schema} plain>
+  <div class="help wrap">
+    <div class="frame">
+      <slot />
+    </div>
+  </div>
+  <Footer />
+</Layout>
+
+<style>
+  /* The same top padding as .doc, so the help sits under the absolute header the way Support and Privacy do. */
+  .help { padding-top: 8rem; padding-bottom: clamp(4rem, 8vw, 7rem); }
+</style>

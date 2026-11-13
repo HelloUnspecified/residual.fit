@@ -1,0 +1,23 @@
+---
+// The close of the help home: who to write to, and the one place in the app that fills in the details for you.
+// Each article ends with the same offer in a line of its own (pages/help/[section]/[slug].astro).
+import { site } from '../../site';
+const mail = `mailto:${site.supportEmail}?subject=Residual`;
+---
+<section class="stuck" aria-labelledby="stuck-title">
+  <div>
+    <h2 id="stuck-title">Still stuck?</h2>
+    <p>Write to <a class="link" href={mail}>{site.supportEmail}</a>. In the app, <span class="path"><span>More</span><span>Support &amp; feedback</span></span> opens the email with your app version, iOS version and iPhone model filled in.</p>
+  </div>
+  <a class="button" href={mail}>Email support</a>
+</section>
+
+<style>
+  .stuck { margin-top: clamp(3rem, 6vw, 4.5rem); background: var(--card); border-radius: var(--radius-card); padding: clamp(1.5rem, 3vw, 2.25rem); display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1.25rem var(--gutter); align-items: center; }
+  .stuck h2 { font-family: var(--font-head); font-weight: 500; font-size: var(--step-title); line-height: 1.15; letter-spacing: -0.02em; }
+  .stuck p { margin-top: 0.5rem; color: var(--label2); }
+  @media (max-width: 40em) {
+    .stuck { grid-template-columns: minmax(0, 1fr); }
+    .stuck .button { justify-self: start; }
+  }
+</style>

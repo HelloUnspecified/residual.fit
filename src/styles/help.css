@@ -1,0 +1,59 @@
+/* The help pages' shared pieces: the small capitals over a group, the in-app path, and everything an article's
+   Markdown turns into (src/lib/help-markdown.mjs), which no component's scoped style can reach. Loaded by
+   layouts/Help.astro only. Colors, type and spacing are the tokens in global.css. */
+
+/* The kicker the app uses over a grouped list ("YOUR DAY"): small capitals in the tertiary label. */
+.kicker { font-family: var(--font-text); font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--label3); }
+
+/* A place in the app, "More → Daily targets": each step stays whole, and the path may wrap between steps. In an
+   article's running text it sits on a chip, so it reads as something to find on screen; inside a callout and in
+   the closing lines it's the bold path alone, since a chip on a card's own ground would be a box in a box. */
+.path { font-weight: 600; color: var(--text); }
+.path > span { white-space: nowrap; }
+.path > span + span::before { content: '→'; margin-inline: 0.3em; color: var(--label3); font-weight: 400; }
+.prose :is(p, li, td) > .path { padding: 0.1em 0.5em; border-radius: 8px; background: var(--note); box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.prose .callout .path { padding: 0; background: none; }
+
+/* The article body: the reading column is 42rem, which holds body text near 62 characters a line. */
+.prose { margin-top: 2.5rem; }
+.prose h2 { font-family: var(--font-head); font-weight: 500; font-size: var(--step-lead); line-height: 1.2; letter-spacing: -0.015em; margin-top: 3rem; margin-bottom: 0.75rem; scroll-margin-top: 2rem; }
+.prose h3 { font-size: 1.0625rem; font-weight: 600; margin-top: 1.75rem; margin-bottom: 0.4rem; }
+.prose > :first-child { margin-top: 0; }
+.prose :is(p, ol, ul, figure, .callout, .table) + :is(p, ol, ul, figure, .callout, .table) { margin-top: 1.1rem; }
+.prose a:not([class]) { color: var(--key); text-decoration: none; }
+.prose a:not([class]):hover { text-decoration: underline; text-underline-offset: 0.18em; }
+.prose ul { display: grid; gap: 0.6rem; padding-left: 1.2em; }
+
+/* Steps: every ordered list in an article. The number sits in a circle in the gutter, so the step's own text,
+   inline or in paragraphs, flows as written. */
+.prose ol { counter-reset: step; display: grid; gap: 1rem; padding: 0; list-style: none; }
+.prose ol > li { counter-increment: step; position: relative; padding-left: 2.85rem; min-height: 2rem; }
+.prose ol > li::before { content: counter(step); position: absolute; left: 0; top: -0.1rem; display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 50%; background: var(--card); font-family: var(--font-head); font-weight: 600; font-size: 1rem; line-height: 1; }
+.prose ol > li > p + p { margin-top: 0.5rem; }
+
+/* Callouts. A note is a card on the page's ground. Amber means what it means on Today, the day is off, so only
+   the [!OFF] callout wears it. */
+.callout { padding: 1.1rem 1.25rem; border-radius: var(--radius-row); background: var(--card); }
+.callout__title { display: block; font-weight: 600; margin-bottom: 0.3rem; }
+.callout p { max-width: none; }
+.callout p + p { margin-top: 0.6rem; }
+.callout ol li::before { background: var(--bg); }
+.callout--off { background: var(--amber-wash); }
+.callout--off .callout__title { color: var(--amber); }
+
+/* A table on its own card, scrolling sideways on a narrow phone rather than widening the page. */
+.table { overflow-x: auto; background: var(--card); border-radius: var(--radius-row); padding-inline: 1.25rem; }
+.table table { width: 100%; border-collapse: collapse; font-size: 1rem; }
+.table th { text-align: left; font-size: var(--step-small); font-weight: 600; color: var(--label2); padding: 0.85rem 0.75rem 0.6rem 0; }
+.table td { padding: 0.75rem 0.75rem 0.75rem 0; border-top: 1px solid var(--separator); vertical-align: top; line-height: 1.4; }
+.table :is(th, td):last-child { padding-right: 0; }
+.table td:first-child { font-weight: 600; }
+
+/* A capture in the phone (Phone.astro), with its caption beside it on wider columns and under it on a phone. */
+.shot { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); gap: 1.5rem; align-items: end; margin-block: 2rem; }
+.shot figcaption { color: var(--label2); font-size: var(--step-small); line-height: 1.5; padding-bottom: 1rem; }
+@media (max-width: 34em) {
+  .shot { grid-template-columns: minmax(0, 1fr); }
+  .shot .phone { max-width: 15rem; margin-inline: auto; }
+  .shot figcaption { padding: 0; }
+}

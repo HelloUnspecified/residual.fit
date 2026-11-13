@@ -18,6 +18,7 @@ const year = new Date().getFullYear();
       </ul>
       <ul class="foot__col">
         <li><a class="nav-link" href={site.appStoreUrl}>App Store</a></li>
+        <li><a class="nav-link" href="/help/" aria-current={Astro.url.pathname === '/help/' ? 'page' : undefined}>Help</a></li>
         <li><a class="nav-link" href="/support/">Support</a></li>
         <li><a class="nav-link" href="/privacy/">Privacy</a></li>
         <li><a class="nav-link" href="/terms/">Terms of use</a></li>

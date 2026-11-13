@@ -1,0 +1,66 @@
+---
+// The help home's sections, as cards on the page's ground, each a grouped list the way Settings draws one.
+// Getting started opens the grid with its first steps as numbered tiles; Troubleshooting closes it full width,
+// its rows in two columns. These cards are the help's navigation without JavaScript, so every article is here.
+import type { HelpGroup } from '../../lib/help';
+
+interface Props { groups: HelpGroup[] }
+const { groups } = Astro.props;
+---
+<div class="sections">
+  {groups.map((g) => (
+    <section class:list={['card', { 'card--start': g.layout === 'start', 'card--wide': g.layout === 'wide' }]} aria-labelledby={g.id}>
+      <h2 id={g.id}>{g.name}</h2>
+      <p class="card__desc">{g.blurb}</p>
+      {g.layout === 'start' ? (
+        <ol class="start">
+          {g.articles.map((a) => (
+            <li><a href={a.url}><strong>{a.data.title}</strong>{a.data.summary && <span>{a.data.summary}</span>}</a></li>
+          ))}
+        </ol>
+      ) : (
+        <ul class="rows">
+          {g.articles.map((a) => (
+            <li><a href={a.url}>{a.data.title}<svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M4.25 2 8.25 6l-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg></a></li>
+          ))}
+        </ul>
+      )}
+    </section>
+  ))}
+</div>
+
+<style>
+  .sections { margin-top: clamp(3rem, 6vw, 4.5rem); display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 21rem), 1fr)); gap: var(--gutter); }
+  .card { background: var(--card); border-radius: var(--radius-card); padding: clamp(1.25rem, 2.2vw, 1.75rem) clamp(1.25rem, 2.2vw, 1.75rem) 0.75rem; display: flex; flex-direction: column; scroll-margin-top: 2rem; }
+  .card h2 { font-family: var(--font-head); font-weight: 500; font-size: 1.375rem; line-height: 1.2; letter-spacing: -0.015em; }
+  .card__desc { margin-top: 0.35rem; color: var(--label2); font-size: var(--step-small); line-height: 1.45; }
+  .rows { margin-top: 0.9rem; }
+  .rows li + li { border-top: 1px solid var(--separator); }
+  .rows a { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 2.9rem; padding-block: 0.55rem; text-decoration: none; font-size: 1rem; line-height: 1.3; }
+  .rows a svg { flex: none; color: var(--label3); }
+  .rows a:focus-visible { outline-offset: 0; border-radius: 8px; }
+
+  /* Getting started spans the grid: the first steps in order, numbered. */
+  .card--start { grid-column: 1 / -1; padding-bottom: clamp(1.25rem, 2.2vw, 1.75rem); }
+  .start { margin-top: 1.25rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); gap: 0.75rem; counter-reset: start; }
+  .start li { counter-increment: start; }
+  .start a { display: grid; gap: 0.3rem; align-content: start; height: 100%; padding: 1rem 1.1rem 1.1rem; border-radius: var(--radius-row); background: var(--bg); text-decoration: none; }
+  .start a::before { content: counter(start); font-family: var(--font-head); font-weight: 600; font-size: 1.5rem; line-height: 1; color: var(--label3); }
+  .start strong { font-weight: 600; line-height: 1.3; }
+  .start span { color: var(--label2); font-size: var(--step-small); line-height: 1.45; }
+
+  /* Troubleshooting closes the grid the way Getting started opens it: full width, its rows in two columns. */
+  .card--wide { grid-column: 1 / -1; }
+  @media (min-width: 48em) {
+    .card--wide .rows { columns: 2; column-gap: clamp(1.5rem, 4vw, 3rem); }
+    .card--wide .rows li { break-inside: avoid; border-bottom: 1px solid var(--separator); }
+    .card--wide .rows li + li { border-top: 0; }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .rows a:hover, .start a:hover strong { color: var(--key); }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .rows a, .start strong { transition: color var(--t-hover) ease; }
+  }
+</style>

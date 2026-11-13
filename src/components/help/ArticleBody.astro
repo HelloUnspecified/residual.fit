@@ -1,0 +1,30 @@
+---
+// An article's rendered Markdown, with each screenshot drawn in the phone. The Markdown plugin
+// (src/lib/help-markdown.mjs) leaves a `<figure class="shot" data-shot data-alt>` with its caption where the
+// writer put `![Alt](shot:name "Caption")`; this swaps it for Phone.astro around the light and dark capture, so
+// a capture in an article is the same responsive <picture> as everywhere else on the site.
+import Phone from '../Phone.astro';
+
+interface Props { html: string }
+const { html } = Astro.props;
+
+const unescape = (s: string) => s.replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+const shot = /<figure class="shot" data-shot="([^"]+)" data-alt="([^"]*)"><figcaption>([\s\S]*?)<\/figcaption><\/figure>/g;
+type Part = { html: string } | { name: string; alt: string; caption: string };
+const parts: Part[] = [];
+let last = 0;
+for (const m of html.matchAll(shot)) {
+  parts.push({ html: html.slice(last, m.index) });
+  parts.push({ name: m[1], alt: unescape(m[2]), caption: m[3] });
+  last = m.index! + m[0].length;
+}
+parts.push({ html: html.slice(last) });
+---
+<div class="prose">
+  {parts.map((p) => 'html' in p ? <Fragment set:html={p.html} /> : (
+    <figure class="shot">
+      <Phone name={p.name} alt={p.alt} sizes="(max-width: 34em) 15rem, 15rem" />
+      {p.caption && <figcaption set:html={p.caption} />}
+    </figure>
+  ))}
+</div>
