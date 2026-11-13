@@ -1,6 +1,6 @@
 ---
 title: Everything in More, and how to reach support
-description: A map of Residual's More tab, section by section, and how to get help, report a bug or suggest a feature from Support & feedback.
+description: A map of Residual’s More tab, section by section, and how to get help, report a bug or suggest a feature from Support & feedback.
 lead: More is the last tab. It holds what shapes your plans, how the app looks, your subscription and data, and the way to reach us.
 order: 3
 updated: 13 November 2026

@@ -1,6 +1,6 @@
 ---
 title: Read the Today screen
-description: What each part of Residual's Today screen means, from the ring, the gauges and the bars to the sentence under them, the button at the bottom, your day's meals and the + menu.
+description: What each part of Residual’s Today screen means, from the ring, the gauges and the bars to the sentence under them, the button at the bottom, your day’s meals and the + menu.
 lead: Today is the first tab. From the top it shows the date, the ring and bars for your calories and macros, one sentence that says where the day lands, your meals, and a button at the bottom for the next thing to do.
 order: 1
 updated: 13 November 2026
@@ -11,13 +11,13 @@ since: "1.0"
 
 At the top is the date, with the title **Today** under it. On any other day the title is that day ("Yesterday", "Tomorrow", or a weekday), and the first tab reads **Day** instead of **Today**.
 
-The circle on the right shows the date. Tap it, or press and hold the title, to open "Go to a day", a month calendar. On any other day a **Today** button sits beside the circle and takes you back; tapping the first tab again does the same. Moving between days is in [Plan days ahead](/help/today/plan-the-week/).
+The circle on the right shows the date; tap it for a calendar. Moving between days is in [Plan days ahead](/help/today/plan-the-week/).
 
 ![Residual's Today screen. The ring reads 465 of 2,100 kcal, labelled Eaten. Bars for protein, carbs and fat show eaten and planned grams against each target, and Fiber reads 31 g, 2 unknown. The sentence reads Lands in range. Three meals ahead, sized to fit. Under YOUR DAY, Breakfast is logged and locked; Lunch, Snack and Dinner are planned. The button at the bottom reads Log lunch.](shot:01-today "A day under way: breakfast eaten, three meals ahead, and the next step is to log lunch.")
 
 ## The ring and the bars
 
-The ring is your calories. The bars beside it are protein, carbs and fat. On each bar, the solid part is what you've eaten and the lighter part is what's still planned. The shaded band is your range and the tick is your target. Landing anywhere inside the band counts.
+The ring is your calories. The bars beside it are protein, carbs and fat. On each bar, the solid part is what you've eaten and the lighter part is what's still planned. The shaded stretch is your range and the tick is your target. Landing anywhere inside the range counts.
 
 A dot marks where the day will land if you eat the plan: green in range, amber or red when it's off.
 
@@ -55,7 +55,7 @@ The wide button at the bottom always names your next step, and it changes with t
 | N kcal still to plan. | The day is short and there's room for another meal. | **Plan the rest** |
 | Lands in range. | Eat the plan and every target lands. | **Log** and the next meal, such as **Log lunch** |
 | Plan lands over. / Plan lands short. | Nothing is eaten yet, and the plan misses a range. | **Close the residual**, "Size the N meals to fit" |
-| A target and how far off, such as "Calories over 193." | Something you logged pushed the day out of range. | **Close the residual**, "Re-size the N meals ahead" |
+| A target and how far off, such as "Calories over 175." | Something you logged pushed the day out of range. | **Close the residual**, "Re-size the N meals ahead" |
 | The same, then "Dinner alone can't fully recover." | The meals ahead can't absorb it within their limits. | **Close the residual** in red, "Re-size the last meal" |
 | You changed your numbers. | New targets leave this plan off. | **Close the residual**, or **Plan the rest** |
 | Day done. | Every meal is logged and every target is in range. | **Plan tomorrow** |
@@ -63,11 +63,9 @@ The wide button at the bottom always names your next step, and it changes with t
 
 On a past day the button logs a meal you haven't, or offers **Copy this day**. "As close as it gets" after the verdict means the meals ahead have already been sized as far as they can go.
 
-![Residual's Today screen after an off-plan lunch. The ring and the number 1,264 are amber. The sentence reads Calories over 175. Two meals ahead can absorb it. Lunch is logged with a chip reading Off plan, plus 237 kcal. The button at the bottom reads Close the residual, Re-size the 2 meals ahead.](shot:03a-drift "Lunch ran over. The sentence says by how much, and the button becomes Close the residual.")
+![Residual's Today screen after an off-plan lunch. The number in the ring, 1,264 of 2,100 kcal, is amber. The sentence reads Calories over 175. Two meals ahead can absorb it. Lunch is logged with a chip reading Off plan, plus 237 kcal. The button at the bottom reads Close the residual, Re-size the 2 meals ahead.](shot:03a-drift "Lunch ran over. The sentence says by how much, and the button becomes Close the residual.")
 
-> [!OFF] Amber means the day is off
->
-> Amber and red on Today mean the day won't land in range as it stands. The button becomes **Close the residual**: tap it to re-size the meals you haven't eaten. See [Close the residual](/help/closing-the-residual/close-the-residual/), and [When the day can't land](/help/closing-the-residual/when-the-day-cant-land/) for red.
+Amber and red on Today mean the day won't land in range as it stands. See [Close the residual](/help/closing-the-residual/close-the-residual/), and [When the day can't land](/help/closing-the-residual/when-the-day-cant-land/) for red.
 
 ## YOUR DAY
 

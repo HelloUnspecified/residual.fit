@@ -1,6 +1,6 @@
 ---
 title: Make a recipe
-description: Turn a dish you make from weighed ingredients into one food, weigh it when it's done, and add it to any meal by the gram.
+description: Turn a dish you make from weighed ingredients into one food, weigh it when it’s done, and add it to any meal by the gram.
 lead: "A recipe is a dish you make from weighed ingredients: a stew, a chopped salad, a sauce. Residual adds up what went in, and the dish becomes one food you add by the gram. The planner and Suggest a fix can reach for it like any other food."
 order: 5
 updated: 13 November 2026
