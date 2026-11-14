@@ -44,7 +44,7 @@ const nameList = `${names.slice(0, -1).join(', ')} and ${names.at(-1)}`;
 
     <section class="block" aria-labelledby="side-title">
       <h2 id="side-title">Side by side</h2>
-      <p class="block__lead">The same {inWords(rows.length)} questions for each app, in a few words. Open any value with an arrow for the full detail and its source. Where an app doesn’t say, neither do we.</p>
+      <p class="block__lead">The same {inWords(rows.length)} questions for each app, in a few words. Open a row for the full detail and its sources. Where an app doesn’t say, neither do we.</p>
       <CompareTable apps={competitors} caption={`Residual and ${inWords(competitors.length)} other apps`} note={`Each app’s facts ${checked}, on its own site, help pages or App Store listing.`} number={number} linkHeads />
       <p class="checked">US prices, from each app’s own pricing page or help, before tax. Apps change; if something here is out of date, <a class="link" href={`mailto:${site.supportEmail}?subject=Compare`}>tell me</a> and I’ll fix it.</p>
     </section>
