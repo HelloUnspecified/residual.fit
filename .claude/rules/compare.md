@@ -23,6 +23,10 @@ page per app. Both come from one route (`src/pages/compare/[...slug].astro`) and
 - `src/content/compare/index.ts`: the list of apps, in page order. `types.ts` documents every field and the text
   marks: `**bold**`, `[text](/link/)`, `[sourceid]` or `[id, id]` after the sentence it backs, and `{roadmap}`.
 - `src/components/compare/`: the overview, the app page, the table, the illustration, the sources list, the close.
+- The table shows each cell's short form. A row with any detail has one control, a `<button aria-expanded>` on its
+  name, that opens the detail under every value in that row at once; a row with no detail has none. A few lines of
+  script in `CompareTable.astro` toggle it; without JavaScript every detail simply shows. A link to `#row-<id>` (each
+  source's "Backs" line) opens that row.
 - Source numbers are counted, never typed: the overview numbers every app's sources in one run, an app's page from 1.
 - `site.roadmapUrl` in `src/site.ts` is `null` until `/roadmap/` exists. While it is null, roadmap pointers say
   "planned for a later version" as text; set it and they become "On the roadmap" links. Never link a page that

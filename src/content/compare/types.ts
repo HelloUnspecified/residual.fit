@@ -26,7 +26,7 @@ export interface Group {
   rows: Row[];
 }
 
-/** One value in the table. `short` is what the table shows; `detail` opens under it with the sources. */
+/** One value in the table. `short` is what the table shows; `detail` shows under it, with the sources, when its row is opened. */
 export interface Cell {
   mark: Mark;
   short: string;

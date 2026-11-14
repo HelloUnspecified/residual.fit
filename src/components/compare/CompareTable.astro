@@ -1,8 +1,15 @@
 ---
-// The comparison table: the rows of content/compare/rows.ts, Residual's column first, then the apps given. A value
-// with more to say is a disclosure: the short form is its summary, and opening it shows the full sentence with its
-// source numbers. Real table markup with a caption and headers; the ARIA roles keep it a table for VoiceOver when a
-// phone's layout changes how the rows display.
+// The comparison table: the rows of content/compare/rows.ts, Residual's column first, then the apps given. Each
+// value shows its short form; a row with more to say has one control, a button on its name, and opening it shows
+// the full sentence and its source numbers under every value in that row at once, each in its own column. Real table
+// markup with a caption and headers; the ARIA roles keep it a table for VoiceOver when a phone's layout changes how
+// the rows display.
+//
+// The row control is a real <button aria-expanded> rather than a styled checkbox: a screen reader then announces
+// "Plans your day, button, collapsed", which a checkbox can't say, and Space and Enter work without help. A few lines
+// of script toggle it. Without JavaScript the `.js` class is never set, so every row's detail simply shows: the page
+// is complete without script, the way the rest of the site's hidden states work. A link to a row (#row-…, as in each
+// source's "Backs" line) opens it.
 //
 // With more than one app (the overview), a row of radio buttons picks which app stands beside Residual on a narrow
 // screen, in CSS alone with :has(). Its rules go by position, the nth app, so they cover up to six apps without
@@ -27,12 +34,13 @@ const { apps, caption, note, number, linkHeads = false } = Astro.props;
 const many = apps.length > 1;
 const columns = apps.length + 2;
 const markClass: Record<Mark, string> = { yes: 'yes', partly: 'part', no: 'no', none: 'none' };
-// The short form's last word stays on the line with the arrow.
-const split = (short: string) => {
-  const cut = short.lastIndexOf(' ') + 1;
-  return [short.slice(0, cut), short.slice(cut)];
-};
 const roadmapLink = Boolean(site.roadmapUrl);
+// Every value in a row, Residual's first, with whether it has anything to show when the row opens.
+const valuesOf = (rowId: string) =>
+  [{ app: undefined as Competitor | undefined, cell: residual.cells[rowId] }, ...apps.map((app) => ({ app, cell: app.cells[rowId] }))].map((v) => {
+    const roadmap = !v.app && 'roadmap' in v.cell && Boolean(v.cell.roadmap) && roadmapLink;
+    return { ...v, roadmap, id: `d-${rowId}-${v.app?.key ?? 'res'}`, more: Boolean(v.cell.detail) || roadmap };
+  });
 ---
 <div class:list={['cmpwrap', { 'cmpwrap--many': many }]}>
   {many && (
@@ -47,7 +55,7 @@ const roadmapLink = Boolean(site.roadmapUrl);
   )}
   <div class="tablecard">
     <table class:list={['cmp', { 'cmp--two': !many }]} role="table">
-      <caption><strong>{caption}</strong><span>{note} Values with an arrow open to the full detail and its sources.</span></caption>
+      <caption><strong>{caption}</strong><span>{note} Open a row for the full detail and its sources.</span></caption>
       <thead role="rowgroup">
         <tr role="row">
           <td class="corner"></td>
@@ -58,35 +66,33 @@ const roadmapLink = Boolean(site.roadmapUrl);
       {groups.map((g) => (
         <tbody role="rowgroup">
           <tr class="grp" role="row"><th colspan={columns} scope="colgroup" class="kicker" role="columnheader">{g.name}</th></tr>
-          {g.rows.map((row) => (
-            <tr id={`row-${row.id}`} role="row">
-              <th scope="row" role="rowheader">{row.label}</th>
-              {[{ app: undefined, cell: residual.cells[row.id] }, ...apps.map((app) => ({ app, cell: app.cells[row.id] }))].map(({ app, cell }) => {
-                const [head, last] = split(cell.short);
-                const more = Boolean(cell.detail) || (!app && 'roadmap' in cell && cell.roadmap && roadmapLink);
-                return (
+          {g.rows.map((row) => {
+            const values = valuesOf(row.id);
+            const opens = values.filter((v) => v.more);
+            return (
+              <tr id={`row-${row.id}`} role="row" data-row>
+                <th scope="row" role="rowheader">
+                  {opens.length ? (
+                    <button type="button" class="rowbtn" aria-expanded="false" aria-controls={opens.map((v) => v.id).join(' ')}>{row.label.slice(0, row.label.lastIndexOf(' ') + 1)}<span class="nw">{row.label.slice(row.label.lastIndexOf(' ') + 1)}<svg class="chev" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M3 4.5 6 7.5l3-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg></span></button>
+                  ) : row.label}
+                </th>
+                {values.map(({ app, cell, id, more, roadmap }) => (
                   <td role="cell">
                     <div class:list={['v', `v--${markClass[cell.mark]}`]}>
                       <span class:list={['m', `m--${markClass[cell.mark]}`]} aria-hidden="true"></span>
-                      <div class="v__t">
-                        {more ? (
-                          <details class="v__d">
-                            <summary><span class="v__s">{head}<span class="nw">{last}<svg class="chev" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M3 4.5 6 7.5l3-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg></span></span></summary>
-                            <p class="v__more">
-                              {app ? <Rich text={cell.detail} app={app} number={number} extra={'sources' in cell ? cell.sources : []} /> : <Rich text={cell.detail} />}
-                              {!app && 'roadmap' in cell && cell.roadmap && roadmapLink && <> <a class="link roadmap" href={site.roadmapUrl!}>On the roadmap</a></>}
-                            </p>
-                          </details>
-                        ) : (
-                          <span class="v__s">{cell.short}</span>
-                        )}
-                      </div>
+                      <div class="v__t"><span class="v__s">{cell.short}</span></div>
                     </div>
+                    {more && (
+                      <p class="v__more" id={id}>
+                        {app ? <Rich text={cell.detail} app={app} number={number} extra={'sources' in cell ? cell.sources : []} /> : <Rich text={cell.detail} />}
+                        {roadmap && <> <a class="link roadmap" href={site.roadmapUrl!}>On the roadmap</a></>}
+                      </p>
+                    )}
                   </td>
-                );
-              })}
-            </tr>
-          ))}
+                ))}
+              </tr>
+            );
+          })}
         </tbody>
       ))}
     </table>
@@ -95,10 +101,35 @@ const roadmapLink = Boolean(site.roadmapUrl);
       <li><span class="m m--part" aria-hidden="true"></span>Partly: only some of it</li>
       <li><span class="m m--no" aria-hidden="true"></span>Doesn’t</li>
       <li>No mark: a description, or the app doesn’t say</li>
-      <li><span class="legend__chev"><svg class="chev" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M3 4.5 6 7.5l3-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg></span>Opens for detail and sources</li>
+      <li><span class="legend__chev"><svg class="chev" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M3 4.5 6 7.5l3-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg></span>Opens the row’s detail and sources</li>
     </ul>
   </div>
 </div>
+
+<script>
+  // One button per row opens the detail under every value in it. Without this script the details all show (the
+  // `.js` class that hides them is never set), so the table is complete either way. A link to a row opens it.
+  const setOpen = (row: Element, open: boolean) => {
+    row.classList.toggle('is-open', open);
+    row.querySelector('.rowbtn')?.setAttribute('aria-expanded', String(open));
+  };
+  for (const row of document.querySelectorAll('tr[data-row]')) {
+    row.querySelector('.rowbtn')?.addEventListener('click', () => setOpen(row, !row.classList.contains('is-open')));
+  }
+  const openTarget = () => {
+    const id = decodeURIComponent(location.hash.slice(1));
+    const row = id.startsWith('row-') ? document.getElementById(id) : null;
+    if (row?.matches('tr[data-row]')) setOpen(row, true);
+  };
+  addEventListener('hashchange', openTarget);
+  // Following the same link again changes no hash, so a click on any link to a row opens it too.
+  addEventListener('click', (e) => {
+    const link = (e.target as Element).closest?.('a[href^="#row-"]');
+    const row = link && document.getElementById(link.getAttribute('href')!.slice(1));
+    if (row?.matches('tr[data-row]')) setOpen(row, true);
+  });
+  openTarget();
+</script>
 
 <style>
   /* The control that picks which app stands beside Residual. Hidden on a wide screen, where every column fits. It
@@ -147,19 +178,21 @@ const roadmapLink = Boolean(site.roadmapUrl);
   .v { display: flex; gap: 0.5rem; align-items: baseline; }
   .v__t { min-width: 0; }
   .v--no .v__t { color: var(--label2); }
-  /* The short form is the summary, with the key-blue arrow that marks every control on the site; opening it shows
-     the full researched sentence and its source numbers under it. */
-  .v__d > summary { display: block; cursor: pointer; list-style: none; border-radius: 6px; }
-  .v__d > summary::-webkit-details-marker { display: none; }
-  .v__d > summary:focus-visible { outline-offset: 2px; }
+  /* The row's one control: its name, with the key-blue arrow that marks every control on the site. The whole name
+     is the hit target; opening it shows the full sentence and its source numbers under every value in the row. */
+  .rowbtn { display: block; width: 100%; padding: 0; text-align: left; font: inherit; color: inherit; border-radius: 6px; cursor: pointer; }
+  .rowbtn:focus-visible { outline-offset: 2px; }
+  /* The arrow stays on the line with the name's last word, never alone on a line of its own. */
   .nw { white-space: nowrap; }
   .chev { display: inline-block; flex: none; margin-left: 0.3rem; color: var(--key); vertical-align: 0.05em; }
-  .v__d[open] > summary .chev { transform: rotate(180deg); }
+  .is-open .rowbtn .chev { transform: rotate(180deg); }
+  /* Hidden only while script runs to open them again; without it every detail shows. */
+  :global(.js) .cmp tr:not(.is-open) .v__more { display: none; }
   .v__more { margin-top: 0.45rem; padding: 0.55rem 0.7rem; border-radius: 12px; background: var(--bg); color: var(--label2); font-size: 0.875rem; line-height: 1.45; max-width: none; }
   .roadmap { white-space: nowrap; }
   .legend__chev { display: inline-flex; color: var(--key); }
   .legend__chev .chev { margin-left: 0; }
-  @media (hover: hover) and (pointer: fine) { .v__d > summary:hover .v__s { color: var(--key); } }
+  @media (hover: hover) and (pointer: fine) { .rowbtn:hover { color: var(--key); } }
   .m { flex: none; position: relative; top: 0.05em; width: 0.6875rem; height: 0.6875rem; border-radius: 50%; overflow: hidden; }
   .m--yes { background: var(--text); }
   .m--part { box-shadow: inset 0 0 0 1.5px var(--text); }
@@ -208,13 +241,17 @@ const roadmapLink = Boolean(site.roadmapUrl);
     .cmp tbody tr:not(.grp) > * { display: block; width: auto; min-width: 0; padding: 0; border: 0; }
     .cmp tbody th[scope="row"] { grid-column: 1 / -1; margin-bottom: 0.3rem; font-size: 0.875rem; color: var(--label2); font-weight: 600; }
     .cmpwrap--many .cmp tbody th[scope="row"], .cmpwrap--many .cmp td { width: auto; }
+    /* The row is one grid here, so the wash goes on the row, not on each cell with gaps between. */
+    .cmp tr:target { background: var(--note); }
+    .cmp tr:target > * { background: none; animation: none; }
   }
 
   @media (prefers-reduced-motion: no-preference) {
     .show__seg span { transition: background-color var(--t-ui) var(--ease-out); }
-    .cmp thead th a, .v__s { transition: color var(--t-hover) ease; }
-    .v__d .chev { transition: transform var(--t-ui) var(--ease-out); }
+    .cmp thead th a, .rowbtn { transition: color var(--t-hover) ease; }
+    .rowbtn .chev { transition: transform var(--t-ui) var(--ease-out); }
     .cmp tr:target > * { animation: cmp-land 1.6s var(--ease-soft); }
+    @media (max-width: 40em) { .cmp tr:target > * { animation: none; } .cmp tr:target { animation: cmp-land 1.6s var(--ease-soft); } }
   }
   @keyframes cmp-land { from { background: var(--track); } }
 </style>
