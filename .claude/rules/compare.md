@@ -29,9 +29,9 @@ page per app. Both come from one route (`src/pages/compare/[...slug].astro`) and
   (not on a link, and not when the click ends a text selection); without JavaScript every detail simply shows. A link to `#row-<id>` (each
   source's "Backs" line) opens that row.
 - Source numbers are counted, never typed: the overview numbers every app's sources in one run, an app's page from 1.
-- `site.roadmapUrl` in `src/site.ts` is `null` until `/roadmap/` exists. While it is null, roadmap pointers say
-  "planned for a later version" as text; set it and they become "On the roadmap" links. Never link a page that
-  doesn't exist yet.
+- `site.roadmapUrl` in `src/site.ts` is the roadmap's address (`/roadmap/`), so roadmap pointers are "On the roadmap"
+  links. Set it to `null` and they say "planned for a later version" as text. Use a pointer only for something the
+  roadmap page really lists, and never link a page that doesn't exist.
 
 ## Tone, in the owner's words
 
