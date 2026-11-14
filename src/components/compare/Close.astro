@@ -1,0 +1,25 @@
+---
+// The close of every compare page: one sentence and one action on empty ground, smaller than the features page's,
+// because the reader came to compare, not to be sold to.
+import { site } from '../../site';
+
+interface Props {
+  line: string;
+}
+const { line } = Astro.props;
+---
+<section class="end" aria-labelledby="end-title">
+  <h2 id="end-title">{site.trialDays} days, then decide.</h2>
+  <p>{line}</p>
+  <div class="end__actions">
+    <a class="button" href={site.appStoreUrl}>Try it free for {site.trialDays} days</a>
+    <a class="link" href="/pricing/">What it costs, and why</a>
+  </div>
+</section>
+
+<style>
+  .end { margin-top: clamp(5rem, 10vw, 9rem); padding-bottom: clamp(3rem, 8vw, 6rem); }
+  .end h2 { font-family: var(--font-head); font-weight: 500; font-size: var(--step-title); line-height: 1.15; letter-spacing: -0.02em; }
+  .end p { margin-top: 0.75rem; color: var(--label2); font-size: 1.125rem; line-height: 1.55; max-width: 35rem; }
+  .end__actions { margin-top: 1.5rem; display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; }
+</style>

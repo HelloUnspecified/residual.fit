@@ -1,0 +1,96 @@
+---
+// /compare/: what each app is for, a card each, then every app side by side, then the sources. The tone is the
+// owner's: "I think there is room for all of these. Those apps are great, I don't want to say they're terrible or
+// better. we're just different." So no ranking, either way; each card says what the app is for and who it suits.
+import Ring from '../Ring.astro';
+import Rich from './Rich.astro';
+import CompareTable from './CompareTable.astro';
+import Sources from './Sources.astro';
+import Close from './Close.astro';
+import { competitors, residual, rows, numberSources, checkedDates, inWords } from '../../content/compare/index';
+import { site } from '../../site';
+
+const { number } = numberSources(competitors);
+const dates = checkedDates();
+const checked = dates.length === 1 ? `checked ${dates[0]}` : 'checked on the dates in Sources';
+const names = competitors.map((a) => a.name);
+const nameList = `${names.slice(0, -1).join(', ')} and ${names.at(-1)}`;
+---
+<div class="cmp-page wrap">
+  <div class="frame">
+    <section class="intro" aria-labelledby="page-title">
+      <h1 id="page-title" class="head">How Residual compares</h1>
+      <p class="lead">Residual is for one thing: you plan the day from your own food, log what really happened, and the meals still to come re-size so the day lands in your ranges. {nameList} are good at different jobs. Here’s what each one is for, so you can pick the one that suits how you eat.</p>
+    </section>
+
+    <section class="block" aria-labelledby="who-title">
+      <h2 id="who-title">Which one is for you</h2>
+      <p class="block__lead">What each one is for, in a sentence or two. There’s room for all of them.</p>
+      <div class="picks">
+        <article class="pick" id="for-residual">
+          <h3><Ring size="0.9em" />{residual.name}</h3>
+          <p><strong>Pick {residual.name}</strong> if <Rich text={residual.forYouIf} /></p>
+          <a class="link pick__go" href="/features/">What Residual does <span aria-hidden="true">→</span></a>
+        </article>
+        {competitors.map((app) => (
+          <article class="pick" id={`for-${app.slug}`}>
+            <h3>{app.name}</h3>
+            <p><strong>Pick {app.name}</strong> if <Rich text={app.forYouIf} app={app} number={number} /></p>
+            <a class="link pick__go" href={`/compare/${app.slug}/`}>Residual and {app.name} <span aria-hidden="true">→</span></a>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="side-title">
+      <h2 id="side-title">Side by side</h2>
+      <p class="block__lead">The same {inWords(rows.length)} questions for each app, in a few words. Open any value with an arrow for the full detail and its source. Where an app doesn’t say, neither do we.</p>
+      <CompareTable apps={competitors} caption={`Residual and ${inWords(competitors.length)} other apps`} note={`Each app’s facts ${checked}, on its own site, help pages or App Store listing.`} number={number} linkHeads />
+      <p class="checked">US prices, from each app’s own pricing page or help, before tax. Apps change; if something here is out of date, <a class="link" href={`mailto:${site.supportEmail}?subject=Compare`}>tell me</a> and I’ll fix it.</p>
+    </section>
+
+    <section class="block" aria-labelledby="src-title">
+      <h2 id="src-title">Sources</h2>
+      <p class="block__lead">Every fact about another app comes from that app’s own site, help pages or App Store listing, {checked}. A number in a value’s detail opens its entry here.</p>
+      <div class="srcs">
+        {competitors.map((app) => <Sources app={app} number={number} page="overview" />)}
+      </div>
+      <p class="ours">Residual’s column describes version {residual.version}, from this site’s <a class="link" href="/features/">Features</a>, <a class="link" href="/pricing/">Pricing</a> and <a class="link" href="/privacy/">Privacy</a> pages.</p>
+    </section>
+
+    <Close line="Plan a real week with the whole app. If another app suits how you eat, cancel before the trial ends and you’ve paid nothing." />
+  </div>
+</div>
+
+<style>
+  /* The same top padding as the documents, so the content sits under the absolute header. */
+  .cmp-page { padding-top: 8rem; }
+  .intro .head { max-width: 16ch; }
+  .intro .lead { margin-top: 1.25rem; max-width: 44ch; }
+
+  /* A section of the page: a heading in the title step, an optional short lead in the secondary label. */
+  .block { margin-top: clamp(4.5rem, 9vw, 8rem); }
+  .block > h2 { font-family: var(--font-head); font-weight: 500; font-size: var(--step-title); line-height: 1.15; letter-spacing: -0.02em; }
+  .block__lead { margin-top: 0.75rem; color: var(--label2); font-size: 1.125rem; line-height: 1.55; max-width: 40rem; }
+
+  /* "Which one is for you": one card per app, the same parts in the same order, none of them louder. Five cards:
+     three over two on a wide screen, Residual and then two by two on a tablet, one column on a phone. */
+  .picks { margin-top: clamp(1.75rem, 3vw, 2.5rem); display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  @media (min-width: 40em) { .picks { grid-template-columns: repeat(2, minmax(0, 1fr)); } .pick:first-child { grid-column: 1 / -1; } }
+  @media (min-width: 64em) { .picks { grid-template-columns: repeat(6, minmax(0, 1fr)); } .pick, .pick:first-child { grid-column: span 2; } .pick:nth-child(n+4) { grid-column: span 3; } }
+  .pick { background: var(--card); border-radius: var(--radius-card); padding: clamp(1.25rem, 2.2vw, 1.75rem); display: flex; flex-direction: column; gap: 0.6rem; scroll-margin-top: 2rem; }
+  .pick h3 { display: flex; align-items: center; gap: 0.45rem; font-family: var(--font-head); font-weight: 500; font-size: 1.375rem; line-height: 1.2; letter-spacing: -0.015em; }
+  .pick p { color: var(--label2); font-size: 1rem; line-height: 1.5; }
+  .pick p > strong { color: var(--text); font-weight: 600; }
+  .pick__go { margin-top: auto; padding-top: 0.6rem; font-size: 1rem; }
+
+  .checked { margin-top: 0.75rem; color: var(--label2); font-size: var(--step-small); max-width: none; }
+
+  .srcs { margin-top: clamp(1.5rem, 3vw, 2rem); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: start; }
+  @media (max-width: 64em) { .srcs { grid-template-columns: minmax(0, 1fr); } }
+  .ours { margin-top: 0.5rem; color: var(--label2); font-size: var(--step-small); max-width: 46rem; }
+
+  @media (hover: hover) and (pointer: fine) {
+    .pick__go:hover { text-decoration: underline; text-underline-offset: 0.18em; }
+  }
+</style>

@@ -1,0 +1,85 @@
+---
+// One app's sources, as one closed disclosure with the date they were checked: the reader opens the list they want.
+// Each entry says what on this page it backs, worked out from the data, so the list can't drift from the cells.
+// A source number in the text links to its entry: browsers that open a <details> for a fragment do it themselves,
+// and ::details-content backs that up where it's supported.
+import { groups, sourceAnchor } from '../../content/compare/index';
+import { citedIds } from '../../content/compare/render';
+import type { Competitor } from '../../content/compare/types';
+
+interface Props {
+  app: Competitor;
+  number: (app: Competitor, id: string) => number | undefined;
+  /** The overview backs rows and the app's "Which one is for you" card; an app's page backs rows and its own text. */
+  page: 'overview' | 'app';
+}
+const { app, number, page } = Astro.props;
+const p = app.page;
+
+// The page's text, in the order a reader meets it, with the name each part goes by in a "Backs" line.
+const prose: [string, string[]][] = page === 'overview'
+  ? [['its card in “Which one is for you”', [app.forYouIf]]]
+  : [
+      ['the summary', [p.summary]],
+      [`“Pick ${app.name} if…”`, [...p.pickThem, p.pickThemNote]],
+      ['the difference', p.difference.paragraphs],
+      ['the illustration', [...(p.figure.them.notes ?? []), p.figure.them.lands ?? '', ...(p.figure.us.notes ?? []), p.figure.us.lands ?? '']],
+      ['the price', [p.price.sources.map((s) => `[${s.id}]`).join(' ')]],
+      ['switching', [p.switching.movingOver, p.switching.keepingBoth]],
+    ];
+
+const backs = (id: string) => {
+  const rows = groups.flatMap((g) => g.rows).filter((r) => app.cells[r.id]?.sources?.includes(id) || citedIds(app.cells[r.id]?.detail ?? '').includes(id));
+  const text = prose.filter(([, texts]) => texts.some((t) => citedIds(t).includes(id))).map(([name]) => name);
+  return { rows, text };
+};
+const domain = (url: string) => new URL(url).hostname.replace(/^www\./, '');
+const elsewhere = page === 'overview' ? { href: `/compare/${app.slug}/`, label: `the Residual and ${app.name} page` } : { href: '/compare/', label: 'the overview' };
+---
+<details class="srcgrp" id={`sources-${app.key}`}>
+  <summary><span>Sources for {app.name} · {app.sources.length}, checked {app.checked}</span><svg class="chev" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M3 4.5 6 7.5l3-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg></summary>
+  <ol class="src">
+    {app.sources.map((s) => {
+      const b = backs(s.id);
+      const none = !b.rows.length && !b.text.length;
+      return (
+        <li id={sourceAnchor(app, s.id)}>
+          <span class="src__n">{number(app, s.id)}</span>
+          <div>
+            <span class="src__t"><a class="link" href={s.url} rel="noopener">{s.title}</a> <span class="src__dom">{domain(s.url)}</span></span>
+            <span class="src__d">
+              Checked {app.checked}. Backs {none
+                ? <a href={elsewhere.href}>{elsewhere.label}</a>
+                : <>{b.rows.map((r, i) => <>{i > 0 && ', '}<a href={`#row-${r.id}`}>{r.label}</a></>)}{b.text.map((t, i) => <>{(b.rows.length || i > 0) && ', '}{t}</>)}</>}.
+            </span>
+          </div>
+        </li>
+      );
+    })}
+  </ol>
+</details>
+
+<style>
+  .srcgrp { background: var(--card); border-radius: var(--radius-card); }
+  .srcgrp > summary { display: flex; justify-content: space-between; align-items: center; gap: 1rem; min-height: 3.25rem; padding: 0.8rem 1.25rem; cursor: pointer; list-style: none; font-weight: 600; font-size: 1rem; line-height: 1.3; border-radius: var(--radius-card); }
+  .srcgrp > summary::-webkit-details-marker { display: none; }
+  .chev { flex: none; color: var(--key); }
+  .srcgrp[open] > summary .chev { transform: rotate(180deg); }
+  .srcgrp:has(:target)::details-content { content-visibility: visible; display: block; }
+  .src { border-top: 1px solid var(--separator); padding: 0.25rem 0.75rem 0.5rem; }
+  .src li { display: grid; grid-template-columns: 1.75rem minmax(0, 1fr); gap: 0.5rem; padding: 0.8rem 0.5rem; scroll-margin-top: 6rem; }
+  .src li + li { border-top: 1px solid var(--separator); }
+  .src li:target { background: var(--note); }
+  .src__n { font-family: var(--font-head); font-weight: 600; color: var(--label3); font-variant-numeric: tabular-nums; }
+  .src__t { display: block; font-size: 1rem; line-height: 1.35; }
+  .src__t .link { overflow-wrap: anywhere; }
+  .src__dom { color: var(--label2); font-size: var(--step-small); }
+  .src__d { display: block; margin-top: 0.15rem; color: var(--label2); font-size: var(--step-small); line-height: 1.45; }
+  .src__d a { color: var(--label2); text-underline-offset: 0.18em; text-decoration-color: var(--label3); }
+  .src__d a:hover { color: var(--key); text-decoration-color: currentColor; }
+  @media (prefers-reduced-motion: no-preference) {
+    .chev { transition: transform var(--t-ui) var(--ease-out); }
+    .src li:target { animation: src-land 1.6s var(--ease-soft); }
+  }
+  @keyframes src-land { from { background: var(--track); } }
+</style>

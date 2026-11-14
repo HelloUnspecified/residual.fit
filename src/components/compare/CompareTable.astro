@@ -1,0 +1,218 @@
+---
+// The comparison table: the rows of content/compare/rows.ts, Residual's column first, then the apps given. A value
+// with more to say is a disclosure: the short form is its summary, and opening it shows the full sentence with its
+// source numbers. Real table markup with a caption and headers; the ARIA roles keep it a table for VoiceOver when a
+// phone's layout changes how the rows display.
+//
+// With more than one app (the overview), a row of radio buttons picks which app stands beside Residual on a narrow
+// screen, in CSS alone with :has(). Its rules go by position, the nth app, so they cover up to six apps without
+// naming any (check.ts holds the limit). Without :has(), every column stays and the card scrolls sideways inside
+// itself, never the page.
+import Ring from '../Ring.astro';
+import Rich from './Rich.astro';
+import { groups, residual } from '../../content/compare/index';
+import type { Competitor, Mark } from '../../content/compare/types';
+import { site } from '../../site';
+
+interface Props {
+  apps: Competitor[];
+  caption: string;
+  /** Under the caption: when the facts were checked. */
+  note: string;
+  number: (app: Competitor, id: string) => number | undefined;
+  /** Link each app's column head to its own page (the overview does). */
+  linkHeads?: boolean;
+}
+const { apps, caption, note, number, linkHeads = false } = Astro.props;
+const many = apps.length > 1;
+const columns = apps.length + 2;
+const markClass: Record<Mark, string> = { yes: 'yes', partly: 'part', no: 'no', none: 'none' };
+// The short form's last word stays on the line with the arrow.
+const split = (short: string) => {
+  const cut = short.lastIndexOf(' ') + 1;
+  return [short.slice(0, cut), short.slice(cut)];
+};
+const roadmapLink = Boolean(site.roadmapUrl);
+---
+<div class:list={['cmpwrap', { 'cmpwrap--many': many }]}>
+  {many && (
+    <fieldset class="show">
+      <legend>Show beside Residual</legend>
+      <div class="show__seg" style={`--n:${apps.length}`}>
+        {apps.map((app, i) => (
+          <label><input type="radio" name="show" value={app.key} checked={i === 0} /><span>{app.name}</span></label>
+        ))}
+      </div>
+    </fieldset>
+  )}
+  <div class="tablecard">
+    <table class:list={['cmp', { 'cmp--two': !many }]} role="table">
+      <caption><strong>{caption}</strong><span>{note} Values with an arrow open to the full detail and its sources.</span></caption>
+      <thead role="rowgroup">
+        <tr role="row">
+          <td class="corner"></td>
+          <th scope="col" role="columnheader"><Ring size="1.05em" />{residual.name}</th>
+          {apps.map((app) => <th scope="col" role="columnheader">{linkHeads ? <a href={`/compare/${app.slug}/`}>{app.name}</a> : app.name}</th>)}
+        </tr>
+      </thead>
+      {groups.map((g) => (
+        <tbody role="rowgroup">
+          <tr class="grp" role="row"><th colspan={columns} scope="colgroup" class="kicker" role="columnheader">{g.name}</th></tr>
+          {g.rows.map((row) => (
+            <tr id={`row-${row.id}`} role="row">
+              <th scope="row" role="rowheader">{row.label}</th>
+              {[{ app: undefined, cell: residual.cells[row.id] }, ...apps.map((app) => ({ app, cell: app.cells[row.id] }))].map(({ app, cell }) => {
+                const [head, last] = split(cell.short);
+                const more = Boolean(cell.detail) || (!app && 'roadmap' in cell && cell.roadmap && roadmapLink);
+                return (
+                  <td role="cell">
+                    <div class:list={['v', `v--${markClass[cell.mark]}`]}>
+                      <span class:list={['m', `m--${markClass[cell.mark]}`]} aria-hidden="true"></span>
+                      <div class="v__t">
+                        {more ? (
+                          <details class="v__d">
+                            <summary><span class="v__s">{head}<span class="nw">{last}<svg class="chev" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M3 4.5 6 7.5l3-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg></span></span></summary>
+                            <p class="v__more">
+                              {app ? <Rich text={cell.detail} app={app} number={number} extra={'sources' in cell ? cell.sources : []} /> : <Rich text={cell.detail} />}
+                              {!app && 'roadmap' in cell && cell.roadmap && roadmapLink && <> <a class="link roadmap" href={site.roadmapUrl!}>On the roadmap</a></>}
+                            </p>
+                          </details>
+                        ) : (
+                          <span class="v__s">{cell.short}</span>
+                        )}
+                      </div>
+                    </div>
+                  </td>
+                );
+              })}
+            </tr>
+          ))}
+        </tbody>
+      ))}
+    </table>
+    <ul class="legend" aria-label="What the marks mean">
+      <li><span class="m m--yes" aria-hidden="true"></span>Does it</li>
+      <li><span class="m m--part" aria-hidden="true"></span>Partly, or on a paid tier</li>
+      <li><span class="m m--no" aria-hidden="true"></span>Doesn’t</li>
+      <li>No mark: a description, or the app doesn’t say</li>
+      <li><span class="legend__chev"><svg class="chev" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M3 4.5 6 7.5l3-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg></span>Opens for detail and sources</li>
+    </ul>
+  </div>
+</div>
+
+<style>
+  /* The control that picks which app stands beside Residual. Hidden on a wide screen, where every column fits. It
+     is the targets card's segmented control (Start.astro), so it reads as the site's own. */
+  .show { margin: clamp(1.5rem, 3vw, 2rem) 0 0.75rem; padding: 0; border: 0; min-width: 0; }
+  .show legend { padding: 0; margin-bottom: 0.5rem; font-size: 0.9375rem; color: var(--label2); }
+  .show__seg { display: grid; grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); background: var(--track); border-radius: 12px; padding: 3px; max-width: 34rem; }
+  .show__seg label { position: relative; display: block; }
+  .show__seg input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+  .show__seg span { display: block; text-align: center; padding: 8px 6px; border-radius: 9px; font-size: 0.875rem; font-weight: 500; line-height: 1.25; white-space: nowrap; }
+  .show__seg input:checked + span { background: var(--card); font-weight: 600; }
+  .show__seg input:focus-visible + span { outline: 2px solid var(--key); outline-offset: 0; }
+  @media (max-width: 26em) { .show__seg { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 3px; } }
+
+  .tablecard { margin-top: clamp(1.5rem, 3vw, 2rem); background: var(--card); border-radius: var(--radius-card); padding: 0.5rem clamp(1rem, 2.4vw, 2rem) 1.25rem; }
+  .show + .tablecard { margin-top: 0; }
+  .cmp { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.9375rem; line-height: 1.4; }
+  .cmp caption { text-align: left; padding: 1rem 0 0.25rem; caption-side: top; }
+  .cmp caption strong { display: block; font-weight: 600; font-size: 1rem; color: var(--text); }
+  .cmp caption span { display: block; margin-top: 0.15rem; color: var(--label2); font-size: var(--step-small); }
+
+  /* Column heads stay in view while the rows scroll under them. */
+  .cmp thead th { position: sticky; top: 0; z-index: 1; background: var(--card); text-align: left; vertical-align: bottom; padding: 1rem 1rem 0.75rem 0; border-bottom: 1px solid var(--separator); font-family: var(--font-head); font-weight: 500; font-size: 1.125rem; letter-spacing: -0.01em; line-height: 1.15; }
+  .cmp thead th :global(.mark) { display: inline-block; vertical-align: -0.12em; margin-right: 0.3rem; }
+  .cmp thead th a { color: inherit; text-decoration: none; }
+  .cmp thead th a:hover { color: var(--key); }
+
+  /* A group of rows opens with the kicker, the way a Settings list does. */
+  .kicker { font-family: var(--font-text); font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--label3); }
+  .cmp .grp th { padding: 1.75rem 0 0.4rem; text-align: left; border-bottom: 1px solid var(--separator); }
+  .cmp tbody:first-of-type .grp th { padding-top: 1.25rem; }
+
+  .cmp tbody tr:not(.grp) > * { padding: 0.75rem 1rem 0.75rem 0; vertical-align: top; text-align: left; border-bottom: 1px solid var(--separator); }
+  .cmp tbody tr:last-child > * { border-bottom: 0; }
+  .cmp tbody th[scope="row"] { font-weight: 600; width: 17%; min-width: 9rem; }
+  .cmp :is(th, td):last-child { padding-right: 0; }
+  .cmp td { width: 16.6%; }
+  .cmp--two td { width: 37%; }
+  .cmp--two tbody th[scope="row"] { width: 26%; }
+  .cmp thead td.corner { width: auto; }
+
+  /* One value: a neutral mark, a few words, the number of the source that backs it. The marks are shapes in the
+     label colors, never green and red: on this site those mean "landed" and "off", not "wins" and "loses". */
+  .v { display: flex; gap: 0.5rem; align-items: baseline; }
+  .v__t { min-width: 0; }
+  .v--no .v__t { color: var(--label2); }
+  /* The short form is the summary, with the key-blue arrow that marks every control on the site; opening it shows
+     the full researched sentence and its source numbers under it. */
+  .v__d > summary { display: block; cursor: pointer; list-style: none; border-radius: 6px; }
+  .v__d > summary::-webkit-details-marker { display: none; }
+  .v__d > summary:focus-visible { outline-offset: 2px; }
+  .nw { white-space: nowrap; }
+  .chev { display: inline-block; flex: none; margin-left: 0.3rem; color: var(--key); vertical-align: 0.05em; }
+  .v__d[open] > summary .chev { transform: rotate(180deg); }
+  .v__more { margin-top: 0.45rem; padding: 0.55rem 0.7rem; border-radius: 12px; background: var(--bg); color: var(--label2); font-size: 0.875rem; line-height: 1.45; max-width: none; }
+  .roadmap { white-space: nowrap; }
+  .legend__chev { display: inline-flex; color: var(--key); }
+  .legend__chev .chev { margin-left: 0; }
+  @media (hover: hover) and (pointer: fine) { .v__d > summary:hover .v__s { color: var(--key); } }
+  .m { flex: none; position: relative; top: 0.05em; width: 0.6875rem; height: 0.6875rem; border-radius: 50%; overflow: hidden; }
+  .m--yes { background: var(--text); }
+  .m--part { box-shadow: inset 0 0 0 1.5px var(--text); }
+  .m--part::after { content: ''; position: absolute; inset: 0 50% 0 0; background: var(--text); }
+  .m--no { box-shadow: inset 0 0 0 1.5px var(--label3); }
+  .m--none { visibility: hidden; width: 0; margin-right: -0.5rem; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 0.4rem 1.25rem; margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--separator); color: var(--label2); font-size: var(--step-small); }
+  .legend li { display: inline-flex; align-items: center; gap: 0.45rem; }
+  .legend .m { top: 0; }
+
+  /* A row someone jumped to holds a quiet wash, so the eye lands on it. */
+  .cmp tr:target > * { background: var(--note); }
+  .cmp tr { scroll-margin-top: 6rem; }
+
+  /* Below 64em every column doesn't fit: Residual stays, and the control picks the one app beside it. Each rule
+     hides every app column except the one whose button is picked (column 3 is the first app). */
+  @media (min-width: 64em) { .show { display: none; } }
+  @media (max-width: 63.99em) {
+    .cmpwrap--many:has(.show__seg label:nth-child(1) input:checked) .cmp tr > :nth-child(n+3):not(:nth-child(3)),
+    .cmpwrap--many:has(.show__seg label:nth-child(2) input:checked) .cmp tr > :nth-child(n+3):not(:nth-child(4)),
+    .cmpwrap--many:has(.show__seg label:nth-child(3) input:checked) .cmp tr > :nth-child(n+3):not(:nth-child(5)),
+    .cmpwrap--many:has(.show__seg label:nth-child(4) input:checked) .cmp tr > :nth-child(n+3):not(:nth-child(6)),
+    .cmpwrap--many:has(.show__seg label:nth-child(5) input:checked) .cmp tr > :nth-child(n+3):not(:nth-child(7)),
+    .cmpwrap--many:has(.show__seg label:nth-child(6) input:checked) .cmp tr > :nth-child(n+3):not(:nth-child(8)) { display: none; }
+    .cmpwrap--many .cmp td { width: 34%; }
+    .cmpwrap--many .cmp tbody th[scope="row"] { width: 32%; min-width: 0; }
+  }
+  @supports not selector(:has(*)) {
+    .cmpwrap--many .tablecard { overflow-x: auto; }
+    .cmpwrap--many .show { display: none; }
+  }
+
+  /* A phone: each row becomes the row's name over its two values, side by side under their column heads. */
+  @media (max-width: 40em) {
+    .cmp, .cmp thead, .cmp tbody { display: block; }
+    .cmp caption { display: block; }
+    .cmp tr { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 1rem; }
+    .cmp thead { position: sticky; top: 0; z-index: 1; background: var(--card); border-bottom: 1px solid var(--separator); }
+    .cmp thead th { position: static; border: 0; padding: 0.85rem 0 0.6rem; font-size: 1.0625rem; }
+    .cmp thead td { display: none; }
+    .cmp .grp { display: block; }
+    .cmp .grp th { display: block; padding-top: 1.5rem; }
+    .cmp tbody tr:not(.grp) { padding-block: 0.75rem; border-bottom: 1px solid var(--separator); }
+    .cmp tbody tr:last-child { border-bottom: 0; }
+    .cmp tbody tr:not(.grp) > * { display: block; width: auto; min-width: 0; padding: 0; border: 0; }
+    .cmp tbody th[scope="row"] { grid-column: 1 / -1; margin-bottom: 0.3rem; font-size: 0.875rem; color: var(--label2); font-weight: 600; }
+    .cmpwrap--many .cmp tbody th[scope="row"], .cmpwrap--many .cmp td { width: auto; }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .show__seg span { transition: background-color var(--t-ui) var(--ease-out); }
+    .cmp thead th a, .v__s { transition: color var(--t-hover) ease; }
+    .v__d .chev { transition: transform var(--t-ui) var(--ease-out); }
+    .cmp tr:target > * { animation: cmp-land 1.6s var(--ease-soft); }
+  }
+  @keyframes cmp-land { from { background: var(--track); } }
+</style>
