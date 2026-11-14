@@ -1,0 +1,59 @@
+---
+// One piece of the compare data's rich text (marks in src/content/compare/types.ts), drawn as markup rather than
+// injected HTML. Source numbers link to their entry in the page's Sources, and the word before them is kept on the
+// same line, so a number never sits alone at the start of one.
+import { site } from '../../site';
+import { parse, type Part } from '../../content/compare/render';
+import { sourceAnchor } from '../../content/compare/index';
+import type { Competitor } from '../../content/compare/types';
+
+interface Props {
+  text?: string;
+  /** The app whose sources the numbers point to. Residual's own text cites none. */
+  app?: Competitor;
+  /** The page's numbering (numberSources in content/compare/index.ts). */
+  number?: (app: Competitor, id: string) => number | undefined;
+  /** Source ids to cite after the text: a table cell's `sources`. */
+  extra?: string[];
+}
+const { text = '', app, number, extra = [] } = Astro.props;
+
+type Item = Part | { t: 'glued'; word: string; ids: string[] };
+const parts: Part[] = parse(text);
+if (extra.length) parts.push({ t: 'cites', ids: extra });
+const items: Item[] = [];
+for (const p of parts) {
+  const prev = items.at(-1);
+  if (p.t === 'cites' && prev?.t === 'text') {
+    const trimmed = prev.s.trimEnd();
+    const cut = trimmed.lastIndexOf(' ') + 1;
+    prev.s = trimmed.slice(0, cut);
+    if (!prev.s) items.pop();
+    items.push({ t: 'glued', word: trimmed.slice(cut), ids: p.ids });
+  } else items.push({ ...p });
+}
+const cites = (ids: string[]) =>
+  app && number
+    ? ids.map((id) => ({ id, n: number(app, id) ?? 0, href: `#${sourceAnchor(app, id)}` })).sort((a, b) => a.n - b.n)
+    : [];
+---
+{items.map((it) =>
+  it.t === 'text' ? it.s
+  : it.t === 'strong' ? <strong>{it.s}</strong>
+  : it.t === 'link' ? <a class="link" href={it.href}>{it.s}</a>
+  : it.t === 'roadmap' ? (site.roadmapUrl ? <a class="link" href={site.roadmapUrl}>on the roadmap</a> : 'planned for a later version')
+  : it.t === 'glued' ? <span class="nw">{it.word}{cites(it.ids).map((c) => <a class="cite" href={c.href}><span class="sr-only">Source </span>{c.n}</a>)}</span>
+  : cites(it.ids).map((c) => <a class="cite" href={c.href}><span class="sr-only">Source </span>{c.n}</a>)
+)}
+
+<style>
+  .nw { white-space: nowrap; }
+  strong { font-weight: 600; }
+  /* Source numbers: small, quiet, and the size of a finger once tapped (the padding is the hit area). */
+  .cite { display: inline-block; margin-left: 0.15rem; padding: 0.1rem 0.2rem; border-radius: 6px; color: var(--label3); font-size: 0.6875rem; font-weight: 600; line-height: 1; text-decoration: none; vertical-align: 0.4em; font-variant-numeric: tabular-nums; }
+  .cite:hover { color: var(--key); }
+  .link { font-size: inherit; }
+  @media (prefers-reduced-motion: no-preference) {
+    .cite { transition: color var(--t-hover) ease; }
+  }
+</style>

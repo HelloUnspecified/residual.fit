@@ -1,0 +1,30 @@
+---
+// The compare pages, from one route: /compare/ (every app side by side) and /compare/<slug>/ for each app in
+// src/content/compare/index.ts. Adding an app there adds its page here, to the overview and to the sitemap.
+// Neither kind of page runs a script of its own: the table's switcher and every disclosure are HTML and CSS.
+import Layout from '../../layouts/Layout.astro';
+import Footer from '../../components/Footer.astro';
+import Overview from '../../components/compare/Overview.astro';
+import AppPage from '../../components/compare/AppPage.astro';
+import { competitors } from '../../content/compare/index';
+import type { Competitor } from '../../content/compare/types';
+
+export function getStaticPaths() {
+  return [
+    { params: { slug: undefined }, props: { app: undefined } },
+    ...competitors.map((app) => ({ params: { slug: app.slug }, props: { app } })),
+  ];
+}
+
+const { app } = Astro.props as { app?: Competitor };
+const names = competitors.map((a) => a.name);
+const nameList = `${names.slice(0, -1).join(', ')} and ${names.at(-1)}`;
+const title = app ? app.page.title : `Compare Residual with ${nameList}`;
+const description = app
+  ? app.page.description
+  : `How Residual compares with ${nameList}: what each does, who should pick it, prices and sources.`;
+---
+<Layout title={title} description={description} plain>
+  {app ? <AppPage app={app} /> : <Overview />}
+  <Footer />
+</Layout>
