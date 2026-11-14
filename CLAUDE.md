@@ -12,6 +12,7 @@ repo; references to `Residual/Info.plist`, `Residual/Theme.swift` and `MacroSolv
 
 - `npm run dev`: dev server on http://localhost:4321
 - `npm run build`: static build to `dist/`; this is the check to run after any change (there are no tests)
+- `npm test`: the tests in `tests/` (the newsletter's list choice, the roadmap's rules)
 - `npm run og`: with the dev server running, renders `/og/` to `public/og.png` via headless Chrome. Re-run after any hero or tagline change and commit the PNG.
 
 `ASTRO_TELEMETRY_DISABLED=1` is set in `.claude/settings.json`.
@@ -19,7 +20,8 @@ repo; references to `Residual/Info.plist`, `Residual/Theme.swift` and `MacroSolv
 ## Layout
 
 - `src/site.ts`: the facts the site repeats (name, tagline, App Store URL, support email, minimum iOS). Change copy facts here, never inline. The App Store URL and support address are pre-launch placeholders.
-- `src/pages/`: `index.astro` (stacks the section components in order), `privacy.md` (Markdown, uses `layouts/Doc.astro`), `support.astro`, and `og.astro`, the unlisted social card, excluded from the sitemap in `astro.config.mjs`.
+- `src/pages/`: `index.astro` (stacks the section components in order), `privacy.md` (Markdown, uses `layouts/Doc.astro`), `support.astro`, `roadmap.astro`, `releases/<version>.md` (release notes), and `og.astro`, the unlisted social card, excluded from the sitemap in `astro.config.mjs`.
+- The roadmap (`/roadmap/`): items live in `src/content/roadmap.ts` (stable `id`s, stages now, next, later, not-planned), drawn by `src/components/roadmap/`. Shipped is read from each release notes page's frontmatter (`highlights`, and `released` or `updated`); 1.0, which has no notes, is listed in the data file. `scripts/check-roadmap.mjs` runs in `prebuild` with the rules in `src/lib/roadmap.ts` (tested in `tests/roadmap.test.ts`). See `.claude/rules/roadmap.md` before changing any of it.
 - `src/components/`: one file per homepage section (`Hero`, `LiveSolve`, `Gauges`, `HowItWorks`, `Widgets`, `Promises`, `Founder`, `Questions`, `Start`, `Footer`), the features page's under `features/`, and the pieces of the app they draw: `DayRing`, `MacroBar`, `Phone` and `Shot` (real captures, light and dark), plus `Ring`, the small mark.
 - `src/scripts/solve.js` + `demo-day.js`: a port of the app's `MacroSolver` (Mode B) re-balance that drives the `LiveSolve` demo. The copy in `LiveSolve` states the solver's rules (calories → protein → carbs, fat floats, ½×–2× bounds, 5 g grid), so a change to the solver must keep that copy true, and the reverse.
 - `src/styles/global.css`: tokens are the app's `DesignTokens` (its `DESIGN.md` §3.1), a light and a dark value; the page follows the visitor's appearance. Data has color, controls are the one key blue, no indigo anywhere. Type is the system's: SF, SF Rounded on titles and numbers, Roundo for the wordmark alone. `src/styles/today.css` holds the working Today fragments' styles.

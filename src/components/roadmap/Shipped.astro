@@ -1,0 +1,55 @@
+---
+// Shipped: one card, a row per release, newest first. The version in Roundo's numerals, the date under it, then
+// the two to four headline changes and the link to the full notes. The rows come from the release notes pages
+// (their `highlights`), plus the roadmap's earlierReleases for the one release that has no notes, so shipping
+// means writing notes and nothing else. A release without a notes page gets no link.
+import { parseDay, type Release } from '../../lib/roadmap.ts';
+interface Props { releases: Release[] }
+const { releases } = Astro.props;
+---
+{releases.length > 0 && (
+  <section class="block" id="shipped" aria-labelledby="shipped-title">
+    <h2 id="shipped-title">Shipped</h2>
+    <p class="block__lead">Every release in the App Store, newest first, with a link to its full notes where it has them.</p>
+    <ol class="releases">
+      {releases.map((r) => (
+        <li class="rel">
+          <div class="rel__id">
+            <h3 class="rel__v nums">{r.version}</h3>
+            <p class="rel__date"><time datetime={parseDay(r.date, { monthOnly: true }) ?? undefined}>{r.date}</time></p>
+          </div>
+          <div class="rel__body">
+            <ul class="rel__changes">
+              {r.highlights.map((h) => <li>{h}</li>)}
+            </ul>
+            {r.href && <a class="link rel__more" href={r.href}>Read the {r.version} notes</a>}
+          </div>
+        </li>
+      ))}
+    </ol>
+  </section>
+)}
+
+<style>
+  .block { margin-top: clamp(4.5rem, 9vw, 8rem); }
+  .block > h2 { font-family: var(--font-head); font-weight: 500; font-size: var(--step-title); line-height: 1.15; letter-spacing: -0.02em; }
+  .block__lead { margin-top: 0.75rem; color: var(--label2); font-size: 1.125rem; line-height: 1.55; max-width: 40rem; }
+
+  /* The global `ol[class] { padding: 0 }` would beat a bare class on the padding, so the card names the ol. */
+  ol.releases { margin-top: clamp(1.75rem, 3vw, 2.5rem); background: var(--card); border-radius: var(--radius-card); padding-inline: clamp(1.25rem, 2.6vw, 2rem); }
+  .rel { display: grid; grid-template-columns: minmax(0, 12rem) minmax(0, 1fr); column-gap: var(--gutter); row-gap: 0.75rem; padding-block: clamp(1.25rem, 2.6vw, 1.75rem); }
+  .rel + .rel { border-top: 1px solid var(--separator); }
+  .rel__v { font-family: var(--font-mark); font-weight: 600; font-size: clamp(1.75rem, 1.5rem + 1vw, 2.25rem); line-height: 1.05; letter-spacing: -0.02em; }
+  .rel__date { margin-top: 0.35rem; color: var(--label2); font-size: var(--step-small); }
+  .rel__changes { display: grid; gap: 0.45rem; font-size: 1rem; line-height: 1.5; }
+  /* The bullet is drawn, not the list marker, so it sits in the tertiary label at a size that suits the row. */
+  .rel__changes li { position: relative; padding-left: 1.1rem; }
+  .rel__changes li::before { content: ''; position: absolute; left: 0.1rem; top: 0.62em; width: 0.32rem; height: 0.32rem; border-radius: 50%; background: var(--label3); }
+  .rel__more { display: inline-block; margin-top: 0.9rem; font-size: 1rem; }
+
+  @media (max-width: 40em) {
+    .rel { grid-template-columns: minmax(0, 1fr); }
+    .rel__id { display: flex; align-items: baseline; gap: 0.75rem; flex-wrap: wrap; }
+    .rel__date { margin-top: 0; }
+  }
+</style>

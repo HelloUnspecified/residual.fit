@@ -9,6 +9,8 @@ page and the universal-link association file in `public/`.
   src/components/       Hero, LiveSolve, Gauges, HowItWorks, Widgets, Promises, Founder, Questions, Start, Footer;
                         DayRing, MacroBar, Phone, Shot (the app's pieces); Ring (the mark)
   src/content/faq.ts    the home page's questions: feeds both the visible cards and the FAQPage structured data
+  src/content/roadmap.ts  the roadmap's items, in page order (/roadmap/); Shipped comes from src/pages/releases/*.md
+  src/lib/roadmap.ts    the roadmap's rules, run before every build by scripts/check-roadmap.mjs (tests/roadmap.test.ts)
   src/scripts/solve.js  a small port of MacroSolver's re-balance for the page's live demo
   src/scripts/demo-day.js  the demo's targets, logged breakfast, lunch, and meals ahead
   src/assets/shots/     real simulator captures, each in light and dark: scripts/screenshots/capture.sh in the app's repo
@@ -48,7 +50,7 @@ npm run dev       # http://localhost:4321
 npm run build     # pages in dist/client, the Worker in dist/server
 npm run preview   # the built site in the local Workers runtime, /api/subscribe included
 npm run og        # with the dev server running: renders public/og.png (needs Google Chrome)
-npm test          # the route's list choice (tests/)
+npm test          # the route's list choice and the roadmap's rules (tests/)
 ```
 
 Set `ASTRO_TELEMETRY_DISABLED=1` in the shell to keep Astro from phoning home. `npm run preview` runs
