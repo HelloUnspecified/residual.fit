@@ -76,6 +76,12 @@ test('a marked or factual cell without a source fails', () => {
   has(run(app((a) => { a.cells.ads = { mark: 'none', short: 'Free tier' }; })).errors, /“Free tier” has no source/);
   has(run(app((a) => { a.cells.ads = { mark: 'none', short: 'Not stated', detail: 'Its page says nothing' }; })).errors, /“Not stated” has no source/);
 });
+test('half a mark only for a paid tier fails; a full mark naming the tier passes', () => {
+  has(run(app((a) => { a.cells.plans = { mark: 'partly', short: 'Premium', sources: ['home'] }; })).errors, /marked partly only for its tier/);
+  has(run(app((a) => { a.cells.plans = { mark: 'partly', short: 'Yes, with Premium+', sources: ['home'] }; })).errors, /marked partly only for its tier/);
+  assert.deepEqual(run(app((a) => { a.cells.plans = { mark: 'yes', short: 'Yes, with Premium', sources: ['home'] }; })).errors, []);
+  assert.deepEqual(run(app((a) => { a.cells.plans = { mark: 'partly', short: 'Targets: fiber only', sources: ['home'] }; })).errors, []);
+});
 test('“Not stated” with no mark needs no source', () => assert.deepEqual(run(app()).errors, []));
 
 test('the checked date must be a real date', () => {

@@ -39,6 +39,13 @@ just different."
 - Residual's own plain facts stay plain: iPhone only, no free tier, it lands the targets you set rather than changing them.
 - A short form in the table never claims more than its detail and sources support. "Not stated" means the app's own
   pages don't say; it is never a guess.
+- Marks are claims too, and they are even-handed. `partly` means the capability itself is partial. A whole capability
+  that needs a paid tier is `yes`, with the tier in the short form ("Yes, with Premium"): Residual has no free tier,
+  so every one of its own marks is paid as well. `no` needs the app's own statement; where its pages are only silent,
+  say what they show ("None listed", "No planner listed") with no mark.
+- Keep the conditions a source gives: the tier, platform, country, language or client count goes into the short form
+  or the detail, never dropped. "Can" stays "can"; an inference is never written as a statement.
+- The close on each app page says to cancel Residual before its trial ends, since the page also names the other app's trial.
 - An illustration is labelled as one in its caption, shows no other app's screens, and puts no number on the other
   app's side that a source doesn't give.
 
@@ -82,6 +89,7 @@ tested in `tests/compare.test.ts` (`npm test`). It fails the build when:
 - a cell, a sentence of page text, or a price card cites a source id its app doesn't define;
 - a source has no title or no https link, or two sources share an id;
 - a competitor cell with a mark, a detail, or any short form other than "Not stated" has no source;
+- a cell is marked `partly` when its short form is only a paid tier's name (mark it `yes` and name the tier);
 - a mark is not yes, partly, no or none, or text has a mistyped mark (a stray bracket, brace or `**`);
 - the illustration's caption doesn't say it's an illustration;
 - `checked` isn't a date like "14 November 2026", is in the future, or is more than 90 days old (a warning from 75).

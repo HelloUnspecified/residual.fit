@@ -11,14 +11,14 @@ export const macrofactor: Competitor = {
   name: 'MacroFactor',
   slug: 'macrofactor',
   checked: '14 November 2026',
-  forYouIf: 'you want your targets adjusted every week from your intake and weight trend, and you’re happy to decide each meal yourself. It has no ads and no free tier. [product]',
+  forYouIf: 'you want your targets adjusted every week from your intake and weight trend, and you’re happy to decide each meal yourself. Its product page says “No ads”, and it has no free tier. [product]',
 
   cells: {
-    plans: { mark: 'no', short: 'No', detail: 'No; meal planning is “Under Consideration” on its roadmap', sources: ['roadmap'] },
-    resize: { mark: 'no', short: 'No: shows what’s left', detail: 'No; its Remaining view shows what’s left. Moving calories between days is manual, its help says', sources: ['remaining', 'overage'] },
+    plans: { mark: 'no', short: 'No', detail: 'No; meal planning is “Under Consideration” on its roadmap; you can log food to future days', sources: ['roadmap', 'future'] },
+    resize: { mark: 'no', short: 'No: shows what’s left', detail: 'No; its Remaining view shows what’s left, and meal suggestions are “Under Consideration” on its roadmap. Moving calories between days is manual, its help says', sources: ['remaining', 'roadmap', 'overage'] },
     ranges: { mark: 'none', short: 'Not stated', detail: 'Not stated for calories and macros; micronutrients have a floor and a ceiling', sources: ['micro'] },
-    adapt: { mark: 'yes', short: 'Yes, weekly', detail: 'Yes, weekly, from your intake and weight', sources: ['product'] },
-    database: { mark: 'none', short: 'About 1.36 million', detail: 'About 1.36 million verified entries', sources: ['db'] },
+    adapt: { mark: 'yes', short: 'Yes, weekly', detail: 'Yes, at its weekly check-ins, from your intake and weight', sources: ['product'] },
+    database: { mark: 'none', short: 'About 1.36 million', detail: 'About 1.36 million verified entries', sources: ['product', 'db'] },
     micros: { mark: 'yes', short: 'Yes', detail: 'Yes, “full micronutrient tracking”', sources: ['product'] },
     scan: { mark: 'yes', short: 'Barcode, label, photo', detail: 'Barcode, label scanner and AI photo logging', sources: ['product'] },
     grocery: { mark: 'none', short: 'Not stated' },
@@ -36,6 +36,7 @@ export const macrofactor: Competitor = {
   sources: [
     { id: 'product', title: 'MacroFactor: product page and FAQ', url: 'https://macrofactor.com/macrofactor/' },
     { id: 'roadmap', title: 'MacroFactor public roadmap', url: 'https://feedback.macrofactorapp.com/en/roadmap' },
+    { id: 'future', title: 'MacroFactor help: Log food to future days', url: `${help}51-log-food-to-future-days` },
     { id: 'remaining', title: 'MacroFactor help: Switch between consumed and remaining views', url: `${help}42-switch-between-consumed-and-remaining-views` },
     { id: 'overage', title: 'MacroFactor help: How to adjust calorie targets to account for overages or to roll over unused calories', url: `${help}108-how-to-adjust-calorie-targets-to-account-for-overages-or-to-roll-over-unused-calories` },
     { id: 'micro', title: 'MacroFactor help: What are the micronutrient floor, target and ceiling?', url: `${help}138-what-are-the-micronutrient-floor-target-and-ceiling` },
@@ -67,7 +68,7 @@ export const macrofactor: Competitor = {
     difference: {
       heading: 'MacroFactor corrects over weeks. Residual corrects within the day.',
       paragraphs: [
-        '**MacroFactor watches the long run.** You log what you eat and weigh in. From those it estimates what you really burn and adjusts your targets each week. Its product page calls this “adherence neutral”: it works whether or not you stuck to the plan. [product]',
+        '**MacroFactor watches the long run.** You log what you eat and weigh in. From those it estimates what you burn and adjusts your targets each week. Its product page calls this “adherence neutral”: it works whether or not you stuck to the plan. [product]',
         'Within a day, its Remaining view shows what’s left. Carrying an overage into later days is something you set up by hand, its help says. [remaining, overage]',
         '**Residual watches today.** You plan the day from your own food, then log what really happened. When lunch runs over, it re-sizes the same dinner and snack, in grams, so tonight still lands inside your ranges. Your targets stay where you set them.',
         'Neither is the wrong idea. If the hard part for you is knowing the right number, MacroFactor is built for that. If it’s hitting the number on a day that didn’t go to plan, that’s what Residual is for.',
@@ -107,6 +108,6 @@ export const macrofactor: Competitor = {
       movingOver: 'Residual doesn’t import from MacroFactor or any other tracker. MacroFactor exports your history as spreadsheets, but Residual can’t read them. [export]',
       keepingBoth: 'You can let MacroFactor set the targets and Residual land them. [product] It works, but it’s two logs: type the new targets into Residual after each check-in. Residual won’t read them for you.',
     },
-    end: 'Plan a real week with the whole app. If MacroFactor turns out to be what you need, cancel before the trial ends and you’ve paid nothing.',
+    end: 'Plan a real week with the whole app. If MacroFactor turns out to be what you need, cancel Residual before its trial ends and you’ve paid nothing.',
   },
 };

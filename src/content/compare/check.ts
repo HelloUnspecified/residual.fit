@@ -12,6 +12,8 @@ export const MAX_COMPETITORS = 6;
 
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const MARKS = ['yes', 'partly', 'no', 'none'];
+/** A short form that is nothing but a paid tier's name ("Premium", "with Gold", "Premium only"). */
+const PAID_TIER = /^(yes,? )?(with |on )?(premium\+?|gold|pro|plus|paid( tier)?)( only)?$/i;
 
 /** "14 November 2026" as a UTC date, or null if it isn't one. */
 export function parseChecked(text: string): Date | null {
@@ -97,6 +99,11 @@ export function checkCompare({ rows, residualCells, competitors, today }: CheckI
       const place = `row "${id}"`;
       if (!MARKS.includes(cell.mark)) errors.push(`${where}, ${place}: mark must be yes, partly, no or none, not "${cell.mark}".`);
       if (!cell.short?.trim()) errors.push(`${where}, ${place}: the short form is empty.`);
+      // Half a mark is for a capability that is itself partial. A paid tier alone earns a full mark with the tier in
+      // the words, because Residual has no free tier and its own marks are all paid too.
+      if (cell.mark === 'partly' && PAID_TIER.test(cell.short.trim())) {
+        errors.push(`${where}, ${place}: “${cell.short}” is marked partly only for its tier. Mark it yes and name the tier in the short form ("Yes, with Premium"); partly is for a capability that is itself partial.`);
+      }
       rich(place, cell.detail);
       cite(place, cell.sources ?? []);
       // "Not stated" with no mark and nothing to open is the one value that needs no source: the app doesn't say.

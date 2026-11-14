@@ -92,7 +92,7 @@ const roadmapLink = Boolean(site.roadmapUrl);
     </table>
     <ul class="legend" aria-label="What the marks mean">
       <li><span class="m m--yes" aria-hidden="true"></span>Does it</li>
-      <li><span class="m m--part" aria-hidden="true"></span>Partly, or on a paid tier</li>
+      <li><span class="m m--part" aria-hidden="true"></span>Partly: only some of it</li>
       <li><span class="m m--no" aria-hidden="true"></span>Doesn’t</li>
       <li>No mark: a description, or the app doesn’t say</li>
       <li><span class="legend__chev"><svg class="chev" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M3 4.5 6 7.5l3-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg></span>Opens for detail and sources</li>
@@ -140,6 +140,8 @@ const roadmapLink = Boolean(site.roadmapUrl);
   .cmp--two tbody th[scope="row"] { width: 26%; }
   .cmp thead td.corner { width: auto; }
 
+  /* Half a mark means the capability itself is partial. A whole capability behind a paid tier is a full mark,
+     with the tier named in the words: Residual has no free tier, so every one of its own marks is paid too. */
   /* One value: a neutral mark, a few words, the number of the source that backs it. The marks are shapes in the
      label colors, never green and red: on this site those mean "landed" and "off", not "wins" and "loses". */
   .v { display: flex; gap: 0.5rem; align-items: baseline; }
