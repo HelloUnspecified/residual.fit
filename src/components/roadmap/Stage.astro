@@ -1,0 +1,57 @@
+---
+// One stage of the roadmap: Now, Next or Later. One reading column per stage, not a board: the list is short,
+// every item is a sentence, and a stage may hold one item or eight. On a wide screen the stage's name stands on
+// the left and stays in view while its items scroll past (the founder note's split); below 64em it sits above
+// them. The stages are told apart by how much they weigh, never by the app's data colors: Now is a card per
+// item, Next one grouped card, Later plain rows (Item.astro draws each). The marks beside the names are the
+// same idea in miniature: solid, outlined, dashed. A stage with no items draws nothing.
+import type { RoadmapItem } from '../../lib/roadmap.ts';
+import Item from './Item.astro';
+interface Props {
+  stage: 'now' | 'next' | 'later';
+  title: string;
+  blurb: string;
+  items: RoadmapItem[];
+}
+const { stage, title, blurb, items } = Astro.props;
+---
+{items.length > 0 && (
+  <section class="stage" id={stage} aria-labelledby={`${stage}-title`}>
+    <header class="stage__head">
+      <h2 id={`${stage}-title`}>
+        <svg class={`glyph glyph--${stage}`} viewBox="0 0 10 10" aria-hidden="true">
+          {stage === 'now' && <circle cx="5" cy="5" r="5" fill="currentColor" />}
+          {stage === 'next' && <circle cx="5" cy="5" r="4" fill="none" stroke="currentColor" stroke-width="2" />}
+          {stage === 'later' && <circle cx="5" cy="5" r="4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="2.1 1.6" />}
+        </svg>
+        {title}
+      </h2>
+      <p>{blurb}</p>
+    </header>
+    <ul class={`stage__items stage__items--${stage}`}>
+      {items.map((item) => <Item item={item} />)}
+    </ul>
+  </section>
+)}
+
+<style>
+  .stage { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); row-gap: 1.25rem; align-items: start; }
+  .stage__head { grid-column: 1 / 5; position: sticky; top: 2rem; }
+  .stage__items { grid-column: 5 / 13; min-width: 0; }
+  .stage__head h2 { display: flex; align-items: center; gap: 0.5rem; font-family: var(--font-head); font-weight: 500; font-size: var(--step-title); line-height: 1.15; letter-spacing: -0.02em; }
+  .stage__head p { margin-top: 0.5rem; color: var(--label2); font-size: 1rem; line-height: 1.5; max-width: 22rem; }
+  .glyph { flex: none; width: 0.6em; height: 0.6em; }
+  .glyph--now { color: var(--text); }
+  .glyph--next { color: var(--label2); }
+  .glyph--later { color: var(--label3); }
+
+  /* Now stacks its cards; Next is itself the one card its rows sit on; Later has no card at all. The global
+     `ul[class] { padding: 0 }` would beat a bare class on the padding, so the card's padding names the ul. */
+  .stage__items--now { display: grid; gap: 12px; }
+  ul.stage__items--next { background: var(--card); border-radius: var(--radius-card); padding-inline: clamp(1.25rem, 2.6vw, 2rem); }
+
+  @media (max-width: 64em) {
+    .stage__head, .stage__items { grid-column: 1 / 13; }
+    .stage__head { position: static; }
+  }
+</style>

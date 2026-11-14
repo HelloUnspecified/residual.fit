@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
-    "prebuild": "node scripts/check-app-version.mjs",
+    "prebuild": "node scripts/check-app-version.mjs && node scripts/check-roadmap.mjs",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",

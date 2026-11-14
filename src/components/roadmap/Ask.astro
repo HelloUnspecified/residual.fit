@@ -1,0 +1,26 @@
+---
+// Ask for something: one line and one button, like a "still stuck?" card. Requests come by email because
+// there's nothing else to count them with: no accounts and no analytics, so a voting board would mean starting
+// to track people.
+import { site } from '../../site';
+const mailto = `mailto:${site.supportEmail}?subject=${encodeURIComponent('Roadmap request')}`;
+---
+<section class="ask" id="ask" aria-labelledby="ask-title">
+  <div>
+    <h2 id="ask-title">Ask for something</h2>
+    <p>Tell me what would make Residual work better for you. An email reaches me directly.</p>
+    <p class="small">There’s no voting board, because Residual has no accounts and collects no analytics. I’d have to start tracking you to count votes.</p>
+  </div>
+  <a class="button" href={mailto}>Email a request</a>
+</section>
+
+<style>
+  .ask { margin-top: clamp(4.5rem, 9vw, 8rem); background: var(--card); border-radius: var(--radius-card); padding: clamp(1.5rem, 3vw, 2.25rem); display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1.25rem var(--gutter); align-items: center; }
+  .ask h2 { font-family: var(--font-head); font-weight: 500; font-size: var(--step-title); line-height: 1.15; letter-spacing: -0.02em; }
+  .ask p { margin-top: 0.6rem; color: var(--label2); max-width: 44rem; }
+  .ask p + p { margin-top: 0.6rem; }
+  @media (max-width: 48em) {
+    .ask { grid-template-columns: minmax(0, 1fr); }
+    .ask .button { justify-self: start; }
+  }
+</style>

@@ -1,0 +1,25 @@
+---
+// Not planned: what people ask about that isn't coming, each with its reason, as small tiles side by side where
+// there's room. Saying so plainly is kinder than leaving someone to wait. Nothing goes here without the owner's
+// say-so, and a reason never runs down another app or the people who want the thing.
+import type { RoadmapItem } from '../../lib/roadmap.ts';
+import Item from './Item.astro';
+interface Props { items: RoadmapItem[] }
+const { items } = Astro.props;
+---
+{items.length > 0 && (
+  <section class="block" id="not-planned" aria-labelledby="np-title">
+    <h2 id="np-title">Not planned</h2>
+    <p class="block__lead">Things people ask about that aren’t coming soon. Better you hear it here than wait for them.</p>
+    <ul class="notplanned">
+      {items.map((item) => <Item item={item} />)}
+    </ul>
+  </section>
+)}
+
+<style>
+  .block { margin-top: clamp(4.5rem, 9vw, 8rem); }
+  .block > h2 { font-family: var(--font-head); font-weight: 500; font-size: var(--step-title); line-height: 1.15; letter-spacing: -0.02em; }
+  .block__lead { margin-top: 0.75rem; color: var(--label2); font-size: 1.125rem; line-height: 1.55; max-width: 40rem; }
+  .notplanned { margin-top: clamp(1.75rem, 3vw, 2.5rem); display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); gap: 12px; }
+</style>

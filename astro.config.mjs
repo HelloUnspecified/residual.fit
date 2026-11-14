@@ -3,10 +3,13 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import cloudflare from '@astrojs/cloudflare';
 import { readdirSync, readFileSync } from 'node:fs';
+import { roadmap } from './src/content/roadmap.ts';
+import { parseDay } from './src/lib/roadmap.ts';
 
 // Each Markdown page states when it last changed (`updated:` in its frontmatter, read the same way as
 // layouts/Doc.astro). The sitemap gives those pages that date as lastmod. The other pages are built from many
-// components and carry no date of their own, so they get none rather than a guessed one.
+// components and carry no date of their own, so they get none rather than a guessed one (the roadmap, below,
+// is the exception).
 const lastmod = Object.fromEntries(
   readdirSync('src/pages')
     .filter((file) => file.endsWith('.md'))
@@ -16,6 +19,9 @@ const lastmod = Object.fromEntries(
       return date && !Number.isNaN(date.getTime()) ? [[`/${file.slice(0, -3)}/`, date.toISOString()]] : [];
     }),
 );
+// The roadmap is drawn from one data file, which says when it last changed, so it gets that date too.
+const roadmapDay = parseDay(roadmap.updated);
+if (roadmapDay) lastmod['/roadmap/'] = `${roadmapDay}T12:00:00.000Z`;
 
 // The deployed origin. Share links (`/s/#…`) and the universal-link association file live on the same
 // domain, so this is also what `SHARE_LINK_BASE` in Residual/Info.plist points at.

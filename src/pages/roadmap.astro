@@ -1,0 +1,95 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Footer from '../components/Footer.astro';
+import Stage from '../components/roadmap/Stage.astro';
+import Shipped from '../components/roadmap/Shipped.astro';
+import NotPlanned from '../components/roadmap/NotPlanned.astro';
+import Ask from '../components/roadmap/Ask.astro';
+import { site } from '../site';
+import { roadmap } from '../content/roadmap';
+import { parseDay, releaseFromNotes, shipped } from '../lib/roadmap';
+
+// What's being built, what's next, what shipped and what isn't coming. Everything on it comes from
+// src/content/roadmap.ts and the release notes in pages/releases/; the prebuild check (scripts/check-roadmap.mjs)
+// has already refused a broken id, a dead link or notes without highlights, so this page only draws.
+// It needs no script: the one moment of motion, an item landing when a link leads to it, is CSS on :target.
+
+const notes = import.meta.glob<{ frontmatter: Record<string, unknown> }>('./releases/*.md', { eager: true });
+const releases = shipped(
+  Object.entries(notes).map(([file, page]) => releaseFromNotes(file, page.frontmatter).release),
+  roadmap.earlierReleases,
+);
+const inStage = (stage: string) => roadmap.items.filter((item) => item.stage === stage);
+const now = inStage('now'), next = inStage('next'), later = inStage('later'), notPlanned = inStage('not-planned');
+const updated = parseDay(roadmap.updated) ?? undefined;
+
+// The page's own contents, only for the sections that have something in them.
+const jump = [
+  ['now', 'Now', now.length],
+  ['next', 'Next', next.length],
+  ['later', 'Later', later.length],
+  ['shipped', 'Shipped', releases.length],
+  ['not-planned', 'Not planned', notPlanned.length],
+  ['ask', 'Ask for something', 1],
+].filter(([, , n]) => n) as [string, string, number][];
+---
+<Layout title="Roadmap: what’s being built, what’s next, what isn’t coming" description="What I’m building for Residual now, what comes next and later, what shipped in each release, and what isn’t coming. No dates, on purpose." modified={updated} plain>
+  <div class="rm wrap">
+    <div class="frame">
+      <section class="intro" aria-labelledby="rm-title">
+        <h1 id="rm-title" class="head">Roadmap</h1>
+        <p class="lead">What I’m building, what’s next, and what isn’t coming.</p>
+        <p class="intro__why">There are no dates here, on purpose. I make Residual on my own, and a date I guessed at would be a promise I might not keep. Things move up a stage when they’re ready, and when one ships it moves to Shipped with its release notes.</p>
+        <p class="intro__updated small muted">Last updated <time datetime={updated}>{roadmap.updated}</time>.</p>
+        <nav class="jump" aria-labelledby="jump-title">
+          <span id="jump-title" class="kicker">On this page</span>
+          {jump.map(([id, label]) => <a class="link" href={`#${id}`}>{label}</a>)}
+        </nav>
+      </section>
+
+      {(now.length > 0 || next.length > 0 || later.length > 0) && (
+        <div class="stages">
+          <Stage stage="now" title="Now" blurb="Built, or being built now." items={now} />
+          <Stage stage="next" title="Next" blurb="Decided, and up after Now. Not started yet." items={next} />
+          <Stage stage="later" title="Later" blurb="Wanted, and not being worked on yet. The order may change, and so may the idea." items={later} />
+        </div>
+      )}
+
+      <Shipped releases={releases} />
+      <NotPlanned items={notPlanned} />
+      <Ask />
+
+      <!-- The close: smaller than the marketing pages' (a title step, not a headline), one line and one action. -->
+      <section class="end" aria-labelledby="end-title">
+        <h2 id="end-title">Everything under Shipped is in the app today.</h2>
+        <p>Plan a real week with all of it. The first {site.trialDays} days are free.</p>
+        <div class="end__actions">
+          <a class="button" href={site.appStoreUrl}>Try it free for {site.trialDays} days</a>
+          <a class="link" href="/features/">See the features</a>
+        </div>
+      </section>
+    </div>
+  </div>
+  <Footer />
+</Layout>
+
+<style>
+  /* The same top padding as the documents, so the content clears the header, which floats over the page. */
+  .rm { padding-top: 8rem; }
+
+  .intro .head { max-width: 14ch; }
+  .intro .lead { margin-top: 1.25rem; max-width: 36ch; }
+  .intro__why { margin-top: 1.25rem; color: var(--label2); font-size: 1.125rem; line-height: 1.55; max-width: 40rem; }
+  .intro__updated { margin-top: 1rem; }
+
+  /* The page's own contents: a quiet row of links under the kicker the app puts over a grouped list. */
+  .jump { margin-top: 2rem; display: flex; flex-wrap: wrap; gap: 0.4rem 1.25rem; font-size: var(--step-small); }
+  .kicker { margin-right: 0.25rem; align-self: center; font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--label3); }
+
+  .stages { margin-top: clamp(3.5rem, 7vw, 6rem); display: grid; gap: clamp(3.5rem, 7vw, 6rem); }
+
+  .end { margin-top: clamp(5rem, 10vw, 9rem); padding-bottom: clamp(3rem, 8vw, 6rem); }
+  .end h2 { font-family: var(--font-head); font-weight: 500; font-size: var(--step-title); line-height: 1.15; letter-spacing: -0.02em; }
+  .end p { margin-top: 0.75rem; color: var(--label2); font-size: 1.125rem; line-height: 1.55; max-width: 35rem; }
+  .end__actions { margin-top: 1.5rem; display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; }
+</style>
