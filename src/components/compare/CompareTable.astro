@@ -113,8 +113,20 @@ const valuesOf = (rowId: string) =>
     row.classList.toggle('is-open', open);
     row.querySelector('.rowbtn')?.setAttribute('aria-expanded', String(open));
   };
+  // The button on the row's name is the one control for the keyboard and screen readers. A click anywhere else on
+  // the row is a pointer convenience that runs the same toggle, so aria-expanded stays the single source of truth.
+  // It leaves alone a click on a link inside the row (a source number, the roadmap or privacy link) and a click that
+  // ends a text selection in the row, so a detail can still be copied.
   for (const row of document.querySelectorAll('tr[data-row]')) {
-    row.querySelector('.rowbtn')?.addEventListener('click', () => setOpen(row, !row.classList.contains('is-open')));
+    if (!row.querySelector('.rowbtn')) continue;
+    row.classList.add('can-open');
+    row.addEventListener('click', (e) => {
+      const target = e.target as Element;
+      if (target.closest('a')) return;
+      const selection = getSelection();
+      if (!target.closest('.rowbtn') && selection && !selection.isCollapsed && row.contains(selection.anchorNode)) return;
+      setOpen(row, !row.classList.contains('is-open'));
+    });
   }
   const openTarget = () => {
     const id = decodeURIComponent(location.hash.slice(1));
@@ -192,7 +204,12 @@ const valuesOf = (rowId: string) =>
   .roadmap { white-space: nowrap; }
   .legend__chev { display: inline-flex; color: var(--key); }
   .legend__chev .chev { margin-left: 0; }
-  @media (hover: hover) and (pointer: fine) { .rowbtn:hover { color: var(--key); } }
+  /* The script marks rows that open (.can-open), so without it no row looks clickable. */
+  .cmp tr.can-open { cursor: pointer; }
+  @media (hover: hover) and (pointer: fine) {
+    .rowbtn:hover, .cmp tr.can-open:hover .rowbtn { color: var(--key); }
+    .cmp tr.can-open:hover > * { background: var(--note); }
+  }
   .m { flex: none; position: relative; top: 0.05em; width: 0.6875rem; height: 0.6875rem; border-radius: 50%; overflow: hidden; }
   .m--yes { background: var(--text); }
   .m--part { box-shadow: inset 0 0 0 1.5px var(--text); }
@@ -244,6 +261,10 @@ const valuesOf = (rowId: string) =>
     /* The row is one grid here, so the wash goes on the row, not on each cell with gaps between. */
     .cmp tr:target { background: var(--note); }
     .cmp tr:target > * { background: none; animation: none; }
+    @media (hover: hover) and (pointer: fine) {
+      .cmp tr.can-open:hover { background: var(--note); }
+      .cmp tr.can-open:hover > * { background: none; }
+    }
   }
 
   @media (prefers-reduced-motion: no-preference) {
