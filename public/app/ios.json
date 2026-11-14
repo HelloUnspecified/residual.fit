@@ -1,8 +1,8 @@
 {
   "schema": 1,
-  "latest": "1.0.1",
+  "latest": "1.1.0",
   "minimum": "1.0.1",
-  "title": "Update Residual to get started",
-  "message": "Version 1.0 went out without its subscriptions, so there was no way to get started. 1.0.1 fixes that, along with a round of bugs. Your days, foods and plans stay as they are.",
-  "url": "https://residual.fit/releases/1.0.1/"
+  "title": "Residual 1.1.0 is out",
+  "message": "Size a food by the serving, try a food inside Close the residual before you apply, and keep a meal you're partway through logging. Still on 1.0? This update also brings the subscriptions, so you can get started. Your days, foods and plans stay as they are.",
+  "url": "https://residual.fit/releases/1.1.0/"
 }
