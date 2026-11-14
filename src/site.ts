@@ -32,10 +32,10 @@ export const site = {
     { name: 'Quarterly', price: 39.99, months: 3, per: 'every 3 months' },
     { name: 'Annual', price: 124.99, months: 12, per: 'a year' },
   ],
-  // The public roadmap's address, once the page exists. The compare pages point at it where Residual doesn't do
-  // something yet but plans to (Apple Health, larger food databases). While it is null they say "planned for a
-  // later version" as plain text, so no link to a missing page ships; set it here and every pointer becomes a link.
-  roadmapUrl: null as string | null,
+  // The public roadmap's address. The compare pages point at it where Residual doesn't do something yet but plans
+  // to (Apple Health, more food sources). Set to null and they say "planned for a later version" as plain text
+  // instead, which is how they shipped before the roadmap page existed.
+  roadmapUrl: '/roadmap/' as string | null,
   developer: 'Clark Sell',
   // The company that publishes Residual: the footer's copyright and maker line. The Terms and the privacy policy
   // name it too, with its mailing address, in their own Markdown.
