@@ -16,13 +16,6 @@ export const roadmap: Roadmap = {
   items: [
     // Now: built, or being built.
     {
-      id: 'residual-1-1',
-      stage: 'now',
-      title: 'Residual 1.1',
-      text: 'Size a food by the serving, add a food while you close the residual and see what it does before you apply, and find Recipes on a tab of their own.',
-      note: 'Needs Apple’s review',
-    },
-    {
       id: 'barcode-frame',
       stage: 'now',
       title: 'A frame in the barcode scanner',
