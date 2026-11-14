@@ -9,7 +9,11 @@
 //   [product] [db, gold]   source numbers: ids from the app's own `sources`, at the end of the sentence they back
 //   {roadmap}              "on the roadmap" as a link once site.roadmapUrl is set; "planned for a later version" until then
 
-/** Yes, partly or on a paid tier, no; `none` for a description or "the app doesn't say". */
+/**
+ * Yes, partly, no; `none` for a description or "the app doesn't say". `partly` means the capability itself is partial;
+ * a whole capability behind a paid tier is `yes`, with the tier in the short form ("Yes, with Premium"), because
+ * Residual has no free tier and its own marks are all paid too. `no` needs a statement from the app, not an absence.
+ */
 export type Mark = 'yes' | 'partly' | 'no' | 'none';
 
 export interface Row {
