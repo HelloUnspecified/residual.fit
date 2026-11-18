@@ -11,17 +11,9 @@
 import type { Roadmap } from '../lib/roadmap.ts';
 
 export const roadmap: Roadmap = {
-  updated: '14 November 2026',
+  updated: '18 November 2026',
 
   items: [
-    // Now: built, or being built.
-    {
-      id: 'barcode-frame',
-      stage: 'now',
-      title: 'A frame in the barcode scanner',
-      text: 'The scanner shows where to hold the barcode and reads only what’s inside the frame, so a second code on the box isn’t picked up.',
-    },
-
     // Next: decided, and up after Now.
     {
       id: 'apple-health',
