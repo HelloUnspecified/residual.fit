@@ -10,7 +10,7 @@ since: "1.0"
 
 ## The idea
 
-Most trackers record what you ate and show what's left. Working out what to eat with what's left is up to you. Residual starts from a plan instead. The first page you see in the app puts it this way: tracking without a plan is just keeping score.
+Most trackers record what you ate and show what's left. Working out what to eat with what's left is up to you. Residual starts from a plan instead. The first page you see in the app puts it this way: food tracking without a plan is just keeping score.
 
 So a day in Residual has two sides. The plan is what you mean to eat. The log is what you ate. Logging never overwrites the plan; it sits beside it, and the difference between them is what the app works with.
 
