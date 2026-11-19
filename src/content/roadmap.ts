@@ -11,24 +11,9 @@
 import type { Roadmap } from '../lib/roadmap.ts';
 
 export const roadmap: Roadmap = {
-  updated: '14 November 2026',
+  updated: '18 November 2026',
 
   items: [
-    // Now: built, or being built.
-    {
-      id: 'residual-1-1',
-      stage: 'now',
-      title: 'Residual 1.1',
-      text: 'Size a food by the serving, add a food while you close the residual and see what it does before you apply, and find Recipes on a tab of their own.',
-      note: 'Needs Apple’s review',
-    },
-    {
-      id: 'barcode-frame',
-      stage: 'now',
-      title: 'A frame in the barcode scanner',
-      text: 'The scanner shows where to hold the barcode and reads only what’s inside the frame, so a second code on the box isn’t picked up.',
-    },
-
     // Next: decided, and up after Now.
     {
       id: 'apple-health',
